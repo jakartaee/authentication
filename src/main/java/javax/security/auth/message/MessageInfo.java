@@ -31,7 +31,6 @@ import java.util.Map;
  * Every implementation of this interface should provide a zero argument
  * constructor, and a constructor which takes a single Map argument.
  * Additional constructors may also be provided.
- * <p>
  *
  * @see Map
  */
