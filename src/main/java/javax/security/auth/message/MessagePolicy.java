@@ -202,6 +202,7 @@ public class MessagePolicy {
 	 *
 	 * @param messageInfo The MessageInfo containing the request or
 	 *	response message into which the object is to be put.
+         * @param data The data to be put into the MessageInfo
 	 */
 	public void put(MessageInfo messageInfo, Object data);
     }
