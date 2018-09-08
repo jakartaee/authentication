@@ -174,7 +174,12 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-		    <useDefaultManifestFile>true</useDefaultManifestFile>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile> 
+                        <manifestEntries>
+                            <Automatic-Module-Name>java.security.auth.message</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
                     <excludes>
                         <exclude>**/*.java</exclude>
                     </excludes>
