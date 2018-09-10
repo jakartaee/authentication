@@ -16,7 +16,10 @@
 
 package javax.security.auth.message.config;
 
+import java.security.AccessController;
 import java.security.Permission;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.security.Security;
 import java.security.SecurityPermission;
 import java.util.Map;
@@ -80,7 +83,7 @@ import java.util.Properties;
  * with the factory during the provider construction (see
  * <code>registerConfigProvider(AuthConfigProvider provider, ...)</code>).
  * 
- * <P>
+ * <p>
  * An AuthConfigFactory implementation is free to choose is own persistent declarative syntax as long as it conforms to
  * the requirements defined by this class.
  *
@@ -189,25 +192,29 @@ public abstract class AuthConfigFactory {
 	 */
 	public static synchronized AuthConfigFactory getFactory() {
 		checkPermission(getFactorySecurityPermission);
+		
 		if (AuthConfigFactory.factory == null) {
 			final String className = Security.getProperty(DEFAULT_FACTORY_SECURITY_PROPERTY);
 			if (className != null) {
 				checkPermission(setFactorySecurityPermission);
 				try {
-					AuthConfigFactory.factory = (AuthConfigFactory) java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-						public Object run() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-							ClassLoader loader = Thread.currentThread().getContextClassLoader();
-
-							Class clazz = Class.forName(className, true, loader);
-
-							return clazz.newInstance();
+					AuthConfigFactory.factory = AccessController.doPrivileged(new PrivilegedExceptionAction<AuthConfigFactory>() {
+						
+						public AuthConfigFactory run() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+							return (AuthConfigFactory) 
+									Class.forName(
+											className, 
+											true, 
+											Thread.currentThread().getContextClassLoader())
+										 .newInstance();
 						}
 					});
-				} catch (java.security.PrivilegedActionException pae) {
+				} catch (PrivilegedActionException pae) {
 					throw new SecurityException(pae.getException());
 				}
 			}
 		}
+		
 		return AuthConfigFactory.factory;
 	}
 
