@@ -49,7 +49,7 @@ public class PasswordValidationCallback implements Callback {
 		this.subject = subject;
 		this.username = username;
 		if (password != null) {
-			this.password = (char[]) password.clone();
+			this.password = password.clone();
 		}
 	}
 

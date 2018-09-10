@@ -76,6 +76,6 @@ public interface ServerAuthConfig extends AuthConfig {
 	 *
 	 * @exception AuthException If this method fails.
 	 */
-	public abstract ServerAuthContext getAuthContext(String authContextID, Subject serviceSubject, Map properties) throws AuthException;
+	ServerAuthContext getAuthContext(String authContextID, Subject serviceSubject, Map properties) throws AuthException;
 
 }

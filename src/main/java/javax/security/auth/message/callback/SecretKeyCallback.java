@@ -37,8 +37,8 @@ public class SecretKeyCallback implements Callback {
 	/**
 	 * Marker interface for secret key request types.
 	 */
-	public static interface Request {
-	};
+	public interface Request {
+	}
 
 	/**
 	 * Request type for secret keys that are identified using an alias.

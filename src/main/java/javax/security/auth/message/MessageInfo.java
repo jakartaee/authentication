@@ -38,28 +38,28 @@ public interface MessageInfo {
 	 *
 	 * @return An object representing the request message, or null if no request message is set within the MessageInfo.
 	 */
-	public Object getRequestMessage();
+	Object getRequestMessage();
 
 	/**
 	 * Get the response message object from this MessageInfo.
 	 *
 	 * @return an object representing the response message, or null if no response message is set within the MessageInfo.
 	 */
-	public Object getResponseMessage();
+	Object getResponseMessage();
 
 	/**
 	 * Set the request message object in this MessageInfo.
 	 * 
 	 * @param request An object representing the request message.
 	 */
-	public void setRequestMessage(Object request);
+	void setRequestMessage(Object request);
 
 	/**
 	 * Set the response message object in this MessageInfo.
 	 * 
 	 * @param response An object representing the response message.
 	 */
-	public void setResponseMessage(Object response);
+	void setResponseMessage(Object response);
 
 	/**
 	 * Get (a reference to) the Map object of this MessageInfo. Operations performed on the acquired Map must effect the Map
@@ -68,6 +68,6 @@ public interface MessageInfo {
 	 * @return the Map object of this MessageInfo. This method never returns null. If a Map has not been associated with the
 	 * MessageInfo, this method instantiates a Map, associates it with this MessageInfo, and then returns it.
 	 */
-	public Map getMap();
+	Map getMap();
 
 }

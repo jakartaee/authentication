@@ -33,12 +33,6 @@ public class CertStoreCallback implements Callback {
 	private CertStore certStore;
 
 	/**
-	 * Create a CertStoreCallback.
-	 */
-	public CertStoreCallback() {
-	}
-
-	/**
 	 * Used by the CallbackHandler to set the CertStore within the Callback.
 	 *
 	 * @param certStore The certificate store, which may be null

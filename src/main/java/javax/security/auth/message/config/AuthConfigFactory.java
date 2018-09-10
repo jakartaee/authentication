@@ -466,7 +466,7 @@ public abstract class AuthConfigFactory {
 		 * may be null.
 		 */
 
-		public String getMessageLayer();
+		String getMessageLayer();
 
 		/**
 		 * Get the application context identifier from the registration context
@@ -474,7 +474,7 @@ public abstract class AuthConfigFactory {
 		 * @return A String identifying the application context for which the AuthConfigProvider was registered. The returned
 		 * value may be null.
 		 */
-		public String getAppContext();
+		String getAppContext();
 
 		/**
 		 * Get the description from the registration context
@@ -482,7 +482,7 @@ public abstract class AuthConfigFactory {
 		 * @return The description String from the registration, or null if no description string was included in the
 		 * registration.
 		 */
-		public String getDescription();
+		String getDescription();
 
 		/**
 		 * Get the persisted status from the registration context.
@@ -491,7 +491,7 @@ public abstract class AuthConfigFactory {
 		 * instance-based (for example, self-) registration. Only registrations performed using the five argument
 		 * <code>registerConfigProvider</code> method are persistent.
 		 */
-		public boolean isPersistent();
+		boolean isPersistent();
 
 	}
 

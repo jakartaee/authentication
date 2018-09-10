@@ -64,6 +64,6 @@ public interface ServerAuthModule extends ServerAuth {
 	 *
 	 * @return An array of Class objects, with at least one element defining a message type supported by the module.
 	 */
-	public Class[] getSupportedMessageTypes();
+	Class[] getSupportedMessageTypes();
 
 }

@@ -104,7 +104,7 @@ public interface AuthConfigProvider {
 	 *
 	 * @exception SecurityException If the caller does not have permission to retrieve the configuration.
 	 */
-	public ClientAuthConfig getClientAuthConfig(String layer, String appContext, CallbackHandler handler) throws AuthException;
+	ClientAuthConfig getClientAuthConfig(String layer, String appContext, CallbackHandler handler) throws AuthException;
 
 	/**
 	 * Get an instance of ServerAuthConfig from this provider.
@@ -134,7 +134,7 @@ public interface AuthConfigProvider {
 	 *
 	 * @exception SecurityException If the caller does not have permission to retrieve the configuration.
 	 */
-	public ServerAuthConfig getServerAuthConfig(String layer, String appContext, CallbackHandler handler) throws AuthException;
+	ServerAuthConfig getServerAuthConfig(String layer, String appContext, CallbackHandler handler) throws AuthException;
 
 	/**
 	 * Causes a dynamic configuration provider to update its internal state such that any resulting change to its state is
@@ -144,6 +144,6 @@ public interface AuthConfigProvider {
 	 * @exception SecurityException If the caller does not have permission to refresh the provider, or if an error occurred
 	 * during the refresh.
 	 */
-	public void refresh();
+	void refresh();
 
 }

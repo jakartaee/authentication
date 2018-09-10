@@ -31,12 +31,6 @@ public class TrustStoreCallback implements Callback {
 	private KeyStore trustStore;
 
 	/**
-	 * Create a TrustStoreCallback.
-	 */
-	public TrustStoreCallback() {
-	}
-
-	/**
 	 * Used by the CallbackHandler to set the trusted certificate keystore within the Callback.
 	 *
 	 * @param trustStore The trusted certificate KeyStore, which must already be loaded.

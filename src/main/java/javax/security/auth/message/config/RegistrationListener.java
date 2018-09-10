@@ -43,6 +43,6 @@ public interface RegistrationListener {
 	 * @param appContext A String value identifying the application contexts corresponding to the registration for which the
 	 * listener is being notified.
 	 */
-	public void notify(String layer, String appContext);
+	void notify(String layer, String appContext);
 
 }

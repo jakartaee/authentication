@@ -54,8 +54,7 @@ public interface AuthConfig {
 	 * @throws IllegalArgumentException If the type of the message objects incorporated in messageInfo are not compatible
 	 * with the message types supported by this authentication context configuration object.
 	 */
-
-	public String getAuthContextID(MessageInfo messageInfo);
+	String getAuthContextID(MessageInfo messageInfo);
 
 	/**
 	 * Causes a dynamic authentication context configuration object to update the internal state that it uses to process
@@ -64,7 +63,7 @@ public interface AuthConfig {
 	 * @exception SecurityException If the caller does not have permission to refresh the configuration object, or if an
 	 * error occurred during the update.
 	 */
-	public void refresh();
+	void refresh();
 
 	/**
 	 * Used to determine whether the authentication context configuration object encapsulates any protected authentication
@@ -73,5 +72,5 @@ public interface AuthConfig {
 	 * @return True if the configuration object encapsulates at least one protected authentication context. Otherwise, this
 	 * method returns false.
 	 */
-	public boolean isProtected();
+	boolean isProtected();
 }

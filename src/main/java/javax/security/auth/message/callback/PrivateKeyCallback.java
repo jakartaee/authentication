@@ -39,8 +39,8 @@ public class PrivateKeyCallback implements Callback {
 	/**
 	 * Marker interface for private key request types.
 	 */
-	public static interface Request {
-	};
+	public interface Request {
+	}
 
 	/**
 	 * Request type for private keys that are identified using an alias.
@@ -94,7 +94,7 @@ public class PrivateKeyCallback implements Callback {
 		 */
 		public SubjectKeyIDRequest(byte[] subjectKeyID) {
 			if (subjectKeyID != null) {
-				this.id = (byte[]) subjectKeyID.clone();
+				this.id = subjectKeyID.clone();
 			}
 		}
 

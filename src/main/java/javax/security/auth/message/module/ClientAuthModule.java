@@ -66,6 +66,6 @@ public interface ClientAuthModule extends ClientAuth {
 	 * return an array containing at least one element. An empty array indicates that the module will attempt to support any
 	 * message type. This method never returns null.
 	 */
-	public Class[] getSupportedMessageTypes();
+	Class[] getSupportedMessageTypes();
 
 }

@@ -151,7 +151,7 @@ public class MessagePolicy {
 	 * The internal state of a Target indicates whether it applies to the request or response message of a MessageInfo and
 	 * to which components it applies within the identified message.
 	 */
-	public static interface Target {
+	public interface Target {
 
 		/**
 		 * Get the Object identified by the Target from the MessageInfo.
@@ -161,14 +161,14 @@ public class MessagePolicy {
 		 *
 		 * @return An Object representing the target, or null when the target could not be found in the MessageInfo.
 		 */
-		public Object get(MessageInfo messageInfo);
+		Object get(MessageInfo messageInfo);
 
 		/**
 		 * Remove the Object identified by the Target from the MessageInfo.
 		 *
 		 * @param messageInfo The MessageInfo containing the request or response message from which the target is to be removed.
 		 */
-		public void remove(MessageInfo messageInfo);
+		void remove(MessageInfo messageInfo);
 
 		/**
 		 * Put the Object into the MessageInfo at the location identified by the target.
@@ -176,7 +176,7 @@ public class MessagePolicy {
 		 * @param messageInfo The MessageInfo containing the request or response message into which the object is to be put.
 		 * @param data The data to be put into the MessageInfo
 		 */
-		public void put(MessageInfo messageInfo, Object data);
+		void put(MessageInfo messageInfo, Object data);
 	}
 
 	/**
@@ -186,12 +186,12 @@ public class MessagePolicy {
 	 * The internal state of a ProtectionPolicy object defines the message authentication requirements to be applied to the
 	 * associated Target.
 	 */
-	public static interface ProtectionPolicy {
+	public interface ProtectionPolicy {
 
 		/**
 		 * The identifier for a ProtectionPolicy that indicates that the sending entity is to be authenticated.
 		 */
-		public static final String AUTHENTICATE_SENDER =
+		String AUTHENTICATE_SENDER =
 
 		        "#authenticateSender";
 
@@ -199,14 +199,14 @@ public class MessagePolicy {
 		 * The identifier for a ProtectionPolicy that indicates that the origin of data within the message is to be authenticated
 		 * (that is, the message is to be protected such that its recipients can establish who defined the message content).
 		 */
-		public static final String AUTHENTICATE_CONTENT =
+		String AUTHENTICATE_CONTENT =
 
 		        "#authenticateContent";
 
 		/**
 		 * The identifier for a ProtectionPolicy that indicates that the message recipient is to be authenticated.
 		 */
-		public static final String AUTHENTICATE_RECIPIENT =
+		String AUTHENTICATE_RECIPIENT =
 
 		        "#authenticateRecipient";
 
@@ -218,7 +218,7 @@ public class MessagePolicy {
 		 * @return A String containing a policy identifier. This interface defines some policy identifier constants.
 		 * Configuration systems may define and employ other policy identifiers values.
 		 */
-		public String getID();
+		String getID();
 	}
 
 }
