@@ -21,9 +21,12 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 
 /**
- * Callback for PasswordValidation. This callback may be used by an authentication module to employ the password
- * validation facilities of its containing runtime. This Callback would typically be called by a
- * <code>ServerAuthModule</code> during <code>validateRequest</code> processing.
+ * Callback for PasswordValidation.
+ * 
+ * <p>
+ * This callback may be used by an authentication module to employ the password validation facilities of its containing
+ * runtime. This Callback would typically be called by a <code>ServerAuthModule</code> during
+ * <code>validateRequest</code> processing.
  *
  */
 public class PasswordValidationCallback implements Callback {
@@ -40,7 +43,7 @@ public class PasswordValidationCallback implements Callback {
 	 *
 	 * @param username The username to authenticate
 	 *
-	 * @param password tTe user's password, which may be null.
+	 * @param password The user's password, which may be null.
 	 */
 	public PasswordValidationCallback(Subject subject, String username, char[] password) {
 		this.subject = subject;

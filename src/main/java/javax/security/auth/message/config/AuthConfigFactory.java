@@ -59,27 +59,30 @@ import java.util.Properties;
  * containing a sequence of configuration entries, with one entry per AuthConfigProvider, and with each entry
  * representing:
  * <ul>
- * <li>The fully qualified name of the provider implementation class (or null)
- * <li>The list of provider initialization properties (which could be empty)
+ *   <li>The fully qualified name of the provider implementation class (or null)
+ *   <li>The list of provider initialization properties (which could be empty)
  * </ul>
+ * 
  * Any provider initialization properties must be specified in a form that can be passed to the provider constructor
  * within a Map of key, value pairs, and where all keys and values within the Map are of type String.
+ * 
  * <p>
  * The entry syntax must also provide for the optional inclusion of information sufficient to define a
  * RegistrationContext. This information would only be present when the factory will register the provider. For example,
  * each entry could provide for the inclusion of one or more RegistrationContext objects of the following form:
  * <ul>
- * <li>The message layer name (or null)
- * <li>The application context identifier (or null)
- * <li>The registration description (or null)
+ *   <li>The message layer name (or null)
+ *   <li>The application context identifier (or null)
+ *   <li>The registration description (or null)
  * </ul>
+ * 
  * When a RegistrationContext is not included, the factory must make it convenient for the provider to self-register
  * with the factory during the provider construction (see
  * <code>registerConfigProvider(AuthConfigProvider provider, ...)</code>).
+ * 
  * <P>
  * An AuthConfigFactory implementation is free to choose is own persistent declarative syntax as long as it conforms to
  * the requirements defined by this class.
- *
  *
  * @see ClientAuthContext
  * @see ServerAuthContext
@@ -142,7 +145,7 @@ public abstract class AuthConfigFactory {
 	public static final SecurityPermission providerRegistrationSecurityPermission = new SecurityPermission(PROVIDER_REGISTRATION_PERMISSION_NAME);
 
 	/**
-	 * utility method to check for permission to operate on the factory.
+	 * Utility method to check for permission to operate on the factory.
 	 *
 	 * @exception SecurityException if the SecurityManager is enabled and the calling access control context has not been
 	 * granted the argument permission.

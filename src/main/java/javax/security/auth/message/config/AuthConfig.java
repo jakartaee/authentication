@@ -25,6 +25,7 @@ import javax.security.auth.message.MessageInfo;
  * @see ServerAuthContext
  */
 public interface AuthConfig {
+	
 	/**
 	 * Get the message layer name of this authentication context configuration object.
 	 *

@@ -43,11 +43,11 @@ import javax.security.auth.message.AuthException;
  * The following represents a typical sequence of calls for obtaining a client authentication context object, and then
  * using it to secure a request.
  * <ol>
- * <li>AuthConfigProvider provider;
- * <li>ClientAuthConfig config = provider.getClientAuthConfig(layer,appID,cbh);
- * <li>String authContextID = config.getAuthContextID(messageInfo);
- * <li>ClientAuthContext context = config.getAuthContext(authContextID,subject,properties);
- * <li>context.secureRequest(messageInfo,subject);
+ *   <li>AuthConfigProvider provider;
+ *   <li>ClientAuthConfig config = provider.getClientAuthConfig(layer,appID,cbh);
+ *   <li>String authContextID = config.getAuthContextID(messageInfo);
+ *   <li>ClientAuthContext context = config.getAuthContext(authContextID,subject,properties);
+ *   <li>context.secureRequest(messageInfo,subject);
  * </ol>
  *
  * <p>
@@ -66,8 +66,7 @@ import javax.security.auth.message.AuthException;
  * <pre>
  * <code>
  * public String 
- * registerConfigProvider(AuthConfigProvider provider, String layer, 
- *                        String appContext, String description);
+ * registerConfigProvider(AuthConfigProvider provider, String layer, String appContext, String description);
  * </code>
  * </pre>
  *

@@ -70,16 +70,15 @@ public class MessagePolicy {
 	 * Get the target policies that comprise the authentication policy.
 	 *
 	 * <p>
+	 * When this method returns an array of target policies, the order of elements in the array represents the order that
+	 * the corresponding message transformations or validations described by the target policies are to be performed by the
+	 * authentication module.
 	 *
 	 * @return An array of target authentication policies, where each element describes an authentication policy and the
 	 * parts of the message to which the authentication policy applies. This method returns null to indicate that no
 	 * security operations should be performed on the messages to which the policy applies. This method never returns a
 	 * zero-length array.
-	 *
-	 * <p>
-	 * When this method returns an array of target policies, the order of elements in the array represents the order that
-	 * the corresponding message transformations or validations described by the target policies are to be performed by the
-	 * authentication module.
+	 * 
 	 */
 	public TargetPolicy[] getTargetPolicies() {
 		return targetPolicies.clone();
@@ -190,14 +189,14 @@ public class MessagePolicy {
 	public static interface ProtectionPolicy {
 
 		/**
-		 * The identifer for a ProtectionPolicy that indicates that the sending entity is to be authenticated.
+		 * The identifier for a ProtectionPolicy that indicates that the sending entity is to be authenticated.
 		 */
 		public static final String AUTHENTICATE_SENDER =
 
 		        "#authenticateSender";
 
 		/**
-		 * The identifer for a ProtectionPolicy that indicates that the origin of data within the message is to be authenticated
+		 * The identifier for a ProtectionPolicy that indicates that the origin of data within the message is to be authenticated
 		 * (that is, the message is to be protected such that its recipients can establish who defined the message content).
 		 */
 		public static final String AUTHENTICATE_CONTENT =
@@ -205,7 +204,7 @@ public class MessagePolicy {
 		        "#authenticateContent";
 
 		/**
-		 * The identifer for a ProtectionPolicy that indicates that the message recipient is to be authenticated.
+		 * The identifier for a ProtectionPolicy that indicates that the message recipient is to be authenticated.
 		 */
 		public static final String AUTHENTICATE_RECIPIENT =
 

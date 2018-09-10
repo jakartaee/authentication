@@ -23,9 +23,11 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.x500.X500Principal;
 
 /**
- * Callback for acquiring a Public Key Infrastructure (PKI) private key and its corresponding certificate chain. This
- * Callback may be used by client or server authentication modules to obtain private keys or private key references,
- * from key repositories available to the CallbackHandler that processes the Callback.
+ * Callback for acquiring a Public Key Infrastructure (PKI) private key and its corresponding certificate chain.
+ * 
+ * <p>
+ * This Callback may be used by client or server authentication modules to obtain private keys or private key
+ * references, from key repositories available to the CallbackHandler that processes the Callback.
  *
  */
 public class PrivateKeyCallback implements Callback {
@@ -191,7 +193,7 @@ public class PrivateKeyCallback implements Callback {
 		/**
 		 * Get the algorithm identifier.
 		 *
-		 * @return The identifer of the algorithm used to compute the digest.
+		 * @return The identifier of the algorithm used to compute the digest.
 		 */
 		public String getAlgorithm() {
 			return algorithm;
@@ -250,7 +252,7 @@ public class PrivateKeyCallback implements Callback {
 	}
 
 	/**
-	 * Used to obtain the certicicate chain set within the Callback.
+	 * Used to obtain the certificate chain set within the Callback.
 	 *
 	 * @return The certificate chain, or null if the chain could not be found.
 	 */

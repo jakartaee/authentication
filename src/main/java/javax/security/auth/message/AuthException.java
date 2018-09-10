@@ -36,8 +36,6 @@ public class AuthException extends javax.security.auth.login.LoginException {
 	 * Constructs an AuthException with the specified detail message. A detail message is a String that describes this
 	 * particular exception.
 	 *
-	 * <p>
-	 *
 	 * @param msg The detail message.
 	 */
 	public AuthException(String msg) {

@@ -20,10 +20,13 @@ import javax.crypto.SecretKey;
 import javax.security.auth.callback.Callback;
 
 /**
- * Callback for acquiring a shared secret from a key repository. This Callback may be used by client or server
- * authentication modules to obtain shared secrets (for example, passwords) without relying on a user during the
- * Callback processing. This Callback is typically empoyed by <code>ClientAuthModules</code> invoked from intermediate
- * components that need to acquire a password to authenticate to their target service.
+ * Callback for acquiring a shared secret from a key repository.
+ * 
+ * <p>
+ * This Callback may be used by client or server authentication modules to obtain shared secrets (for example,
+ * passwords) without relying on a user during the Callback processing. This Callback is typically called by
+ * <code>ClientAuthModules</code> invoked from intermediate components that need to acquire a password to authenticate
+ * to their target service.
  *
  */
 public class SecretKeyCallback implements Callback {

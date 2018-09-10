@@ -25,16 +25,16 @@ import javax.security.auth.message.module.ClientAuthModule;
  * manner:
  *
  * <ol>
- * <li>Retrieve an instance of this class by using ClientAuthConfig.getAuthContext.
- * <li>Invoke <i>secureRequest</i>. <br>
- * ClientAuthContext implementation invokes secureRequest of one or more encapsulated ClientAuthModules. Modules might
- * attach credentials to request (for example, a user name and password), and/or secure the request (for example, sign
- * and encrypt the request).
- * <li>Send request and receive response.
- * <li>Invoke <i>validateResponse</i>. <br>
- * ClientAuthContext implementation invokes validateResponse of one or more encapsulated ClientAuthModules. Modules
- * verify or decrypt response as necessary.
- * <li>Invoke <i>cleanSubject</i> method (as necessary) to clean up any authentication state in Subject.
+ *   <li>Retrieve an instance of this class by using ClientAuthConfig.getAuthContext.
+ *   <li>Invoke <i>secureRequest</i>. <br>
+ *       ClientAuthContext implementation invokes secureRequest of one or more encapsulated ClientAuthModules. Modules might
+ *       attach credentials to request (for example, a user name and password), and/or secure the request (for example, sign
+ *       and encrypt the request).
+ *   <li>Send request and receive response.
+ *   <li>Invoke <i>validateResponse</i>. <br>
+ *       ClientAuthContext implementation invokes validateResponse of one or more encapsulated ClientAuthModules. Modules
+ *       verify or decrypt response as necessary.
+ *   <li>Invoke <i>cleanSubject</i> method (as necessary) to clean up any authentication state in Subject.
  * </ol>
  * 
  * <p>

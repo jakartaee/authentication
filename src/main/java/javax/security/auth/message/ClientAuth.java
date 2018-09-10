@@ -29,9 +29,11 @@ public interface ClientAuth {
 
 	/**
 	 * Secure a service request message before sending it to the service.
+	 * 
 	 * <p>
 	 * This method is called to transform the request message acquired by calling getRequestMessage (on messageInfo) into
 	 * the mechanism-specific form to be sent by the runtime.
+	 * 
 	 * <p>
 	 * This method conveys the outcome of its message processing either by returning an AuthStatus value or by throwing an
 	 * AuthException.
@@ -48,22 +50,22 @@ public interface ClientAuth {
 	 * @return An AuthStatus object representing the completion status of the processing performed by the method. The
 	 * AuthStatus values that may be returned by this method are defined as follows:
 	 * <ul>
-	 * <li>AuthStatus.SUCCESS when the application request message was successfully secured. The secured request message may
-	 * be obtained by calling getRequestMessage on messageInfo.
+	 *   <li>AuthStatus.SUCCESS when the application request message was successfully secured. The secured request message may
+	 *       be obtained by calling getRequestMessage on messageInfo.
 	 *
-	 * <li>AuthStatus.SEND_CONTINUE to indicate that the application request message (within messageInfo) was replaced with
-	 * a security message that should elicit a security-specific response from the peer security system. This status value
-	 * also indicates that the application message has not yet been secured.
+	 *   <li>AuthStatus.SEND_CONTINUE to indicate that the application request message (within messageInfo) was replaced with
+	 *       a security message that should elicit a security-specific response from the peer security system. This status value
+	 *       also indicates that the application message has not yet been secured.
 	 *
-	 * This status value serves to inform the calling runtime that (to successfully complete the message exchange) it will
-	 * need to be capable of continuing the message dialog by conducting at least one additional request/response exchange
-	 * after having received the security-specific response elicited by sending the security message.
+	 *       This status value serves to inform the calling runtime that (to successfully complete the message exchange) it will
+	 *       need to be capable of continuing the message dialog by conducting at least one additional request/response exchange
+	 *       after having received the security-specific response elicited by sending the security message.
 	 *
-	 * When this status value is returned, the corresponding invocation of <code>validateResponse</code> must be able to
-	 * obtain the original application request message.
+	 *       When this status value is returned, the corresponding invocation of <code>validateResponse</code> must be able to
+	 *       obtain the original application request message.
 	 *
-	 * <li>AuthStatus.FAILURE to indicate that a failure occured while securing the request message, and that an appropriate
-	 * failure response message is available by calling getResponseMessage on messageInfo.
+	 *   <li>AuthStatus.FAILURE to indicate that a failure occured while securing the request message, and that an appropriate
+	 *       failure response message is available by calling getResponseMessage on messageInfo.
 	 * </ul>
 	 *
 	 * @exception AuthException When the message processing failed without establishing a failure response message (in
@@ -73,11 +75,13 @@ public interface ClientAuth {
 
 	/**
 	 * Validate a received service response.
+	 * 
 	 * <p>
 	 * This method is called to transform the mechanism-specific response message acquired by calling getResponseMessage (on
 	 * messageInfo) into the validated application message to be returned to the message processing runtime. If the response
 	 * message is a (mechanism-specific) meta-message, the method implementation must attempt to transform the meta-message
 	 * into the next mechanism-specific request message to be sent by the runtime.
+	 * 
 	 * <p>
 	 * This method conveys the outcome of its message processing either by returning an AuthStatus value or by throwing an
 	 * AuthException.
@@ -98,17 +102,17 @@ public interface ClientAuth {
 	 * @return An AuthStatus object representing the completion status of the processing performed by the method. The
 	 * AuthStatus values that may be returned by this method are defined as follows:
 	 * <ul>
-	 * <li>AuthStatus.SUCCESS when the application response message was successfully validated. The validated message is
-	 * available by calling getResponseMessage on messageInfo.
+	 *   <li>AuthStatus.SUCCESS when the application response message was successfully validated. The validated message is
+	 *       available by calling getResponseMessage on messageInfo.
 	 *
-	 * <li>AuthStatus.SEND_CONTINUE to indicate that response validation is incomplete, and that a continuation request was
-	 * returned as the request message within messageInfo.
+	 *   <li>AuthStatus.SEND_CONTINUE to indicate that response validation is incomplete, and that a continuation request was
+	 *       returned as the request message within messageInfo.
 	 * 
-	 * This status value serves to inform the calling runtime that (to successfully complete the message exchange) it will
-	 * need to be capable of continuing the message dialog by conducting at least one additional request/response exchange.
+	 *       This status value serves to inform the calling runtime that (to successfully complete the message exchange) it will
+	 *       need to be capable of continuing the message dialog by conducting at least one additional request/response exchange.
 	 *
-	 * <li>AuthStatus.FAILURE to indicate that validation of the response failed, and that a failure response message has
-	 * been established in messageInfo.
+	 *   <li>AuthStatus.FAILURE to indicate that validation of the response failed, and that a failure response message has
+	 *       been established in messageInfo.
 	 * </ul>
 	 *
 	 * @exception AuthException When the message processing failed without establishing a failure response message (in
