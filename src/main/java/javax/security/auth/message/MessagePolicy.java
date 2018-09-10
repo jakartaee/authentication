@@ -35,7 +35,6 @@ import javax.security.auth.message.module.ServerAuthModule;
  * @see ClientAuthModule
  * @see ServerAuthModule
  */
-
 public class MessagePolicy {
 
 	private TargetPolicy[] targetPolicies;

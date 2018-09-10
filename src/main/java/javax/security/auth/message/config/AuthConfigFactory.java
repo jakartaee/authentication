@@ -454,7 +454,6 @@ public abstract class AuthConfigFactory {
 	 * Represents the layer identifier, application context identifier, and description components of an AuthConfigProvider
 	 * registration at the factory.
 	 */
-
 	public interface RegistrationContext {
 
 		/**

@@ -133,7 +133,6 @@ public interface ServerAuth {
 	 *
 	 * @exception AuthException If an error occurs during the Subject processing.
 	 */
-
 	void cleanSubject(MessageInfo messageInfo, Subject subject) throws AuthException;
 
 }

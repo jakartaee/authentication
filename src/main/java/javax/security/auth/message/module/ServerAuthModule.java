@@ -57,7 +57,6 @@ public interface ServerAuthModule extends ServerAuth {
 	 * @exception AuthException If module initialization fails, including for the case where the options argument contains
 	 * elements that are not supported by the module.
 	 */
-
 	void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options) throws AuthException;
 
 	/**

@@ -44,7 +44,6 @@ public class CallerPrincipalCallback implements Callback {
 	 * argument Principal values, but it must be possible to configure the handler such that it establishes the non-null
 	 * argument Principal as the caller principal.
 	 */
-
 	public CallerPrincipalCallback(Subject s, Principal p) {
 		subject = s;
 		principal = p;

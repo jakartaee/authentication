@@ -31,7 +31,6 @@ import java.util.Map;
  *
  * @see Map
  */
-
 public interface MessageInfo {
 
 	/**
@@ -39,7 +38,6 @@ public interface MessageInfo {
 	 *
 	 * @return An object representing the request message, or null if no request message is set within the MessageInfo.
 	 */
-
 	public Object getRequestMessage();
 
 	/**
@@ -47,7 +45,6 @@ public interface MessageInfo {
 	 *
 	 * @return an object representing the response message, or null if no response message is set within the MessageInfo.
 	 */
-
 	public Object getResponseMessage();
 
 	/**
@@ -55,7 +52,6 @@ public interface MessageInfo {
 	 * 
 	 * @param request An object representing the request message.
 	 */
-
 	public void setRequestMessage(Object request);
 
 	/**
