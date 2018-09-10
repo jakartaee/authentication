@@ -34,9 +34,9 @@ public class CallerPrincipalCallback implements Callback {
 	/**
 	 * Create a CallerPrincipalCallback to set the container's representation of the caller principal
 	 *
-	 * @param s The Subject in which the container will distinguish the caller identity.
+	 * @param subject The Subject in which the container will distinguish the caller identity.
 	 *
-	 * @param p The Principal that will be distinguished as the caller principal. This value may be null.
+	 * @param principal The Principal that will be distinguished as the caller principal. This value may be null.
 	 * <p>
 	 * The CallbackHandler must use the argument Principal to establish the caller principal associated with the invocation
 	 * being processed by the container. When the argument Principal is null, the handler must establish the container's
@@ -44,18 +44,17 @@ public class CallerPrincipalCallback implements Callback {
 	 * argument Principal values, but it must be possible to configure the handler such that it establishes the non-null
 	 * argument Principal as the caller principal.
 	 */
-	public CallerPrincipalCallback(Subject s, Principal p) {
-		subject = s;
-		principal = p;
-		name = null;
+	public CallerPrincipalCallback(Subject subject, Principal principal) {
+		this.subject = subject;
+		this.principal = principal;
 	}
 
 	/**
 	 * Create a CallerPrincipalCallback to set the container's representation of the caller principal.
 	 *
-	 * @param s The Subject in which the container will distinguish the caller identity.
+	 * @param subject The Subject in which the container will distinguish the caller identity.
 	 *
-	 * @param n The String value that will be returned when getName() is called on the principal established as the caller
+	 * @param name The String value that will be returned when getName() is called on the principal established as the caller
 	 * principal or null.
 	 * <p>
 	 * The CallbackHandler must use the n argument to establish the caller principal associated with the invocation being
@@ -65,10 +64,9 @@ public class CallerPrincipalCallback implements Callback {
 	 * configure the handler such that it establishes the non-null argument value as the value returned when getName is
 	 * called on the established principal.
 	 */
-	public CallerPrincipalCallback(Subject s, String n) {
-		subject = s;
-		principal = null;
-		name = n;
+	public CallerPrincipalCallback(Subject subject, String name) {
+		this.subject = subject;
+		this.name = name;
 	}
 
 	/**

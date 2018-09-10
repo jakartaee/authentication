@@ -21,7 +21,6 @@ package javax.security.auth.message;
  * AuthStatus value is returned when the module processing has established a corresponding request or response message
  * within the message parameters exchanged with the runtime.
  */
-
 public class AuthStatus {
 
 	/**
@@ -54,15 +53,15 @@ public class AuthStatus {
 	 */
 	public static final AuthStatus SEND_CONTINUE = new AuthStatus(5);
 
-	private final int v;
+	private final int value;
 
 	private AuthStatus(int value) {
-		v = value;
+		this.value = value;
 	}
 
 	@Override
 	public String toString() {
-		switch (v) {
+		switch (value) {
 		case 1:
 			return "AuthStatus.SUCCESS";
 		case 2:

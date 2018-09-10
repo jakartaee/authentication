@@ -31,7 +31,7 @@ public class PasswordValidationCallback implements Callback {
 	private Subject subject;
 	private String username;
 	private char[] password;
-	private boolean result = false;
+	private boolean result;
 
 	/**
 	 * Create a PasswordValidationCallback.

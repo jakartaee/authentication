@@ -147,10 +147,10 @@ public abstract class AuthConfigFactory {
 	 * @exception SecurityException if the SecurityManager is enabled and the calling access control context has not been
 	 * granted the argument permission.
 	 */
-	private static void checkPermission(Permission p) throws SecurityException {
-		SecurityManager sm = System.getSecurityManager();
-		if (sm != null) {
-			sm.checkPermission(p);
+	private static void checkPermission(Permission permission) throws SecurityException {
+		SecurityManager securityManager = System.getSecurityManager();
+		if (securityManager != null) {
+			securityManager.checkPermission(permission);
 		}
 	}
 

@@ -33,9 +33,9 @@ public class GroupPrincipalCallback implements Callback {
 	 * Create a GroupPrincipalCallback to establish the container's representation of the corresponding group principals
 	 * within the Subject.
 	 *
-	 * @param s The Subject in which the container will create group principals.
+	 * @param subject The Subject in which the container will create group principals.
 	 *
-	 * @param g An array of Strings, where each element contains the name of a group that will be used to create a
+	 * @param groups An array of Strings, where each element contains the name of a group that will be used to create a
 	 * corresponding group principal within the Subject.
 	 * <p>
 	 * When a null value is passed to the g argument, the handler will establish the container's representation of no group
@@ -43,9 +43,9 @@ public class GroupPrincipalCallback implements Callback {
 	 * (without duplicates) of the principals existing within the Subject, and those created with the names occuring within
 	 * the argument array. The CallbackHandler will define the type of the created principals.
 	 */
-	public GroupPrincipalCallback(Subject s, String[] g) {
-		subject = s;
-		groups = g;
+	public GroupPrincipalCallback(Subject subject, String[] groups) {
+		this.subject = subject;
+		this.groups = groups;
 	}
 
 	/**
