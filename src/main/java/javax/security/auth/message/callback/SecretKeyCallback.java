@@ -20,99 +20,93 @@ import javax.crypto.SecretKey;
 import javax.security.auth.callback.Callback;
 
 /**
- * Callback for acquiring a shared secret from a key repository.
- * This Callback may be used by client or server authentication modules 
- * to obtain shared secrets (for example, passwords) without relying on a 
- * user during the Callback processing. 
- * This Callback is typically empoyed by <code>ClientAuthModules</code>
- * invoked from intermediate components that need to acquire
- * a password to authenticate to their target service.
+ * Callback for acquiring a shared secret from a key repository. This Callback may be used by client or server
+ * authentication modules to obtain shared secrets (for example, passwords) without relying on a user during the
+ * Callback processing. This Callback is typically empoyed by <code>ClientAuthModules</code> invoked from intermediate
+ * components that need to acquire a password to authenticate to their target service.
  *
  */
 public class SecretKeyCallback implements Callback {
 
-    private Request request;
-    private SecretKey key;
-
-    /**
-     * Marker interface for secret key request types.
-     */
-    public static interface Request { };
-
-    /**
-     * Request type for secret keys that are identified using an alias.
-     */
-    public static class AliasRequest implements Request {
-	private String alias;
+	private Request request;
+	private SecretKey key;
 
 	/**
-	 * Construct an AliasRequest with an alias.
-	 *
-	 * <p> The alias is used to directly identify the secret key
-	 * to be returned.
-	 *
-	 * <p> If the alias is null,
-	 * the handler of the callback relies on its own default.
-	 *
-	 * @param alias Name identifier for the secret key, or null.
+	 * Marker interface for secret key request types.
 	 */
-	public AliasRequest(String alias) {
-	    this.alias = alias;
+	public static interface Request {
+	};
+
+	/**
+	 * Request type for secret keys that are identified using an alias.
+	 */
+	public static class AliasRequest implements Request {
+		private String alias;
+
+		/**
+		 * Construct an AliasRequest with an alias.
+		 *
+		 * <p>
+		 * The alias is used to directly identify the secret key to be returned.
+		 *
+		 * <p>
+		 * If the alias is null, the handler of the callback relies on its own default.
+		 *
+		 * @param alias Name identifier for the secret key, or null.
+		 */
+		public AliasRequest(String alias) {
+			this.alias = alias;
+		}
+
+		/**
+		 * Get the alias.
+		 *
+		 * @return The alias, or null.
+		 */
+		public String getAlias() {
+			return alias;
+		}
 	}
 
 	/**
-	 * Get the alias.
+	 * Constructs this SecretKeyCallback with a secret key Request object.
 	 *
-	 * @return The alias, or null.
+	 * <p>
+	 * The <i>request</i> object identifies the secret key to be returned.
+	 *
+	 * If the alias is null, the handler of the callback relies on its own default.
+	 *
+	 * @param request Request object identifying the secret key, or null.
 	 */
-	public String getAlias() {
-	    return alias;
+	public SecretKeyCallback(Request request) {
+		this.request = request;
 	}
-    }
 
-    /**
-     * Constructs this SecretKeyCallback with a secret key Request object.
-     *
-     * <p> The <i>request</i> object identifies the secret key
-     * to be returned.
-     *
-     * If the alias is null, the handler of the callback
-     * relies on its own default.
-     *
-     * @param request Request object identifying the secret key, or null.
-     */
-    public SecretKeyCallback(Request request) {
-	this.request = request;
-    }
+	/**
+	 * Used by the CallbackHandler to get the Request object which identifies the secret key to be returned.
+	 *
+	 * @return The Request object which identifies the private key to be returned, or null. If null, the handler of the
+	 * callback relies on its own default.
+	 */
+	public Request getRequest() {
+		return request;
+	}
 
-    /**
-     * Used by the CallbackHandler to get the Request object which identifies 
-     * the secret key to be returned.
-     *
-     * @return The Request object which identifies the private key
-     *		to be returned, or null.  If null, the handler of the callback
-     *		relies on its own default.
-     */
-    public Request getRequest() {
-	return request;
-    }
+	/**
+	 * Used by the CallbackHandler to set the requested secret key within the Callback.
+	 *
+	 * @param key The secret key, or null if no key was found.
+	 */
+	public void setKey(SecretKey key) {
+		this.key = key;
+	}
 
-    /**
-     * Used by the CallbackHandler to set the requested secret key within
-     * the Callback.
-     *
-     * @param key The secret key, or null if no key was found.
-     */
-    public void setKey(SecretKey key) {
-	this.key = key;
-    }
-
-    /**
-     * Used to obtain the secret key set within the Callback.
-     *
-     * @return The secret key, or null if no key was found.
-     */
-    public SecretKey getKey() {
-	return key;
-    }
+	/**
+	 * Used to obtain the secret key set within the Callback.
+	 *
+	 * @return The secret key, or null if no key was found.
+	 */
+	public SecretKey getKey() {
+		return key;
+	}
 }

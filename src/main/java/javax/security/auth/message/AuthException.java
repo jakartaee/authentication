@@ -22,27 +22,25 @@ package javax.security.auth.message;
  */
 public class AuthException extends javax.security.auth.login.LoginException {
 
-    private static final long serialVersionUID = -1156951780670243758L;
+	private static final long serialVersionUID = -1156951780670243758L;
 
-    /**
-     * Constructs an AuthException with no detail message. A detail
-     * message is a String that describes this particular exception.
-     */
-    public AuthException() {
-	super();
-    }
+	/**
+	 * Constructs an AuthException with no detail message. A detail message is a String that describes this particular
+	 * exception.
+	 */
+	public AuthException() {
+		super();
+	}
 
-    /**
-     * Constructs an AuthException with the specified detail message.
-     * A detail message is a String that describes this particular
-     * exception.
-     *
-     * <p>
-     *
-     * @param msg The detail message.
-     */
-    public AuthException(String msg) {
-	super(msg);
-    }
+	/**
+	 * Constructs an AuthException with the specified detail message. A detail message is a String that describes this
+	 * particular exception.
+	 *
+	 * <p>
+	 *
+	 * @param msg The detail message.
+	 */
+	public AuthException(String msg) {
+		super(msg);
+	}
 }
-

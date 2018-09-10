@@ -24,59 +24,47 @@ import javax.security.auth.message.ServerAuth;
 import javax.security.auth.message.config.ServerAuthContext;
 
 /**
- * A ServerAuthModule validates client requests and secures responses
- * to the client.
+ * A ServerAuthModule validates client requests and secures responses to the client.
  *
- * <p> A module implementation should assume it may be used to secure
- * different requests as different clients. A module should also assume
- * it may be used concurrently by multiple callers.  It is the module
- * implementation's responsibility to properly save and restore any state
- * as necessary.  A module that does not need to do so
- * may remain completely stateless.
+ * <p>
+ * A module implementation should assume it may be used to secure different requests as different clients. A module
+ * should also assume it may be used concurrently by multiple callers. It is the module implementation's responsibility
+ * to properly save and restore any state as necessary. A module that does not need to do so may remain completely
+ * stateless.
  *
- * <p> Every implementation of the interface must provide a public zero 
- * argument constructor.
+ * <p>
+ * Every implementation of the interface must provide a public zero argument constructor.
  *
  * @see ServerAuthContext
  */
 public interface ServerAuthModule extends ServerAuth {
 
-    /**
-     * Initialize this module with request and response message policies
-     * to enforce, a CallbackHandler, and any module-specific configuration
-     * properties.
-     *
-     * <p> The request policy and the response policy must not both be null.
-     *
-     * @param requestPolicy The request policy this module must enforce,
-     *		or null.
-     *
-     * @param responsePolicy The response policy this module must enforce,
-     *		or null.
-     *
-     * @param handler CallbackHandler used to request information.
-     *
-     * @param options A Map of module-specific configuration properties.
-     *
-     * @exception AuthException If module initialization fails, including for
-     * the case where the options argument contains elements that are not 
-     * supported by the module.
-     */
+	/**
+	 * Initialize this module with request and response message policies to enforce, a CallbackHandler, and any
+	 * module-specific configuration properties.
+	 *
+	 * <p>
+	 * The request policy and the response policy must not both be null.
+	 *
+	 * @param requestPolicy The request policy this module must enforce, or null.
+	 *
+	 * @param responsePolicy The response policy this module must enforce, or null.
+	 *
+	 * @param handler CallbackHandler used to request information.
+	 *
+	 * @param options A Map of module-specific configuration properties.
+	 *
+	 * @exception AuthException If module initialization fails, including for the case where the options argument contains
+	 * elements that are not supported by the module.
+	 */
 
-    void initialize(MessagePolicy requestPolicy,
-	       MessagePolicy responsePolicy,
-	       CallbackHandler handler,
-	       Map options)
-	throws AuthException;
+	void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options) throws AuthException;
 
-    /**
-     * Get the one or more Class objects representing the message types 
-     * supported by the module.
-     *
-     * @return An array of Class objects, with at least one element 
-     * defining a message type supported by the module.
-     */
-    public Class[] getSupportedMessageTypes();
+	/**
+	 * Get the one or more Class objects representing the message types supported by the module.
+	 *
+	 * @return An array of Class objects, with at least one element defining a message type supported by the module.
+	 */
+	public Class[] getSupportedMessageTypes();
 
 }
-
