@@ -25,8 +25,8 @@
         <version>1.0.1</version>
     </parent>
 
-    <groupId>javax.security.auth.message</groupId>
-    <artifactId>javax.security.auth.message-api</artifactId>
+    <groupId>jakarta.security.auth.message</groupId>
+    <artifactId>jakarta.security.auth.message-api</artifactId>
     <version>1.1.2-SNAPSHOT</version>
 
     <properties>
