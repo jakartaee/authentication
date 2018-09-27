@@ -31,7 +31,7 @@
 
     <properties>
         <non.final>false</non.final>
-        <extension.name>jakarta.security.auth.message</extension.name>
+        <extension.name>javax.security.auth.message</extension.name>
         <spec.version>1.1</spec.version>
         <findbugs.version>3.0.1</findbugs.version>
         <findbugs.skip>false</findbugs.skip>
@@ -117,8 +117,9 @@
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>spec-version-maven-plugin</artifactId>
-                <version>1.4</version>
+                <version>1.5</version>
                 <configuration>
+                    <specMode>jakarta</specMode>
                     <spec>
                         <groupIdPrefix>jakarta.</groupIdPrefix>
                         <nonFinal>${non.final}</nonFinal>
