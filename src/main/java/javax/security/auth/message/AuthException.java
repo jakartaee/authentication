@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates and others.
+ * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,27 +23,23 @@ package javax.security.auth.message;
  */
 public class AuthException extends javax.security.auth.login.LoginException {
 
-    private static final long serialVersionUID = -1156951780670243758L;
+	private static final long serialVersionUID = -1156951780670243758L;
 
-    /**
-     * Constructs an AuthException with no detail message. A detail
-     * message is a String that describes this particular exception.
-     */
-    public AuthException() {
-	super();
-    }
+	/**
+	 * Constructs an AuthException with no detail message. A detail message is a String that describes this particular
+	 * exception.
+	 */
+	public AuthException() {
+		super();
+	}
 
-    /**
-     * Constructs an AuthException with the specified detail message.
-     * A detail message is a String that describes this particular
-     * exception.
-     *
-     * <p>
-     *
-     * @param msg The detail message.
-     */
-    public AuthException(String msg) {
-	super(msg);
-    }
+	/**
+	 * Constructs an AuthException with the specified detail message. A detail message is a String that describes this
+	 * particular exception.
+	 *
+	 * @param msg The detail message.
+	 */
+	public AuthException(String msg) {
+		super(msg);
+	}
 }
-
