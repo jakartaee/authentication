@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates and others.
+ * All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,38 +23,29 @@ import javax.security.auth.callback.Callback;
 /**
  * Callback for trusted certificate KeyStore.
  *
- * <p> A trusted certificate KeyStore may be used to determine
- * whether a given certificate chain can be trusted.
+ * <p>
+ * A trusted certificate KeyStore may be used to determine whether a given certificate chain can be trusted.
  *
  */
 public class TrustStoreCallback implements Callback {
 
-    private KeyStore trustStore;
+	private KeyStore trustStore;
 
-    /**
-     * Create a TrustStoreCallback.
-     */
-    public TrustStoreCallback() { }
+	/**
+	 * Used by the CallbackHandler to set the trusted certificate keystore within the Callback.
+	 *
+	 * @param trustStore The trusted certificate KeyStore, which must already be loaded.
+	 */
+	public void setTrustStore(KeyStore trustStore) {
+		this.trustStore = trustStore;
+	}
 
-    /**
-     * Used by the CallbackHandler to set the trusted certificate keystore 
-     * within the Callback.
-     *
-     * @param trustStore The trusted certificate KeyStore,
-     *		which must already be loaded.
-     */
-    public void setTrustStore(KeyStore trustStore) {
-	this.trustStore = trustStore;
-    }
-
-    /**
-     * Used by the TrustStore user to obtain the TrustStore set within the  
-     * Callback.
-     *
-     * @return The trusted certificate KeyStore.
-     *		The KeyStore is guaranteed to already be loaded.
-     */
-    public KeyStore getTrustStore() {
-	return trustStore;
-    }
+	/**
+	 * Used by the TrustStore user to obtain the TrustStore set within the Callback.
+	 *
+	 * @return The trusted certificate KeyStore. The KeyStore is guaranteed to already be loaded.
+	 */
+	public KeyStore getTrustStore() {
+		return trustStore;
+	}
 }
