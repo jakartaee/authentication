@@ -27,7 +27,7 @@
 
     <groupId>jakarta.security.auth.message</groupId>
     <artifactId>jakarta.security.auth.message-api</artifactId>
-    <version>1.1.2-SNAPSHOT</version>
+    <version>1.1.2</version>
 
     <properties>
         <non.final>false</non.final>
