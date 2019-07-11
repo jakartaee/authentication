@@ -1,13 +1,13 @@
-# Notices for Eclipse Project for JASPIC
+# Notices for Jakarta Authentication
 
-This content is produced and maintained by the Eclipse Project for JASPIC
+This content is produced and maintained by the Jakarta Authentication
 project.
 
 * Project home: https://projects.eclipse.org/projects/ee4j.jaspic
 
 ## Trademarks
 
-Eclipse Project for JASPIC is a trademark of the Eclipse Foundation.
+Jakarta Authentication is a trademark of the Eclipse Foundation.
 
 ## Copyright
 

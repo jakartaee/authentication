@@ -68,8 +68,8 @@
     </Match>
 
     <!--
-        Exclude all low priority bugs in the EJB CMP code,
-	which we really don't want to touch.
+        Exclude all low priority bugs in the Jakarte Enterprise Beans CMP code,
+	    which we really don't want to touch.
     -->
     <Match>
 	<Or>

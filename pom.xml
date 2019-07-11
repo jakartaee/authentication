@@ -28,6 +28,17 @@
     <groupId>jakarta.security.auth.message</groupId>
     <artifactId>jakarta.security.auth.message-api</artifactId>
     <version>1.1.2-SNAPSHOT</version>
+  
+    <name>Jakarta Authentication</name>
+    <description>
+        Jakarta Authentication defines a general low-level SPI for authentication mechanisms, which are controllers
+        that interact with a caller and a container's environment to obtain the caller's credentials, validate these,
+        and pass an authenticated identity (such as name and groups) to the container. 
+        
+        Jakarta Authentication consists of several profiles, with each profile telling how a specific container
+        (such as Jakarta Servlet) can integrate with- and adapt to this SPI.
+    </description>
+    <url>https://github.com/eclipse-ee4j/jaspic</url>
 
     <properties>
         <non.final>false</non.final>
@@ -38,9 +49,6 @@
         <findbugs.exclude>exclude-common.xml</findbugs.exclude>
         <findbugs.threshold>Low</findbugs.threshold>
     </properties>
-    <name>Java Authentication Service Provider Interface for Containers API ${spec.version}</name>
-    <description>JASPIC API</description>
-    <url>http://jcp.org/en/jsr/detail?id=196</url>
 
     <developers>
         <developer>
@@ -60,9 +68,10 @@
     </contributors>
 
     <organization>
-        <name>Eclipse Project for JASPIC</name>
+        <name>Jakarta Authentication</name>
         <url>https://github.com/eclipse-ee4j/jaspic</url>
     </organization>
+    
     <licenses>
         <license>
             <name>EPL 2.0</name>
@@ -154,7 +163,7 @@
                         <Implementation-Version>${spec.implementation.version}</Implementation-Version>
                         <Specification-Version>${spec.specification.version}</Specification-Version>                        
                         <Bundle-Description>
-                            JASPIC API ${spec.version} Design Specification
+                            Jakarta Authentication ${spec.version} Specification
                         </Bundle-Description>
                         <Specification-Vendor>Oracle Corporation</Specification-Vendor>
                         <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
@@ -192,7 +201,7 @@
                 <configuration>
                     <groups>
                         <group>
-                            <title>JASPIC API Documentation</title>
+                            <title>Jakarta Authentication Documentation</title>
                             <packages>
                                 javax.security.auth.message
                                 javax.security.auth.message.callback
@@ -207,7 +216,7 @@
     and/or its affiliates. All Rights Reserved.
     Use is subject to
     <a href="{@docRoot}/doc-files/speclicense.html" target="_top">license terms</a>.
-    <br>Comments to : users@jaspic-spec.java.net
+    <br>Comments to : jaspic-dev@eclipse.org
 ]]>
                     </bottom>
                 </configuration>
