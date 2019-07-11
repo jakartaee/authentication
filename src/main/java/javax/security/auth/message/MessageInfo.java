@@ -20,8 +20,8 @@ package javax.security.auth.message;
 import java.util.Map;
 
 /**
- * A message processing runtime uses this interface to pass messages and message processing state to authentication
- * contexts for processing by authentication modules.
+ * A container (message processing runtime) uses this interface to pass messages and message processing state to authentication
+ * contexts for processing by authentication mechanisms (modules).
  * <p>
  * This interface encapsulates a request message object and a response message object for a message exchange. This
  * interface may also be used to associate additional context in the form of key/value pairs, with the encapsulated

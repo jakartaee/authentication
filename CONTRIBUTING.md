@@ -1,13 +1,15 @@
-# Contributing to Eclipse Project for JASPIC
+# Contributing to Jakarta Authentication
 
 Thanks for your interest in this project.
 
 ## Project description
 
-The Java Authentication Service Provider Interface for Containers (JASPIC)
-defines a service provider interface (SPI) by which authentication providers
-that implement message authentication mechanisms may be integrated in client or
-server message processing containers or runtimes.
+Jakarta Authentication defines a general low-level SPI for authentication mechanisms, which are controllers
+that interact with a caller and a container's environment to obtain the caller's credentials, validate these,
+and pass an authenticated identity (such as name and groups) to the container. 
+        
+Jakarta Authentication consists of several profiles, with each profile telling how a specific container
+(such as Jakarta Servlet) can integrate with- and adapt to this SPI.
 
 * https://projects.eclipse.org/projects/ee4j.jaspic
 
