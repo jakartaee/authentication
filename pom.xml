@@ -19,6 +19,7 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
@@ -44,10 +45,17 @@
         <non.final>false</non.final>
         <extension.name>javax.security.auth.message</extension.name>
         <spec.version>1.1</spec.version>
+        
         <findbugs.version>3.0.1</findbugs.version>
         <findbugs.skip>false</findbugs.skip>
         <findbugs.exclude>exclude-common.xml</findbugs.exclude>
         <findbugs.threshold>Low</findbugs.threshold>
+        
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <developers>
@@ -112,17 +120,21 @@
                     <exclude>${findbugs.exclude}</exclude>
                 </excludes>
             </resource>
-        </resources>        
+        </resources>  
+              
         <plugins>
+            <!-- Restricts the Java version to 1.8 -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>2.5.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
                 </configuration>
             </plugin>
+        
+            <!-- First sets properties for the maven-bundle-plugin and later checks if they are indeed used. -->
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>spec-version-maven-plugin</artifactId>
@@ -147,6 +159,8 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <!-- Creates the OSGi MANIFEST.MF file -->
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -181,6 +195,8 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <!-- Adds the manifest file created by the org.apache.felix:maven-bundle-plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -194,11 +210,13 @@
                     </excludes>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
+                    <source>1.8</source>
                     <groups>
                         <group>
                             <title>Jakarta Authentication Documentation</title>
@@ -228,7 +246,8 @@
                         </goals>
                      </execution>
                 </executions>
-            </plugin>     
+            </plugin>
+               
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
@@ -240,6 +259,7 @@
                     <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
@@ -259,6 +279,7 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
