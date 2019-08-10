@@ -19,7 +19,7 @@ following is a summary of the TCK results for releases of Jakarta Authentication
   [TCK results summary](https://eclipse-ee4j.github.io/jaspic/certifications/authentication/1.1/TCK-Results)
 - [x] Any Additional Specification Certification Requirements
   None
-- [x] Java runtime used to run the implementation\
+- [x] Java runtime used to run the implementation
   Oracle JDK 1.8.0_202
 - [x] Summary of the information for the certification environment, operating system, cloud, ...
   Linux
