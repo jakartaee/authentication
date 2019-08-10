@@ -2,7 +2,7 @@
 // Copyright (c) 2017, 2019 Contributors to the Eclipse Foundation
 //
 
-= Jakarta Authentication 1.1
+= Jakarta Authentication
 :authors: Jakarta Authentication Team, https://projects.eclipse.org/projects/ee4j.jaspic
 :email: https://dev.eclipse.org/mailman/listinfo/jaspic-dev
 :version-label!:
