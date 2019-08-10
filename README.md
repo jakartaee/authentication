@@ -4,6 +4,8 @@ This repository contains the code for Jakarta Authentication.
 
 [Online JavaDoc](https://javadoc.io/doc/jakarta.security.auth.message/jakarta.security.auth.message-api/)
 
+[TCK results summary](https://eclipse-ee4j.github.io/jaspic/certifications/authentication/1.1/TCK-Results)
+
 Building
 --------
 
