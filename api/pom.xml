@@ -24,6 +24,7 @@
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
         <version>1.0.5</version>
+        <relativePath/>
     </parent>
 
     <groupId>jakarta.security.auth.message</groupId>
@@ -120,6 +121,22 @@
                     <exclude>${findbugs.exclude}</exclude>
                 </excludes>
             </resource>
+            <resource>
+                <directory>${project.basedir}/..</directory>
+                <includes>
+                    <include>LICENSE.md</include>
+                    <include>NOTICE.md</include>
+                </includes>
+                <targetPath>META-INF</targetPath>
+            </resource>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>LICENSE.md</include>
+                    <include>NOTICE.md</include>
+                </includes>
+                <targetPath>META-INF</targetPath>
+            </resource>
         </resources>  
               
         <plugins>
@@ -211,40 +228,45 @@
                 </configuration>
             </plugin>
             
+            <!-- 
+               Create Javadoc for API jar
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <groups>
-                        <group>
-                            <title>Jakarta Authentication Documentation</title>
-                            <packages>
-                                javax.security.auth.message
-                                javax.security.auth.message.callback
-                                javax.security.auth.message.config
-                                javax.security.auth.message.module
-                            </packages>
-                        </group>
-                    </groups>
-                    <bottom>
-<![CDATA[Copyright &#169; 1997-2018,
-    <a href="http://www.oracle.com">Oracle</a>
-    and/or its affiliates. All Rights Reserved.
-    Use is subject to
-    <a href="{@docRoot}/doc-files/speclicense.html" target="_top">license terms</a>.
-    <br>Comments to : jaspic-dev@eclipse.org
-]]>
-                    </bottom>
-                </configuration>
+                <version>3.1.1</version>
                 <executions>
                     <execution>
-                        <id>attach-javadocs</id>
+                        <id>attach-api-javadocs</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                     </execution>
+                        <configuration>
+                            <source>1.8</source>
+                            <additionalJOption>-Xdoclint:none</additionalJOption>
+                            <description>Jakarta Authentication API documentation</description>
+                            <doctitle>Jakarta Authentication API documentation</doctitle>
+                            <windowtitle>Jakarta Authentication API documentation</windowtitle>
+                            <header><![CDATA[<br>Jakarta Authentication API v${project.version}]]></header>
+                            <bottom><![CDATA[
+Comments to: <a href="mailto:jaspic-dev@eclipse.org">jaspic-dev@eclipse.org</a>.<br>
+Copyright &#169; 2019 Eclipse Foundation. All rights reserved.<br>
+Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">license terms</a>.]]>
+                            </bottom>
+                            <docfilessubdirs>true</docfilessubdirs>
+                            <groups>
+                                <group>
+                                    <title>Jakarta Authentication API Documentation</title>
+                                    <packages>
+                                        javax.security.auth.message
+                                        javax.security.auth.message.callback
+                                        javax.security.auth.message.config
+                                        javax.security.auth.message.module
+                                    </packages>
+                                </group>
+                            </groups>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
                
