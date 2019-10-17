@@ -1,5 +1,5 @@
 Jakarta Authentication Specification
-============================
+====================================
 
 This project generates the Jakarta Authentication Specification.
 
@@ -16,7 +16,7 @@ Run the full build:
 `mvn install`
 
 Locate the html files:
-- `target/generated-docs/authentication-spec-<version>.html`
+- target/generated-docs/Authentication.html
 
 Locate the PDF files:
-- `target/generated-docs/authentication-spec-<version>.pdf`
+- target/generated-docs/Authentication.pdf
