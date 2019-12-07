@@ -15,37 +15,39 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package javax.security.auth.message.callback;
+package jakarta.security.auth.message.callback;
 
-import java.security.KeyStore;
+import java.security.cert.CertStore;
 import javax.security.auth.callback.Callback;
 
 /**
- * Callback for trusted certificate KeyStore.
+ * Callback for CertStore.
  *
  * <p>
- * A trusted certificate KeyStore may be used to determine whether a given certificate chain can be trusted.
+ * A CertStore is a generic repository for certificates. CertStores may be searched to locate public key certificates,
+ * as well as to put together certificate chains. Such a search may be necessary when the caller needs to verify a
+ * signature.
  *
  */
-public class TrustStoreCallback implements Callback {
+public class CertStoreCallback implements Callback {
 
-	private KeyStore trustStore;
+	private CertStore certStore;
 
 	/**
-	 * Used by the CallbackHandler to set the trusted certificate keystore within the Callback.
+	 * Used by the CallbackHandler to set the CertStore within the Callback.
 	 *
-	 * @param trustStore The trusted certificate KeyStore, which must already be loaded.
+	 * @param certStore The certificate store, which may be null
 	 */
-	public void setTrustStore(KeyStore trustStore) {
-		this.trustStore = trustStore;
+	public void setCertStore(CertStore certStore) {
+		this.certStore = certStore;
 	}
 
 	/**
-	 * Used by the TrustStore user to obtain the TrustStore set within the Callback.
+	 * Used by the CertStore user to obtain the CertStore set within the Callback.
 	 *
-	 * @return The trusted certificate KeyStore. The KeyStore is guaranteed to already be loaded.
+	 * @return The CertStore, or null.
 	 */
-	public KeyStore getTrustStore() {
-		return trustStore;
+	public CertStore getCertStore() {
+		return certStore;
 	}
 }
