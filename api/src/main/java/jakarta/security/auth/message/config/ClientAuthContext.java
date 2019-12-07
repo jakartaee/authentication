@@ -15,10 +15,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package javax.security.auth.message.config;
+package jakarta.security.auth.message.config;
 
-import javax.security.auth.message.ClientAuth;
-import javax.security.auth.message.module.ClientAuthModule;
+import jakarta.security.auth.message.ClientAuth;
+import jakarta.security.auth.message.module.ClientAuthModule;
 
 /**
  * This ClientAuthContext class encapsulates ClientAuthModules that are used to secure service requests made by a
