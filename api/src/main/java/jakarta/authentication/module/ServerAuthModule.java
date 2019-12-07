@@ -15,14 +15,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package jakarta.security.auth.message.module;
+package jakarta.authentication.module;
 
 import java.util.Map;
 import javax.security.auth.callback.CallbackHandler;
-import jakarta.security.auth.message.AuthException;
-import jakarta.security.auth.message.MessagePolicy;
-import jakarta.security.auth.message.ServerAuth;
-import jakarta.security.auth.message.config.ServerAuthContext;
+
+import jakarta.authentication.AuthException;
+import jakarta.authentication.ServerAuth;
+import jakarta.authentication.config.ServerAuthContext;
+import jakarta.authentication.MessagePolicy;
 
 /**
  * A ServerAuthModule validates client requests and secures responses to the client.

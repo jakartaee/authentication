@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package jakarta.security.auth.message.config;
+package jakarta.authentication.config;
 
 /**
  * An implementation of this interface may be associated with an AuthConfigProvider registration at an AuthConfigFactory
