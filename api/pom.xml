@@ -19,19 +19,17 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
-        <groupId>org.eclipse.ee4j</groupId>
-        <artifactId>project</artifactId>
-        <version>1.0.5</version>
-        <relativePath/>
+        <groupId>jakarta.authentication</groupId>
+        <artifactId>jaspic-parent</artifactId>
+        <version>2.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>jakarta.security.auth.message</groupId>
-    <artifactId>jakarta.security.auth.message-api</artifactId>
-    <version>1.1.4-SNAPSHOT</version>
+    <artifactId>jakarta.authentication-api</artifactId>
+    <version>2.0-SNAPSHOT</version>
   
-    <name>Jakarta Authentication</name>
+    <name>Jakarta Authentication API</name>
     <description>
         Jakarta Authentication defines a general low-level SPI for authentication mechanisms, which are controllers
         that interact with a caller and a container's environment to obtain the caller's credentials, validate these,
@@ -44,7 +42,7 @@
 
     <properties>
         <non.final>false</non.final>
-        <extension.name>jakarta.security.auth.message</extension.name>
+        <extension.name>jakarta.authentication</extension.name>
         <spec.version>1.1</spec.version>
         
         <findbugs.version>3.0.1</findbugs.version>
@@ -171,7 +169,8 @@
                     <execution>
                         <goals>
                             <goal>set-spec-properties</goal>
-                            <goal>check-module</goal>
+                            <!--Not correctly reading apiPackage spec-config-->
+                            <!--<goal>check-module</goal>-->
                         </goals>
                     </execution>
                 </executions>
@@ -258,10 +257,10 @@ Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">
                                 <group>
                                     <title>Jakarta Authentication API Documentation</title>
                                     <packages>
-                                        jakarta.security.auth.message
-                                        jakarta.security.auth.message.callback
-                                        jakarta.security.auth.message.config
-                                        jakarta.security.auth.message.module
+                                        jakarta.authentication
+                                        jakarta.authentication.callback
+                                        jakarta.authentication.config
+                                        jakarta.authentication.module
                                     </packages>
                                 </group>
                             </groups>

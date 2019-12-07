@@ -15,13 +15,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package jakarta.security.auth.message;
+package jakarta.authentication;
 
 // for @see
-import jakarta.security.auth.message.config.ClientAuthContext;
-import jakarta.security.auth.message.config.ServerAuthContext;
-import jakarta.security.auth.message.module.ClientAuthModule;
-import jakarta.security.auth.message.module.ServerAuthModule;
+import jakarta.authentication.config.ClientAuthContext;
+import jakarta.authentication.config.ServerAuthContext;
+import jakarta.authentication.module.ClientAuthModule;
+import jakarta.authentication.module.ServerAuthModule;
 
 /**
  * This class defines a message authentication policy.
