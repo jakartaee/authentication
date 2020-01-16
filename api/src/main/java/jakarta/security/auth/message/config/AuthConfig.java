@@ -15,9 +15,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package javax.security.auth.message.config;
+package jakarta.security.auth.message.config;
 
-import javax.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.MessageInfo;
 
 /**
  * This interface defines the common functionality implemented by Authentication context configuration objects.

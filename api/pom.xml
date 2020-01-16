@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,9 +17,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
@@ -29,8 +29,8 @@
 
     <groupId>jakarta.security.auth.message</groupId>
     <artifactId>jakarta.security.auth.message-api</artifactId>
-    <version>1.1.4-SNAPSHOT</version>
-  
+    <version>2.0.0-SNAPSHOT</version>
+
     <name>Jakarta Authentication</name>
     <description>
         Jakarta Authentication defines a general low-level SPI for authentication mechanisms, which are controllers
@@ -41,46 +41,10 @@
         (such as Jakarta Servlet) can integrate with- and adapt to this SPI.
     </description>
     <url>https://github.com/eclipse-ee4j/jaspic</url>
-
-    <properties>
-        <non.final>false</non.final>
-        <extension.name>javax.security.auth.message</extension.name>
-        <spec.version>1.1</spec.version>
-        
-        <findbugs.version>3.0.1</findbugs.version>
-        <findbugs.skip>false</findbugs.skip>
-        <findbugs.exclude>exclude-common.xml</findbugs.exclude>
-        <findbugs.threshold>Low</findbugs.threshold>
-        
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-
-    <developers>
-        <developer>
-            <id>yaminikb</id>
-            <name>Yamini K B</name>
-            <organization>Oracle Corporation</organization>
-            <organizationUrl>http://www.oracle.com/</organizationUrl>
-        </developer>
-    </developers>
-
-    <contributors>
-        <contributor>
-            <name>Ronald Monzillo</name>
-            <organization>Oracle Corporation</organization>
-            <organizationUrl>http://www.oracle.com/</organizationUrl>
-        </contributor>
-    </contributors>
-
     <organization>
         <name>Jakarta Authentication</name>
         <url>https://github.com/eclipse-ee4j/jaspic</url>
     </organization>
-    
     <licenses>
         <license>
             <name>EPL 2.0</name>
@@ -93,16 +57,51 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <issueManagement>
-        <system>github</system>
-        <url>https://github.com/eclipse-ee4j/jaspic/issues</url>
-    </issueManagement>
+
+    <developers>
+        <developer>
+            <id>atijms</id>
+            <name>Arjan Tijms</name>
+            <email>arjan.tijms@gmail.com</email>
+            <roles>
+                <role>Project-Lead</role>
+                <role>comitter</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+        <developer>
+            <id>yaminikb</id>
+            <name>Yamini K B</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <name>Ronald Monzillo</name>
+            <organization>Oracle Corporation</organization>
+            <organizationUrl>http://www.oracle.com/</organizationUrl>
+        </contributor>
+    </contributors>
+
     <scm>
         <connection>scm:git:ssh://git@github.com/eclipse-ee4j/jaspic.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/eclipse-ee4j/jaspic.git</developerConnection>
         <url>https://github.com/eclipse-ee4j/jaspic</url>
-      <tag>HEAD</tag>
-  </scm>
+    </scm>
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/eclipse-ee4j/jaspic/issues</url>
+    </issueManagement>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
 
     <build>
         <defaultGoal>install</defaultGoal>
@@ -137,13 +136,34 @@
                 </includes>
                 <targetPath>META-INF</targetPath>
             </resource>
-        </resources>  
-              
+        </resources>
         <plugins>
+            <!-- Sets minimal Maven version to 3.5.4 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.5.4</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        
             <!-- Restricts the Java version to 1.8 -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -155,16 +175,12 @@
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>spec-version-maven-plugin</artifactId>
-                <version>1.5</version>
+                <version>2.0</version>
                 <configuration>
-                    <specMode>jakarta</specMode>
                     <spec>
-                        <groupIdPrefix>jakarta.</groupIdPrefix>
-                        <nonFinal>${non.final}</nonFinal>
-                        <jarType>api</jarType>
-                        <specVersion>${spec.version}</specVersion>
+                        <specVersion>2.0</specVersion>
                         <specImplVersion>${project.version}</specImplVersion>
-                        <apiPackage>${extension.name}</apiPackage>
+                        <apiPackage>jakarta.security.auth.message</apiPackage>
                     </spec>
                 </configuration>
                 <executions>
@@ -181,7 +197,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>4.0.0</version>
+                <version>4.2.1</version>
                 <configuration>
                     <supportedProjectTypes>
                         <supportedProjectType>jar</supportedProjectType>
@@ -194,7 +210,7 @@
                         <Implementation-Version>${spec.implementation.version}</Implementation-Version>
                         <Specification-Version>${spec.specification.version}</Specification-Version>                        
                         <Bundle-Description>
-                            Jakarta Authentication ${spec.version} Specification
+                            Jakarta Authentication ${spec.specification.version} Specification
                         </Bundle-Description>
                         <Specification-Vendor>Oracle Corporation</Specification-Vendor>
                         <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
@@ -250,7 +266,7 @@
                             <header><![CDATA[<br>Jakarta Authentication API v${project.version}]]></header>
                             <bottom><![CDATA[
 Comments to: <a href="mailto:jaspic-dev@eclipse.org">jaspic-dev@eclipse.org</a>.<br>
-Copyright &#169; 2019 Eclipse Foundation. All rights reserved.<br>
+Copyright &#169; 2020 Eclipse Foundation. All rights reserved.<br>
 Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">license terms</a>.]]>
                             </bottom>
                             <docfilessubdirs>true</docfilessubdirs>
@@ -258,10 +274,10 @@ Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">
                                 <group>
                                     <title>Jakarta Authentication API Documentation</title>
                                     <packages>
-                                        javax.security.auth.message
-                                        javax.security.auth.message.callback
-                                        javax.security.auth.message.config
-                                        javax.security.auth.message.module
+                                        jakarta.security.auth.message
+                                        jakarta.security.auth.message.callback
+                                        jakarta.security.auth.message.config
+                                        jakarta.security.auth.message.module
                                     </packages>
                                 </group>
                             </groups>
@@ -269,60 +285,6 @@ Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">
                     </execution>
                 </executions>
             </plugin>
-               
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>${findbugs.version}</version>
-                <configuration>
-                    <threshold>${findbugs.threshold}</threshold>
-                    <excludeFilterFile>${findbugs.exclude}</excludeFilterFile>
-                    <findbugsXmlOutput>true</findbugsXmlOutput>
-                    <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <mavenExecutorId>forked-path</mavenExecutorId>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
-                    <arguments>${release.arguments}</arguments>
-                    <preparationGoals>install</preparationGoals>
-                    <goals>deploy</goals>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>1.10.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.7.1</version>
-                <configuration>
-                    <reporting>
-                        <plugins>
-                            <plugin>
-                                <groupId>org.codehaus.mojo</groupId>
-                                <artifactId>findbugs-maven-plugin</artifactId>
-                                <version>${findbugs.version}</version>
-                                <configuration>
-                                    <threshold>${findbugs.threshold}</threshold>
-                                    <excludeFilterFile>${findbugs.exclude}</excludeFilterFile>
-                                </configuration>
-                            </plugin>
-                        </plugins>                        
-                    </reporting>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
-    
 </project>

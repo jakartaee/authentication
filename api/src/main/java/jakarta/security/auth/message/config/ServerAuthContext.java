@@ -15,10 +15,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package javax.security.auth.message.config;
+package jakarta.security.auth.message.config;
 
-import javax.security.auth.message.ServerAuth;
-import javax.security.auth.message.module.ServerAuthModule;
+import jakarta.security.auth.message.ServerAuth;
+import jakarta.security.auth.message.module.ServerAuthModule;
 
 /**
  * This ServerAuthContext class encapsulates ServerAuthModules that are used to validate service requests received from

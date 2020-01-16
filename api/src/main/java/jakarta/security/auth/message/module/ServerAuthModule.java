@@ -15,17 +15,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package javax.security.auth.message.module;
+package jakarta.security.auth.message.module;
 
 import java.util.Map;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.message.AuthException;
-import javax.security.auth.message.ClientAuth;
-import javax.security.auth.message.MessagePolicy;
-import javax.security.auth.message.config.ClientAuthContext;
+
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.ServerAuth;
+import jakarta.security.auth.message.config.ServerAuthContext;
 
 /**
- * A ClientAuthModule secures request messages, and validates received response messages.
+ * A ServerAuthModule validates client requests and secures responses to the client.
  *
  * <p>
  * A module implementation should assume it may be used to secure different requests as different clients. A module
@@ -36,9 +37,9 @@ import javax.security.auth.message.config.ClientAuthContext;
  * <p>
  * Every implementation of the interface must provide a public zero argument constructor.
  *
- * @see ClientAuthContext
+ * @see ServerAuthContext
  */
-public interface ClientAuthModule extends ClientAuth {
+public interface ServerAuthModule extends ServerAuth {
 
 	/**
 	 * Initialize this module with request and response message policies to enforce, a CallbackHandler, and any
@@ -63,9 +64,7 @@ public interface ClientAuthModule extends ClientAuth {
 	/**
 	 * Get the one or more Class objects representing the message types supported by the module.
 	 *
-	 * @return An array of Class objects where each element defines a message type supported by the module. A module should
-	 * return an array containing at least one element. An empty array indicates that the module will attempt to support any
-	 * message type. This method never returns null.
+	 * @return An array of Class objects, with at least one element defining a message type supported by the module.
 	 */
 	Class[] getSupportedMessageTypes();
 
