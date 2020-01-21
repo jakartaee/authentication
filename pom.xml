@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,8 +28,9 @@
 
     <groupId>org.eclipse.ee4j.jaspic</groupId>
     <artifactId>jaspic-parent</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <version>1.1.3-SNAPSHOT</version>
+
     <name>Jakarta Authentication</name>
     <description>
         Jakarta Authentication defines a general low-level SPI for authentication mechanisms, which are controllers
@@ -40,36 +41,6 @@
         (such as Jakarta Servlet) can integrate with- and adapt to this SPI.
     </description>
     <url>https://github.com/eclipse-ee4j/jaspic</url>
-
-    <scm>
-        <connection>scm:git:ssh://git@github.com/eclipse-ee4j/jaspic.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/eclipse-ee4j/jaspic.git</developerConnection>
-        <url>https://github.com/eclipse-ee4j/jaspic</url>
-      <tag>HEAD</tag>
-    </scm>
-
-    <properties>
-        <non.final>false</non.final>
-        <extension.name>javax.security.auth.message</extension.name>
-        <spec.version>1.1</spec.version>
-        
-        <findbugs.version>3.0.1</findbugs.version>
-        <findbugs.skip>false</findbugs.skip>
-        <findbugs.exclude>exclude-common.xml</findbugs.exclude>
-        <findbugs.threshold>Low</findbugs.threshold>
-        
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-
-    <modules>
-        <module>api</module>
-        <module>spec</module>
-    </modules>
-
     <licenses>
         <license>
             <name>EPL 2.0</name>
@@ -83,4 +54,49 @@
         </license>
     </licenses>
 
+    <modules>
+        <module>api</module>
+        <module>spec</module>
+    </modules>
+
+    <scm>
+        <connection>scm:git:ssh://git@github.com/eclipse-ee4j/jaspic.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/eclipse-ee4j/jaspic.git</developerConnection>
+        <url>https://github.com/eclipse-ee4j/jaspic</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <build>
+        <plugins>
+            <!-- Sets minimal Maven version to 3.5.4 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.5.4</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
