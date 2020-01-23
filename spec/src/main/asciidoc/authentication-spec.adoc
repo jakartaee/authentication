@@ -33,4 +33,19 @@ include::preface.adoc[]
 :doc-part: 1
 include::overview.adoc[]
 
+:doc-part: 2
+include::message-authentication.adoc[]
+
+:doc-part: 3
+include::servlet-container-profile.adoc[]
+
+:doc-part: 4
+include::soap-profile.adoc[]
+
+:doc-part: 5
+include::future-profiles.adoc[]
+
+:doc-part: 6
+include::loginmodule-bridge-profile.adoc[]
+
 include::Authentication.adoc[]

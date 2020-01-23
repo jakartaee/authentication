@@ -1,0 +1,536 @@
+[[a261]]
+== Message Authentication
+
+This chapter defines how message processing
+runtimes invoke authentication modules to secure or validate request and
+response messages. It describes the interactions that occur between
+message processing runtimes and authentication modules to cause security
+guarantees to be enforced on request and response messages.
+
+The subsections of this chapter establish the
+common requirements that pertain to the use of this specification in a
+generic message processing context. Profiles are expected to be defined
+to establish the specific requirements pertaining to the use of this
+specification in a particular message processing context.
+
+The API defined by this specification is
+intended to have more general applicability than the contexts of use
+defined in this specification. To that end, a runtime that provides
+compatible Java definitions of the interfaces defined by this
+specification and compatible Java implementations of the defined classes
+satisfies the baseline compatibility requirements of this specification.
+
+=== [[a265]]Authentication
+
+As defined in
+link:jaspic.html#a151[See Typical Runtime Use Model],” a
+message processing runtime’s interaction with the interfaces defined by
+this specification is divided into the following five phases:
+
+Acquire AuthConfigProvider – Runtime acquires
+a provider of authentication context configuration objects for the
+relevant messaging layer and application identifier.
+
+Acquire AuthConfig – Runtime acquires the
+authentication context configuration object for the application from the
+provider.
+
+Acquire AuthContext Identifier – Runtime
+acquires the authentication context identifier corresponding to the
+messages to be processed.
+
+Acquire Authentication Context – Runtime uses
+the context identifier to obtain the corresponding authentication
+context.
+
+Process Message(s) – Runtime uses the
+authentication context to process the messages.
+
+The remaining sections of this chapter define
+the requirements that must be satisfied by messaging runtimes and
+providers in support of each of the five interactions identified above.
+
+=== [[a273]]Acquire AuthConfigProvider
+
+=== [[a274]]What the Runtime Must Do
+
+For a message processing runtime to be able
+to invoke authentication modules configured according to this
+specification, the JVM of the message processing runtime must have been
+configured or initialized such that it has loaded the abstract
+AuthConfigFactory class, and such that the getFactory method of the
+abstract class (loads, as necessary, and) returns a concrete
+implementation of AuthConfigFactory. When called by the messaging
+runtime with layer and appContext arguments, the getConfigProvider
+method of the returned factory implementation must return the
+corresponding (as a result of configuration or registration)
+AuthConfigProvider object (or null if no provider is configured for the
+arguments).
+
+This specification defines authorization
+protected configuration interfaces, and a message processing runtime
+must support the granting, to applications and administration utilities,
+of the permissions required to employ these configuration interfaces.
+
+A message processing runtime that wishes to
+invoke authentication modules configured according to this specification
+must use the AuthConfigFactory.getFactory method to obtain a factory
+implementation. The runtime must invoke the getConfigProvider method of
+the factory to obtain the AuthConfigProvider. The runtime must specify
+appropriate (non-null) layer and application context identifiers in its
+call to getConfigProvider. The specified values must be as defined by
+the profile of this specification being followed by the messaging
+runtime.
+
+A runtime may continue to reuse a provider
+for as long as it wishes. However, a runtime that wishes to be notified
+of changes to the factory that would cause the factory to return a
+different provider for the layer and appContext arguments should include
+a (non-null) RegistrationListener as an argument in the call used to
+acquire the provider. When a listener argument is included in the call
+to acquire a provider, the factory will invoke the notify method of the
+listener when the correspondence between the provider and the layer and
+application context for which it had been acquired is no longer in
+effect. When the notify method is invoked by the factory, the runtime
+should reacquire an AuthConfigProvider for the layer and application
+context.
+
+=== What the Factory Must Do
+
+The factory implementation must satisfy the
+requirements defined by the AuthConfigFactory class. In particular, it
+must offer a public, zero argument constructor that supports the
+construction and registration of AuthConfigProvider objects from a
+persistent declarative representation.
+
+=== Acquire AuthConfig
+
+=== What the Runtime Must Do
+
+Once the runtime has obtained the appropriate
+(non-null) AuthConfigProvider, it must obtain from the provider the
+authentication context configuration object corresponding to the
+messaging layer, its role as client or server, and the application
+context for which it will be exchanging messages. It does this by
+invoking getClientAuthConfig or getServerAuthConfig as appropriate to
+the role of the runtime in the message exchange. A runtime operating at
+points 1 and 4 in the messaging model must invoke getClientAuthConfig to
+acquire its configuration object. A runtime operating at points 2 and 3
+in the messaging model must invoke getServerAuthConfig to acquire its
+configuration object. The call to acquire the configuration object must
+specify the same values for layer and application context identifier
+that were used to acquire the provider. Depending on the profile of this
+specification being followed by the messaging runtime, a CallbackHandler
+may also be a required argument of the call to acquire the configuration
+object. When a profile requires a CallbackHandler, the profile must also
+specify the callbacks that must be supported by the handler.
+
+A runtime may continue to reuse an acquired
+authentication context configuration object for as long as it is acting
+as client or server of the corresponding application. A runtime should
+reacquire an authentication context configuration object when it is
+notified (through a RegistrationListener) that it must reacquire the
+AuthConfigProvider from which the configuration object was acquired (and
+after having reacquired the provider).
+
+=== [[a285]]What the Provider Must Do
+
+The provider implementation must satisfy the
+requirements defined by the AuthConfigProvider interface. In particular,
+it must return non-null authentication configuration objects. Moreover,
+when the provider is a dynamic configuration provider, any change to the
+internal state of the provider occurring as the result of a call to its
+refresh method must be recognized by every authentication context
+configuration object obtained from the provider.
+
+The provider implementation must provide a
+configuration facility that may be used to configure the information
+required to initialize authentication contexts for the (one or more)
+authentication context configuration scopes (defined by layer and
+application context) for which the provider is registered (at the
+factory).
+
+To allow for delegation of session management
+to authentication contexts and their contained authentication modules,
+it must be possible for one or more of the authentication context
+configuration scopes handled by an AuthConfigProvider to be configured
+such that the getAuthContext method of the corresponding authentication
+context configuration objects will return a non-null authentication
+context for all authentication context identifier values, independent of
+whether or not the corresponding messages require protection. In this
+case, contexts returned for messages for which protection is NOT
+required must initialize their contained authentication modules with
+request and/or response MessagePolicy objects for which isMandatory()
+returns false (while allowing for the case where one of either request
+or response policy may be null).
+
+A sample and perhaps typical context
+initialization model is described in
+Sectionlink:jaspic.html#a302[See What the Configuration Must
+Do]. Providers must offer a configuration facility sufficient to sustain
+the typical context initialization model.
+
+=== [[a290]]Acquire AuthContext Identifier
+
+=== What the Runtime Must Do
+
+At points (1) and (2) in the messaging model,
+the message processing runtime must obtain the authentication context
+identifier corresponding to the request message processing being
+performed by the runtime.
+
+The identifier may be acquired by calling the
+getAuthContextID method of the authentication context configuration
+object (obtained in the preceding step). If the messaging runtime
+chooses to obtain the context identifier by this means, it must provide
+a MessageInfo object as argument to the getAuthContextID call, and the
+MessageInfo must have been initialized such that its getRequestMessage
+method will return the request message being processed by the runtime.
+The type of the returned request message must be as defined by the
+profile of this specification being followed by the messaging runtime.
+
+Alternatively and depending on the
+requirements relating to authentication context identifier inherent in
+the profile being followed by the messaging runtime, the runtime may
+obtain the identifier by other means. Where a profile defines or
+facilitates other means by which a messaging runtime may acquire the
+identifier, the identifier acquired by any such means must be equivalent
+to the identifier that would be acquired by calling getAuthContextID as
+described above.
+
+=== What the Configuration Must Do
+
+The configuration implementation must satisfy
+the requirements defined by the AuthConfig interface with respect to the
+getAuthContextID method.
+
+=== [[a297]]Acquire Authentication Context
+
+=== What the Runtime Must Do
+
+At points (1) and (2) in the messaging model,
+the message processing runtime must invoke the getAuthContext method of
+the authentication context configuration object (obtained in step 2) to
+obtain the authentication context object corresponding to the message
+that is to be processed. This is accomplished by invoking getAuthContext
+with the authentication context identifier corresponding to the request
+message and obtained as described above. If required by the profile of
+this specification being followed by the runtime, the call to
+getAuthContext must pass a Map containing the required property
+elements. The value of the Subject argument provided by the runtime in
+its call to getAuthContext must correspond to the requirements of the
+profile of this specification being followed by the runtime.
+
+ Once an authentication context is acquired,
+it may be reused to process subsequent requests of the application for
+which an equivalent authentication context identifier, Subject, and
+properties Map (as used in the getAuthContext) applies. Runtimes that
+wish to be dynamic with respect to changes in context configuration
+should call getAuthContext for every request. An authentication context
+configuration object may return the same authentication context object
+for different authentication context identifiers for which the same
+module configuration and message protection policy applies.
+
+At points (3) and (4) in the messaging model,
+the runtime may repeat the context acquisition performed at point (2)
+and (1) respectively, or it may reuse the previously acquired context.
+
+=== [[a302]]What the Configuration Must Do
+
+The configuration implementation must satisfy
+the requirements defined by the corresponding ClientAuthConfig or
+ServerAuthConfig interface with respect to the getAuthContext method. In
+this regard, the configuration implementation must determine the
+authentication modules that are to comprise the acquired context, and it
+must provide the context implementation with sufficient information to
+initialize the modules of the context. The getAuthContext method must
+return null when no authentication modules are to be invoked for an
+identified authentication context at the layer and application context
+represented by the configuration object.
+
+The interfaces by which an authentication
+context configuration object obtains a properly configured or
+initialized authentication context object are implementation-specific.
+That said, it is expected that the typical context initialization will
+require the following information:
+
+* The CallbackHandler (if any) to be passed
+to the modules of the context
+* A list of one or more module configurations
+(one for each module of the context), and where each such configuration
+conveys (either directly or indirectly) the following information:
+
+The implementation class for the
+authentication module (that is, an implementation of the
+ClientAuthModule or ServerAuthModule interface as appropriate to the
+type of the containing context)
+
+The module specific initialization properties
+(in a form compatible with conveyance to the module by using a Map)
+
+The request and response MessagePolicy
+objects for the module
+
+The context-specific control attributes to be
+used by the context to coordinate the invocation of the module with
+respect to the other modules of the context
+
+To sustain the above requirements, the
+AuthConfigProvider from which the authentication context configuration
+object was acquired must provide a configuration facility by which the
+information required to initialize authentication contexts may be
+configured and associated with one or more authentication context
+identifiers within the (one or more) layer and application context
+scopes for which the provider is registered (at the factory).
+
+=== Process Messages
+
+=== What the Context Must Do
+
+Every context implementation must satisfy the
+requirements as defined by the corresponding ClientAuthContext or
+ServerAuthContext interface.
+
+Every context is responsible for constructing
+and initializing the one or more authentication modules assigned to the
+context by the authentication context configuration object. The
+initialization step includes passing the relevant request and response
+MessagePolicy objects to the authentication modules. These policy
+objects may have been acquired by the authentication context
+configuration object and provided as arguments through the internal
+interfaces used by the configuration object to acquire the context.
+
+Every context must delegate calls made to the
+methods of its corresponding ClientAuth or ServerAuth interface to the
+corresponding methods of its one or more authentication modules. If a
+context encapsulates multiple authentication modules, the context must
+embody the control logic to determine which modules of the context are
+to be invoked and in what order. Contexts which encapsulate alternative
+sufficient modules must ensure that the same message values are passed
+to each invoked alternative of the context. If a context invokes
+multiple authentication modules, the context must combine the AuthStatus
+values returned by the invoked authentication modules to establish the
+AuthStatus value returned by the context to the messaging runtime. The
+context implementation must define the logic for combining the returned
+AuthStatus values.
+
+=== [[a317]]What the Runtime Must Do
+
+If a non-null authentication context object
+is returned by getAuthContext, the corresponding message processing
+runtime must invoke the methods of the acquired authentication context
+to process the corresponding request and response messages as defined
+below. Otherwise, the message processing runtime must proceed with its
+normal processing of the corresponding messages and without invoking the
+methods of an authentication context object.
+
+=== At point (1) in the message processing model:
+
+* The message processing runtime must call
+the secureRequest method of the ClientAuthContext.
+* The messageInfo argument to the call must
+have been initialized such that its getRequestMessage method will return
+the request message being processed by the runtime. The type of the
+returned request message must be as defined by the profile being
+followed.
+* If a non-null Subject was used to acquire
+the ClientAuthContext, the same Subject must be passed as the
+clientSubject in this call. If a non-null clientSubject is used in this
+call, it must not be read-only, and the same clientSubject argument must
+be passed in all calls to validateResponse made for the one or more
+responses processed to complete the message exchange.
+* If the call to secureRequest returns:
+
+AuthStatus.SEND_SUCCESS – The runtime should
+send (without calling secureRequest) the request message acquired by
+calling messageInfo.getRequestMessage. After sending the request, the
+runtime should proceed to point (4) in the message processing model (to
+receive and validate the response).
+
+AuthStatus.SEND_CONTINUE – The module has
+returned, in messageInfo, an initial request message to be sent.
+Moreover, the module is informing the client runtime that it will be
+required to continue the message dialog by sending the message resulting
+from validation of the response to the initial message. If the runtime
+will be unable to continue the dialog by sending the message resulting
+from validation of the response, the runtime must not send the initial
+request and must convey its inability by returning an error to the
+client application. Otherwise, the runtime should send (without calling
+secureRequest) the request message acquired by calling
+messageInfo.getRequestMessage.
+
+AuthStatus.FAILURE – The runtime should
+return an error to the client application. The runtime should derive the
+returned error from the response message acquired by calling
+messageInfo.getResponseMessage.
+
+Throws an AuthException – The runtime should
+use the exception to convey to the client runtime that the request
+failed.
+
+=== At point (4) in the message processing model:
+
+* The message processing runtime must call
+the validateResponse method of the ClientAuthContext.
+* In the call made to validateResponse, the
+runtime must pass the same MessageInfo instance that was passed to
+secureRequest (at the start of the message exchange). The messageInfo
+argument must have been initialized such that its getResponseMessage
+method will return the response message being processed by the
+runtime.The type of the required return messages must be as defined by
+the profile being followed.
+* The value of the clientSubject argument to
+the call must be the same as that passed in the call to secureRequest
+for the corresponding request.
+* The serviceSubject argument to the call may
+be non-null, in which it must not be read-only and may be used by
+modules to store Principals and credentials determined to pertain to the
+source of the response.
+* If the call to validateResponse returns:
+
+AuthStatus.SUCCESS – The runtime should use
+the response message acquired by calling messageInfo.getResponseMessage
+to create the value to be returned to the client.
+
+AuthStatus.SEND_CONTINUE – If the runtime is
+unable to process this status value, it must return an error to the
+client application indicating its inability to process this status
+value. To process this status value, the runtime must send (without
+calling secureRequest) the (continuation) request message obtained by
+calling messageInfo.getRequestMessage, and it must receive and process
+by using validateResponse (at least) the next corresponding response or
+error (before returning a value to the client).
+
+AuthStatus.FAILURE – The runtime should
+return an error to the client application. The runtime should derive the
+returned error from the response message acquired by calling
+messageInfo.getResponseMessage.
+
+Throws an AuthException – The runtime should
+use the exception to convey to the client runtime that the request
+failed.
+
+
+
+image:authn-2.png[image]
+
+=== State Diagram of Client Message Processing Runtime
+
+=== At point (2) in the message processing model:
+
+* The message processing runtime must call
+the validateRequest method of the ServerAuthContext.
+* The messageInfo argument to the call must
+have been initialized such that its getRequestMessage method will return
+the request message being processed by the runtime. For some profiles of
+this specification, the runtime must also initialize messageInfo such
+that its getResponseMessage method will return the response message
+being processed by the runtime. The type of the required return messages
+must be as defined by the profile being followed.
+* The clientSubject argument must be non-null
+and it must not be read-only. It is expected that the modules of the
+authentication context will populate this Subject with principals and
+credentials resulting from their processing of the request message.
+* If a non-null Subject was used to acquire
+the ServerAuthContext, the same Subject must be passed as the
+serviceSubject in this call. If a non-null serviceSubject is used in
+this call, it must not be read-only, and the same serviceSubject must be
+passed in the call to secureResponse for the corresponding response (if
+there is one).
+* If the call to validateRequest returns:
+
+AuthStatus.SUCCESS – The runtime should
+proceed to authorize the request using the clientSubject, perform the
+application request processing (depending on the authorization result),
+and proceed to point (3) as appropriatelink:#a901[4].
+
+AuthStatus.SEND_SUCCESS – The runtime should
+send (without calling secureResponse) the response message acquired by
+calling messageInfo.getResponseMessage, at which time the processing of
+the application request and its corresponding response will be complete.
+The runtime must NOT proceed to authorize the request or perform the
+application request processing.
+
+AuthStatus.SEND_CONTINUE – The runtime should
+send (without calling secureResponse) the response message acquired by
+calling messageInfo.getResponseMessage. The runtime must NOT proceed to
+authorize the request or perform the application request processing. The
+processing of the application request is not finished, and as such, its
+outcome is not yet known.
+
+AuthStatus.SEND_FAILURE – The runtime must
+NOT proceed to authorize the request or perform the application request
+processing. If the failure occurred afterlink:#a902[5] the
+service invocation, the runtime must perform whatever processing it
+requires to complete the processing of a request that failed after a
+successful service invocation, and prior to communicating the invocation
+result to the client runtime. The runtime may send (without calling
+secureResponse) the response message acquired by calling
+messageInfo.getResponseMessage.
+
+Throws an AuthException – The runtime must
+NOT proceed to authorize the request or perform the application request
+processing. If the failure occurred after the service invocation, the
+runtime must perform whatever processing it requires to complete the
+processing of a request that failed after the service invocation, and
+prior to communicating the invocation result to the client runtime. The
+runtime may send (without calling secureResponse) a failure message of
+its choice. If a failure message is returned, it should indicate whether
+the failure in request processing occurred before or after the service
+invocation.
+
+=== At point (3) in the message processing model:
+
+* The message processing runtime must call
+the secureResponse method of the ServerAuthContext. The call to
+secureResponse should be made independent of the result of the
+application request processing.
+* In the call made to secureResponse, the
+runtime must pass the same MessageInfo instance that was passed to
+validateRequest (for the corresponding request message). The messageInfo
+argument must have been initialized such that its getResponseMessage
+method will return the response message being processed by the runtime.
+The type of the required return messages must be as defined by the
+profile being followed.
+* The value of the serviceSubject argument to
+the call must be the same as that passed in the call to validateRequest
+for the corresponding request.
+* If the call to secureResponse returns:
+
+AuthStatus.SEND_SUCCESS – The runtime should
+send (without calling secureResponse) the response message acquired by
+calling messageInfo.getResponseMessage at which time the processing of
+the application request and its corresponding response will be complete.
+
+AuthStatus.SEND_CONTINUE – The runtime should
+send (without calling secureResponse) the response message acquired by
+calling messageInfo.getResponseMessage. The processing of the response
+is not finished, and as such, its outcome is not yet known.
+
+AuthStatus.SEND_FAILURE – The runtime must
+perform whatever processing it requires to complete the processing of a
+request that failed after (or during) service invocation, and prior to
+communicating the invocation result to the client runtime. This may
+include sending (without calling secureResponse) the response message
+acquired by calling messageInfo.getResponseMessage.
+
+Throws an AuthException – The runtime must
+perform whatever processing it requires to complete the processing of a
+request that failed after (or during) service invocation, and prior to
+communicating the invocation result to the client runtime. The runtime
+may send (without calling secureResponse) an appropriate response
+message of its choice. If a failure message is returned, it should
+indicate that the failure in request processing occurred after the
+service invocation.
+
+
+
+image:authn-3.png[image]
+
+=== State Diagram of Server Message Processing Runtime
+
+=== What the Modules Must Do
+
+The authentication module implementations
+within the context must satisfy the requirements as defined by the
+corresponding ClientAuthModule or ServerAuthModule interface.
