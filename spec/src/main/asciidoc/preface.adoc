@@ -1,0 +1,123 @@
+:numbered!:
+["preface",sectnum="0"]
+
+[[preface]]
+
+== Preface
+
+This document is the Jakarta Authentication Specification, version 2.0.
+
+=== Notational Conventions
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119, "Key words for use in RFCs to Indicate Requirement Levels" [https://tools.ietf.org/html/rfc2119[RFC2119]].
+
+=== Audience
+
+This document is intended for developers of
+a Compatible Implementation and of the Technology Compatibility Kit and
+for those who will be delivering implementations of this technology in
+their products.
+
+=== Specification Scope
+
+Jakarta Authentication defines a general low-level SPI for authentication mechanisms, which are controllers
+that interact with a caller and a container's environment to obtain the caller's credentials, validate these,
+and pass an authenticated identity (such as name and groups) to the container. 
+        
+Jakarta Authentication consists of several profiles, with each profile telling how a specific container
+(such as Jakarta Servlet) can integrate with- and adapt to this SPI.
+
+=== Abstract
+
+This specification defines a service provider
+interface (SPI) by which authentication providers implementing message
+authentication mechanisms may be integrated in client or server message
+processing containers or runtimes. Authentication providers integrated
+through this interface operate on network messages provided to them by
+their calling container. They transform outgoing messages such that the
+source of the message may be authenticated by the receiving container,
+and the recipient of the message may be authenticated by the message
+sender. They authenticate incoming messages and return to their calling
+container the identity established as a result of the message
+authentication. The SPI is applicable to diverse messaging protocols
+(including SOAP, Jakarta Messaging, and HTTP) and message processing runtimes
+(including Jakarta EE containers).
+
+This specification extends the pluggable
+authentication concepts of the Java Authentication and Authorization
+Service (JAAS) to the authentication of network messages. This effect is
+achieved by evolving the JAAS login model to facilitate the integration
+of security functionality at differentiated points within a logical
+message processing model and by defining corresponding authentication
+interfaces that make the network messages available for processing by
+authentication modules.
+
+
+=== Acknowledgments
+
+The authors would like to thank the original JCP JSR-196 Expert Group and Contributors.
+
+
+==== Expert Group under the JCP
+
+[cols="3*", options="noheader"]
+|===
+| Steven Bazyl RSA Security, Inc.
+| Shing Wai Chan Sun Microsystems
+
+| Herb Erickson Novell, Inc.
+| Johan Gellner Tmax Soft, Inc.
+
+| Steven Kinser Novell, Inc.
+| Boris Koberle Sap AG.
+
+| Mikko Kolehmainen Nokia Networks
+| Charlie Lai Sun Microsystems
+
+| Hal Lockart BEA Systems
+| Thomas Maslen Quest Software
+
+| Cameron Morris Novell, Inc.
+| Larry McCay Individual
+
+| Ron Monzillo Sun Microsystems
+| Anthony Nadalin IBM
+
+| Nataraj Nagaratnam IBM
+| Raymond K. Ng Oracle Corporation
+
+| Arvind Prabhakar Sun Microsystems
+| Anil Saldhana JBoss, Inc.
+
+| Rajiv Shivane Pramati Technologies
+| Neil Smithline BEA Systems
+
+| Jeppe Sommer Trifork
+| Misun Yoon Tmax Soft, Inc.
+|===
+
+
+==== Contributors under the JCP
+
+[cols="3*", options="noheader"]
+|===
+| Venu Gopal Sun Microsystems
+| Will Hopkins Oracle America, Inc.
+
+| V. B. Kumar Jayanti Sun Microsystems
+| Manveen Kaur Sun Microsystems
+
+| Raja Perumal Sun Microsystems
+| Tim Quinn Oracle America, Inc.
+
+| Gursharan Singh Sun Microsystems
+| Anil Tappetla Sun Microsystems
+
+| Arjan Tijms
+| Yi Wang Oracle America, Inc.
+
+| Kai Xu Sun Microsystems
+|===
+
+
+:numbered:
