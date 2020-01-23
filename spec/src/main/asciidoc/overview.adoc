@@ -1,0 +1,691 @@
+[[concepts]]
+
+== [[a52]]Overview
+
+This chapter introduces the message processing model facilitated by this specification and the interfaces
+defined to integrate message authentication facilities within this model.
+
+=== Message Processing Model
+
+A typical message interaction between a client and server begins with a request from the client to the server.
+The server receives the request and dispatches it to a service to perform the requested processing. When the service completes, it may
+create a response that is returned back to the client.
+
+The SPI defined by the specification is
+structured such that message processing runtimes can inject security
+processing at four points in the typical message interaction scenario. A
+message processing runtime uses the SPI at these points to delegate the
+corresponding message security processing to authentication providers
+(that is, authentication modules) integrated into the runtime by way of
+the SPI.
+
+The following diagram depicts the four
+interaction points. The names of the interaction points represent the
+methods of the corresponding `ClientAuthModule` (client authentication
+module) and `ServerAuthModule` (server authentication module) interfaces
+defined by the SPI.
+
+
+[#fig:001] 
+image::authn-1.svg[caption="Figure {doc-part}-{counter:figure} ", reftext="Figure {doc-part}-{figure}", title="Message Processing Model footnote:[The dashed lines between validateRequest and validateResponse convey additional message exchanges that may occur when message validation requires a multi-message dialog, such as would occur in challenge-response protocols.]", align="center"] 
+
+
+==== Authentication Modules
+
+As described above, there are two types of authentication modules. A client authentication module 
+implements the `ClientAuthModule` interface and is invoked (indirectly) by a message processing runtime at 
+points 1 and 4 (that is, `secureRequest` and `validateResponse`) in the message processing model. A server 
+authentication module implements the ServerAuthModule interface and is invoked (indirectly) by a 
+message processing runtime at points 2 and 3 (that is, `validateRequest` and `secureResponse`) in the message 
+processing model.
+
+When an authentication module is invoked at the identified message processing points, it is provided 
+access to the request and response messages (as appropriate to the point in the interaction) and proceeds to
+secure or validate them as appropriate. For example, when `secureRequest` is invoked on a client 
+authentication module, the module may attach a user name and password to the request message. Similarly,
+when `validateRequest` is called, the server authentication module may extract a user name and password 
+from the message and validate them against a user database. Note that authentication modules are 
+responsible for securing or validating messages, while the message processing runtime remains responsible for
+transport of messages and invocation of the corresponding application level processing.
+
+A message processing runtime invokes client
+authentication modules by interacting with a client authentication
+context object, and server authentication modules by interacting with a
+server authentication context object. An authentication context object
+is an implementation of either the `ClientAuthContext` or
+`ServerAuthContext` interface as defined by this specification. A message
+processing runtime may acquire the authentication context objects that
+it uses to invoke authentication modules by interacting with an
+authentication context configuration object. An authentication context
+configuration object is an implementation of either the ClientAuthConfig
+or ServerAuthConfig interface as defined by this specification.
+
+==== Authentication Contexts
+
+An authentication context is responsible for constructing, initializing, and coordinating the invocation
+of one or more encapsulated authentication modules. If the context implementation supports the 
+configuration of multiple authentication modules within a context (for example, as sufficient alternatives), 
+the context coordinates the invocation of the authentication modules on behalf of both the message 
+processing runtime and the authentication modules.
+
+A client message processing runtime interacts with an implementation of the `ClientAuthContext` 
+interface to invoke the authentication modules of the context to perform message processing at
+points 1 and 4 (secureRequest and validateResponse) of the message processing model. 
+Similarly, a server message processing runtime interacts with an implementation of the
+ `ServerAuthContext` interface to invoke the modules of the context to perform message processing at
+points 2 and 3 (`validateRequest` and `secureResponse`) of the message processing model.
+
+==== Authentication Context Configuration
+
+An authentication context configuration object serves a message processing runtime as the source of
+authentication contexts pertaining to the messages of an application at a messaging layer. The context 
+configuration implementation is responsible for returning authentication context objects that
+encapsulate authentication module invocations sufficient to satisfy the security policy configured 
+for an application message. A message processing runtime may use a representation of the message being
+processed to obtain the corresponding authentication context from the appropriate authentication 
+context configuration object.
+
+A client authentication context configuration object implements the `ClientAuthConfig` interface and
+provides `ClientAuthContext` objects for use by a message processing runtime at points 1 and 4 
+(`secureRequest` and `validateResponse`) in the message processing model. A server authentication context
+configuration object implements the `ServerAuthConfig` interface and provides `ServerAuthContext` objects
+for use by a message processing runtime at points 2 and 3 (`validateRequest` and `secureResponse`) in the 
+message processing model.
+
+A message processing runtime may acquire authentication context configuration objects by interacting 
+with a provider of authentication context configuration objects.
+
+==== Authentication Context Configuration Providers
+
+An authentication context configuration provider is an implementation of the `AuthConfigProvider` 
+interface. An authentication context configuration provider serves as a source of authentication context 
+configuration objects, where as noted above, each configuration object serves as the source of 
+authentication contexts pertaining to the messages of an application at a messaging layer.
+
+An authentication context configuration provider embodies the implementation of a message authentication
+configuration mechanism. Each such configuration mechanism encapsulates the message authentication processing
+pertaining to applications in configuration objects that return context objects that coordinate the
+invocation of pluggable authentication modules to perform message authentication on behalf of the corresponding
+applications.
+
+The `AuthConfigFactory` class serves as the catalog or registry of authentication context providers 
+available for use by a runtime. A message processing runtime may interact with the factory to obtain or 
+establish the provider registered for an application context and messaging layer.
+
+==== Request and Response Messages
+
+Request and response messages are Java representations of the corresponding protocol messages, and are 
+passed to authentication modules through an implementation of the `MessageInfo` interface which provides 
+common methods for accessing protocol specific messages.
+
+Authentication Modules that operate on messages for a specific protocol (for example, SOAP 
+messages) are expected to be configured for and called from an appropriate message processing runtime 
+(for example, a SOAP message processing runtime).
+
+==== Message Authentication Policy
+
+When an authentication module is initialized within an authentication context, it is passed policy 
+information that specifies what authentication guarantees the module is to enforce when securing or 
+validating request and response messages within that context. Policy information is conveyed by the 
+authentication context to the authentication module in the form of MessagePolicy objects. Two separate 
+`MessagePolicy` objects are passed to the module through its `initialize method`: One defines the message
+authentication policy to be applied to the request message, and the other defines the message
+authentication policy to be applied to the response.
+
+A message authentication policy can be targeted at specific parts of the related message or to the 
+message as a whole, and conveys the high level authentication guarantees that must be enforced by the 
+modules of a context. The policy may specify, for example, that the source of a request must be 
+authenticated. The mechanisms by which a module enforces the guarantees, or, in other words, _how_ the 
+module enforces the guarantees is up to the module.
+
+==== Authentication Exchanges and State
+
+Authentication modules should be implemented such that they may be invoked concurrently and such that
+they are able to apply and establish independent security identities for concurrent invocations. To this end,
+modules should rely on their invocation parameters and the callbacks supported by the `CallbackHandler` 
+with which they were initialized to obtain any information required to establish the invocation context for
+which they were invoked.
+
+In a multi-message authentication scenario, it is the responsibility of the authentication modules
+involved in the authentication to tie together or correlate the messages that comprise
+the authentication exchange. In addition to message correlation to tie together the messages required
+to complete an authentication, message correlation may also be employed post-authentication such that a prior
+authentication result or session may be applied to a subsequent invocation. Modules are expected to perform
+their message correlation function based on the parameters of their invocation and with the benefit of any
+additional facilities provided by the invoking runtime (for example, through their `CallbackHandler`).
+
+To assist modules in performing their correlation function, calls made to `validateResponse` must be 
+made with the same `messageInfo` object used in the call to `secureRequest` (or `validateResponse`) that 
+elicited the response. Similarly, calls made to `secureResponse` must be made with the same `messagInfo`
+object that was passed to `validateRequest` (for the corresponding request message). Modules are also 
+expected to avail themselves of persisted state management facilities (for example, 
+jakarta.servlet.http.HttpSession facilities) provided by the invoking runtime. The use of such facilities
+prior to authentication may increase the system’s susceptibility to a denial-of-service attack, 
+and their use by authentication modules should be considered in that regard.
+
+For security mechanisms or protocols where message correlation is dependent on the content of 
+exchanged messages, it is the responsibility of the authentication modules to ensure that
+the required correlation information is inserted in the exchanged messages. For security mechanisms where message
+correlation is dependent on context external to the exchanged messages, such as the transport connection 
+or session on which messages are received, the authentication modules will be dependent on correlation 
+related facilities provided by the runtime.
+
+This version of this specification does not define the interfaces by which runtimes present correlation 
+facilities to authentication modules.
+
+==== Callbacks for Information From the Runtime
+
+Authentication modules may require security information from the message processing environment that 
+invoked them. For example, a `ClientAuthModule` may require access to the client's key
+pair to sign requests made on behalf of the client. The client's keys
+would typically have been configured as part of the client application
+itself. Likewise, a `ServerAuthModule` may require access to the server's
+key pair to sign responses from the server. The server's keys would
+typically be configured as part of the server.
+
+To access cryptographic keys or other external security credentials configured as part of the 
+encompassing runtime, an authentication module is provided with a `CallbackHandler` (at initialization). 
+The `CallbackHandler` is provided by the encompassing runtime and serves to provide the authentication 
+module with access to facilities of the encompassing runtime.
+
+The module can ask the `CallbackHandler` to handle requests for security information needed by the 
+module to perform its message authentication processing.
+
+==== Subjects
+
+When an authentication module is invoked to validate a message, it is passed a `Subject` object to receive the
+credentials of the source of the message and a separate `Subject` object to represent the credentials of the 
+recipient of the message (such that they are available to validate the message). When an authentication
+module is invoked to validate a message, it communicates the message source or caller authentication
+identity to its calling runtime (for example, container) through (that is, by modifying) the `Subject`
+associated with the source of the message.
+
+Authentication modules may rely on the Subjects as well as the `CallbackHandler`, described in
+<<Callbacks for Information From the Runtime>>, to obtain the security information necessary to secure or
+validate messages. When an authentication module is invoked to secure a
+message, it is passed a `Subject` object that may convey the credentials
+of the source of the message (such that they are available to secure the request).
+
+==== Status Values and Exceptions
+
+Authentication modules and authentication contexts return `AuthStatus` values to characterize the outcome 
+of their message processing. When an `AuthStatus` value is returned, its value represents the logical result of 
+the module processing and indicates that the module has established a corresponding request or response
+message within the `MessageInfo` parameter exchanged with the runtime.
+
+Authentication modules and authentication contexts throw exceptions when their processing was 
+unsuccessful and when that processing did not establish a corresponding request or
+response message to convey the error.
+
+The vocabulary of AuthStatus values and exceptions returned by authentication modules, and their 
+mapping to the message processing points at which they may be returned, is represented
+in the following table.
+
+
+[caption="Table {doc-part}-{counter:table-number} ", title="AuthStatus and AuthException to Message Processing Point Matrix"]
+[.center, width=90%]
+[%header,cols="^,^,^,^,^"] 
+|===
+a| [.small]#+++<font size=".8em">status or exception</font>+++#
+a| [.small]#+++<font size=".8em">secureRequest</font>+++#
+a| [.small]#+++<font size=".8em">validateRequest</font>+++#
+a| [.small]#+++<font size=".8em">secureResponse</font>+++#
+a| [.small]#+++<font size=".8em">validateResponse</font>+++#
+
+|SUCCESS
+|
+|Yes 
+|
+|Yes
+
+|FAILURE
+|Yes
+|
+|
+|Yes
+
+|SEND_SUCCESS
+|Yes
+|Yes
+|Yes
+|
+
+|SEND_FAILURE
+|
+|Yes
+|Yes
+|
+
+|SEND_CONTINUE
+|Yes
+|Yes
+|Yes
+|Yes
+
+|AuthException
+|Yes
+|Yes
+|Yes
+|Yes
+|===
+
+The following table describes the high level
+semantics associated with the status values and exceptions presented in
+the preceding table.
+
+
+[caption="Table {doc-part}-{counter:table-number} ", title="AuthStatus and AuthException Semantics"]
+[.center, width=90%]
+[%header,cols="^20%,80%"] 
+|===
+a| [.small]#+++<font size=".8em">status or exception</font>+++#
+^a| [.small]#+++<font size=".8em">semantic</font>+++#
+
+| SUCCESS
+| Validation of a received message was successful and produced either the request (validateRequest) message to be dispatched to the service, or the response (validateResponse) message to be returned to the client application.
+
+|FAILURE
+|A failure occurred on the client-side (secureRequest or validateResponse) and produced a failure response message to be returned to the client application.
+
+|SEND_SUCCESS
+|Processing of a request (secureRequest or validateRequest) or response (secureResponse) message was successful and produced the request (secureRequest) or response (validateRequest, secureResponse) message to be sent to the peer.
+
+|SEND_FAILURE
+|A failure occurred on the service-side (validateRequest or secureResponse) and produced a failure response message to be sent to the client.
+
+|SEND_CONTINUE
+|Processing was incomplete. Additional message exchanges will be required to achieve successful completion. The processing produced the next request (secureRequest or validateResponse) or response (validateRequest or secureResponse) message to be sent to the peer.
+
+|AuthException
+|A failure occurred on the client-side (secureRequest or validateResponse) or service-side (validateRequest or secureResponse) without producing a failure response message.
+|===
+
+The expected behavior of runtimes in response
+to AuthStatus return values and AuthException exceptions is described in
+link:jaspic.html#a317[See What the Runtime Must Do]. These
+behaviors may be specialized in profiles of this specification.
+
+=== Typical Runtime Use Model
+
+In the typical use model, a runtime would perform the five steps defined in the following subsections to secure or
+validate a message. In many cases, some or all of steps 1-4 will be performed once, while step 5 would be repeated
+for each message to be processed.
+
+==== Acquire AuthConfigProvider
+
+The message processing runtime acquires a provider of authentication context configuration objects for the
+relevant messaging layer and application identifier. This step is typically done once for each application, 
+and may be accomplished as follows:
+
+[source,java]
+----
+AuthConfigFactory factory = AuthConfigFactory.getFactory();
+AuthConfigProvider provider = factory.getConfigProvider(layer, appID, listener);
+----
+
+==== Acquire AuthConfig
+
+The message processing runtime acquires the
+authentication context configuration object for the application from the
+provider. This step is typically done at application deployment, and may
+be accomplished as follows:
+
+[source,java]
+----
+ClientAuthConfig clientConfig =
+    provider.getClientAuthConfig(layer, appID, callbackHandler);
+----
+
+or:
+
+[source,java]
+----
+ServerAuthConfig serverConfig =
+    provider.getServerAuthConfig(layer, appID, callbackHandler);
+----  
+
+The resulting authentication context configuration object encapsulates all authentication contexts for 
+the application at the layer. Its internal state will be kept up to date by the configuration system, and from
+this point until the application is undeployed, the configuration object represents a stable point of
+interaction between the runtime and the integrated authentication mechanisms for the purpose of securing 
+the messages of the application at the layer.
+
+A callback handler is associated with the configuration object when it is obtained from the provider. This
+callback handler will be passed to the authentication modules within the authentication contexts acquired from
+the configuration object. The runtime provides the callback handler so that the authentication modules
+may employ facilities of the messaging runtime (such as keying infrastructure) in their processing of application messages.
+
+[[a166]]
+==== Acquire AuthContext Identifier
+
+At points (1) and (2) in the message processing model, a message processing runtime creates a MessageInfo
+object and sets within it the message or messages being processed. The runtime uses the MessageInfo to acquire
+the authentication context identifier corresponding to the message from the authentication
+configuration object. This step is typically performed for every 
+different footnote:[A client runtime may be able to tell when a request is the same, based on the context 
+(for example, stub) from which the request is made.] request and may be accomplished by a runtime as follows:
+
+[source,java]
+----
+String authContextID = clientConfig.getAuthContextID(messageInfo);
+----
+
+or:
+
+[source,java]
+----
+String authContextID = serverConfig.getAuthContextID(messageInfo);
+----
+
+The authentication context identifier will be used to select the authentication context with which to 
+perform the message processing. In cases where the configuration system cannot determine the context 
+identifier footnote:[For example, where the message content that defines the identifier is encrypted.], 
+the value null will be returned.
+
+[[a172]]
+==== Acquire Authentication Context
+
+The authentication identifier is used to acquire an authentication context from the authentication context
+configuration object. The acquired authentication context encapsulates the one or more authentication modules 
+that are to be invoked to process the identified messages. The authentication context is acquired from the
+authentication context configuration object as follows:
+
+[source,java]
+----
+ClientAuthContext clientContext =
+    clientConfig.getAuthContext(authContextID, clientSubject, properties);
+----
+or:
+
+[source,java]
+----
+ServerAuthContext serverContext =
+    serverConfig.getAuthContext(authContextID, serviceSubject, properties);
+----
+
+The properties argument is used to pass additional initialization time properties to the authentication 
+modules encapsulated in the authentication context. Such properties might be used to convey values specific
+to this use of the context by a user or with a specific service.
+
+The Subject argument is used to make the principals and credentials of the sending entity available during the
+acquisition of the authentication context. If the Subject is not null, additional principals or credentials 
+(pertaining to the sending entity) may be added (to the Subject) during the context acquisition.
+
+==== Process Messages
+
+Appropriate to its point of processing in the messaging model, the messaging runtime uses the 
+`MessageInfo` described in Step 3 to invoke a method of the authentication context obtained in Step 4.
+
+At point (1) in the messaging model, the`clientSubject` may contain the credentials used to secure the 
+request, or the modules of the context may collect the client credentials including by using the callback
+handler passed through to them by the context. `MessageInfo` would contain a request message about to be sent. 
+On successful return from the context, the runtime would extract the secured request message from 
+`messageInfo` and send it.
+
+[source,java]
+----
+(1) AuthStatus status = clientContext.secureRequest(messageInfo, clientSubject);
+----
+
+At point (2), the `clientSubject` receives any principals or credentials established as a result of message 
+validation by the authentication modules of the context. The `serviceSubject` may contain the credentials of 
+the service or the modules of the context may collect the service credentials, as necessary, by using the 
+callback handler passed to them by the context. `MessageInfo` would contain a received request message. 
+On successful return from the context, the runtime may use the `clientSubject` to authorize and dispatch the
+validated request message, as appropriate.
+
+[source,java]
+----
+(2) AuthStatus status = serverContext.validateRequest(messageInfo, clientSubject, serviceSubject);
+----
+
+At point (3), the `serviceSubject` may contain the credentials used to secure the response, or the modules of
+the context may collect the service credentials including by using the callback handler passed through to them
+by the context. The `MessageInfo` would contain a response message about to be sent and may also contain
+the corresponding request message received at point (2). On return from the context, the runtime would send 
+the secured response message.
+
+[source,java]
+----
+(3) AuthStatus status = serverContext.secureResponse(messageInfo, serviceSubject);
+----
+
+At point (4), the `serviceSubject` receives any principals or credentials established as a result of message 
+validation by the authentication modules of the context. The `clientSubject` may contain the credentials of 
+the receiving client or the modules of the context may collect the client credentials, as necessary, by using 
+the callback handler passed to them by the context. `MessageInfo` would contain a received response 
+message and may also contain the associated request message sent at point (1). On successful return from 
+the context, the runtime may use the `serviceSubject` to authorize the response and would return the received 
+message to the client, as appropriate.
+
+[source,java]
+----
+(4) AuthStatus status =
+        clientContext.validateResponse(messageInfo, clientSubject, serviceSubject);
+----
+
+[[a194]]
+=== Terminology
+
+[frame=none]
+[grid=none]
+[cols="20%,80%",options="noheader"] 
+|===
+2+| *authentication context* 
+
+| | A Java Object that implements the `ClientAuthContext` and/or `ServerAuthContext` interfaces and that is responsible for constructing, initializing, and coordinating the invocation of one or more encapsulated authentication modules. Authentication context objects are classified as client or server authentication contexts.
+
+2+| *authentication context configuration* 
+
+| |  A Java Object that implements the `AuthConfig` Interface and that serves as the source of client or server authentication context objects pertaining to the processing of messages for an application at a messaging layer.
+
+2+| *authentication context configuration provider* 
+
+| | A Java Object that implements the `AuthConfigProvider` Interface and that serves as the source of authentication context configuration objects.
+
+
+2+| *authentication module* 
+
+| | A Java Object that implements the `ClientAuthModule` and/or `ServerAuthModule` message authentication interfaces defined by this specification.
+
+2+| *authentication provider* 
+
+| | A synonym for an authentication module.
+
+2+| *client authentication context* 
+
+| | An authentication context that implements the `ClientAuthContext` interface and that encapsulates client authentication modules.
+
+2+| *client authentication context configuration* 
+
+| | An authentication context configuration that implements the `ClientAuthConfig` interface and that returns client authentication contexts.
+
+2+| *client authentication module* 
+
+| |  A Java Object that implements the `ClientAuthModule` interface defined by this specification.
+
+2+| *message layer* 
+
+| | The name associated within a message processing runtime with a messaging protocol or abstraction, and which may be used in the interfaces defined by this specification to cause the integration of security mechanisms at the corresponding points within the messaging runtime.
+
+2+| *message processing runtime* 
+
+| | The process or component (for example, container) responsible for sending and receiving, including establishing the transports used for such purposes, the application messages to be secured using the interfaces defined by this specification. Message processing runtimes are characterized as client, server, or as both client and server message processing runtimes. A client message processing runtime sends service requests and receives service responses. A server message processing runtime receives service requests and sends service responses.
+
+2+| *message (layer) security* 
+
+| | A network security mechanism that operates above the transport and below the application messaging layers, and that typically operates by encapsulating or associating application layer messages within a securing context that may be independent of the transport or connection over which the messages are communicated.
+
+2+| *meta message* 
+
+| | A mechanism specific message sent in addition to (for example, in an advance of) the application messages, typically for the purpose of establishing or modifying the context (such as security) in which application messages will be exchanged.
+
+2+| *server authentication context* 
+
+| | An authentication context that implements the `ServerAuthContext` interface and that encapsulates server authentication modules.
+
+2+| *server authentication context configuration* 
+
+| | An authentication context configuration that implements the `ServerAuthConfig` interface and that encapsulates client authentication context.
+
+2+| *server authentication module* 
+
+| | A Java Object that implements the `ServerAuthModule` interface defined by this specification.
+
+|===
+
+
+=== Assumptions
+
+The following assumptions apply to the interfaces defined by this specification:
+
+. This specification defines interfaces for
+integrating message layer security functionality in Java messaging
+runtimes. These interfaces are intended to be employed by Jakarta
+Enterprise Edition (Jakarta EE version 9 and beyond) messaging runtimes,
+and by any Java messaging runtime that chooses to use them to support
+integration of message layer security functionality.
+
+. The interfaces defined by this specification
+have been developed for use within the message processing runtimes of
+service consumers (for example, clients) and service providers (for
+example, servers).
+
+. Interoperability between a message processing
+runtime that employs the interfaces defined by this specification and
+any other system will depend on the formats of the exchanged messages,
+not on the interfaces used to process them.
+
+. This specification will define profiles to
+establish the requirements governing the use of its interfaces within
+specific messaging contexts or runtimes. Additional profiles may be
+defined in futures releases of this specification, or external to it.
+
+. This specification promotes authentication
+modules as the pluggable unit of message layer security functionality.
+In the typical integration scenario, a new message layer security
+mechanism is integrated in a message processing runtime as the result of
+the configuration of a new authentication module.
+
+. Mechanisms that feature or require more
+complex or specialized configuration functionality may depend on
+integration of a corresponding configuration provider which may
+encapsulate authentication module pluggability, including such that it
+occurs as the result of provider configuration.
+
+. A message processing runtime that uses the
+interfaces defined by this specification will remain responsible for
+sending and receiving, including establishing the transports used for
+such purposes, the application messages secured through these
+interfaces. The integrated security mechanism code is responsible for
+adding security constructs to messages to be sent, and for interpreting
+security constructs contained in received messages.
+
+. As needed to perform its primary function
+(that is, to add to and validate security constructs in messages
+provided to it by its messaging runtime), an authentication mechanism
+integrated through the interfaces defined in this specification may use
+its own facilities or those of its calling runtime to exchange
+additional messages with the same or with other parties.
+
+. Some multi-message authentication dialogs
+require that the sending runtime be able to delay or retry application
+message transmission until after a preliminary authentication dialog has
+completed. Where a sending runtime is unable to perform such
+functionality, effective integration of a dependent security mechanism
+may require that the integrated security facilities perform the required
+delay and retry functionality.
+
+. Authentication mechanisms integrated in a
+messaging runtime through the interfaces defined by this specification
+may require access to sensitive security information (for example,
+cryptographic keys) for which access may have otherwise been limited to
+the messaging runtime.
+
+. Independent of message transformations
+performed by one or more integrated security mechanisms, the client
+messaging runtime must remain capable of associating received responses
+with sent requests.
+
+=== Requirements
+
+The interfaces defined by this specification must comply with the following:
+
+. Be compatible with versions of Java beginning
+with 1.4.
+
+. Be compatible with a wide range of messaging
+protocols and runtimes.
+
+. Support the integration and configuration of
+message security mechanisms in Java message processing runtimes that
+retain responsibility for the transport of application layer messages.
+
+. Provide integrated authentication mechanisms
+with access to the application messages transported by the messaging
+runtime, especially for the purpose of adding or validating contained
+security credentials.
+
+. Define a means for an integrated security
+mechanism to establish (for example, application layer) response
+messages as necessary to implement security mechanisms.
+
+. Define a means for an integrated security
+mechanism to effect the destination address of outgoing messages.
+
+. Support the binding of received messages to
+configured security mechanisms at various levels of granularity such as
+per messaging runtime, per messaging layer, per application, and per
+message.
+
+. Support the integration of alternative
+security mechanism configuration facilities as required to support
+specific security mechanisms or to integrate into standard or existing
+configuration infrastructures.
+
+. Support the runtime binding of user or
+application client credentials to invocations of authentication modules.
+
+. Support the establishment of Subject based
+authorization identities by integrated authentication mechanisms.
+
+. Define a means for integrated security
+mechanisms to gain access to facilities (for example, key repositories,
+password databases, and subject or principal interpretation interfaces)
+of their calling messaging runtime.
+
+. Facilitate the correlation of the associated
+request and response processing performed by an authentication module.
+
+. Support runtime parameterization of security
+mechanism invocation such that a single mechanism configuration can be
+employed to secure commonly protected exchanges with different service
+entities.
+
+. Support the apportionment of responsibility
+for creation and maintenance of stateful security contexts among a
+messaging runtime and its integrated security mechanisms, especially
+such that context invalidation (including as a result of policy
+modification) by either party is appropriately detected by the other.
+
+. Support the portable implementation
+(including by third parties) of security mechanisms such that they may
+be integrated in any messaging runtime which is compatible with the
+corresponding interfaces of this specification.
+
+==== Non Requirements
+
+. The standardization of specific principals or
+credentials to be added by authentication modules to subjects.
+
+. The standardization of additional interfaces
+or callbacks to allow JAAS login modules to secure the request and
+response messages exchanged by Jakarta EE containers.
+
+. The standardization of interfaces to interact
+with network authentication services, or to represent the security
+credentials acquired from such services.
+
+. The standardization of application
+programming interfaces for use in establishing or manipulating security
+contexts in Subjects.

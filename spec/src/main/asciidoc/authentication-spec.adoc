@@ -13,6 +13,8 @@
 :toclevels: 4
 :sectnumlevels: 4
 :sectanchors:
+:figure-caption: Figure {doc-part}- 
+:xrefstyle: short
 ifdef::backend-pdf[]
 :pagenums:
 :numbered:
@@ -23,6 +25,12 @@ endif::[]
 :sectnums!:
 include::license-efsl.adoc[]
 
-// == Scope
+// == Toc
 :sectnums:
-include::scope.adoc[]
+
+include::preface.adoc[]
+
+:doc-part: 1
+include::overview.adoc[]
+
+include::Authentication.adoc[]
