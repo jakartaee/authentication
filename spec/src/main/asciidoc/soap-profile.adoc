@@ -1,5 +1,5 @@
 [[a502]]
-== CHAPTER SOAP Profile 
+== SOAP Profile 
 
 This chapter defines a profile of the use of
 the interfaces defined in this specification to secure SOAP message
@@ -16,35 +16,37 @@ defined in Chapter 2. A compatible implementation of an internal profile
 of this specification is an implementation that satisfies all of the
 requirements that apply to that profile.
 
-=== [[a505]]Message Layer Identifier
+[[a505]]
+=== Message Layer Identifier
 
 The message layer value used to select the
-AuthConfigProvider and ServerAuthConfig objects for this profile must be
+`AuthConfigProvider` and ServerAuthConfig objects for this profile must be
 “SOAP”.
 
-=== [[a507]]Application Context Identifier
+[[a507]]
+=== Application Context Identifier
 
 The application context identifier (that is,
-the appContext parameter value) used by a client runtime to select the
-AuthConfigProvider and ClientAuthConfig objects pertaining to a
+the `appContext` parameter value) used by a client runtime to select the
+`AuthConfigProvider` and `ClientAuthConfig` objects pertaining to a
 client-side application context configuration scope must be as defined
 in link:jaspic.html#a537[See Client-Side Application Context
 Identifier].
 
 Similarly, the application context identifier
-used by a server runtime to select the AuthConfigProvider and
-ClientAuthConfig objects pertaining to an server-side application
+used by a server runtime to select the `AuthConfigProvider` and
+`ClientAuthConfig` objects pertaining to an server-side application
 context configuration scope must be as defined in
-link:jaspic.html#a603[See Server-Side Application Context
-Identifier].
+<<a603>>.
 
-=== [[a510]]Message Requirements
+[[a510]]
+=== Message Requirements
 
-The MessageInfo argument used in any call
+The `messageInfo` argument used in any call
 made by the message processing runtime to secureRequest,
-validateResponse, validateRequest, or secureResponse must have been
+validateResponse, validateRequest, or `secureResponse` must have been
 initialized such that any non-null objects returned by the
-getRequestMessage and getResponseMessage methods of the MessageInfo are
+getRequestMessage and getResponseMessage methods of the `MessageInfo` are
 an instanceof jakarta.xml.soap.SOAPMessage.
 
 === Module Requirements
@@ -53,11 +55,12 @@ The getSupportedMessageTypes method of all
 authentication modules integrated for use with this profile must include
 jakarta.xml.soap.SOAPMessage.class in its return value.
 
-=== [[a514]]CallbackHandler Requirements
+[[a514]]
+=== CallbackHandler Requirements
 
 The CallbackHandler passed to an
 authentication module’s initialize method is determined by the handler
-argument passed in the call to AuthConfigProvider.getClientAuthConfig or
+argument passed in the call to `AuthConfigProvider.getClientAuthConfig` or
 getServerAuthConfig that acquired the corresponding authentication
 context configuration object.
 
@@ -91,36 +94,32 @@ For each application context for which it is
 servicing requests, the runtime must call getConfigProvider to acquire
 the provider object corresponding to the layer and application context.
 The layer and appContext arguments to getConfigProvider must be as
-defined in link:jaspic.html#a505[See Message Layer Identifier]”
-and link:jaspic.html#a507[See Application Context Identifier]”
-respectively.
+defined in <<a505>> and <<a507>> respectively.
 
-A null return value from getConfigProvider
+A null return value from `getConfigProvider`
 indicates that pluggable authentication modules have not been configured
 at the layer for the application context, and that the messaging runtime
 must proceed to perform its SOAP message processing (for the application
 context) without further reliance on this profile.
 
-=== [[a526]]Authentication Context Requirements
+[[a526]]
+=== Authentication Context Requirements
 
-When a non-null AuthConfigProvider is
+When a non-null `AuthConfigProvider` is
 returned by the factory, the provider must have been configured with the
 information required to initialize the authentication contexts for the
 one or more authentication context configuration scopes, defined by
 layer and application context, for which the provider is registered (at
 the factory). The information typically required to initialize
-authentication contexts is described by example in
-Sectionlink:jaspic.html#a302[See What the Configuration Must
-Do].
+authentication contexts is described by example in <<a302>>.
 
-When a non-null AuthConfigProvider is
-returned by the factory, the messaging runtime must call getAuthContext
+When a non-null `AuthConfigProvider` is
+returned by the factory, the messaging runtime must call `getAuthContext` 
 on the authentication context configuration object (obtained from the
-provider). The authContextID argument used in the call to getAuthContext
-must be the value as described in link:jaspic.html#a531[See
-Authentication Context Identifiers].”
+provider). The authContextID argument used in the call to `getAuthContext` 
+must be the value as described in <<a531>>.
 
-A null return value from getAuthContext
+A null return value from `getAuthContext` 
 indicates that pluggable authentication modules have not been configured
 for the web service invocation within the authentication context
 configuration scope, and that the runtime must proceed to perform its
@@ -130,25 +129,26 @@ reliance on this profile.
 Effective integration of a session-oriented
 authentication mechanism for use in an authentication context
 configuration scope should be expected to require configuration of the
-corresponding AuthConfigProvider such that getAuthContext will return
+corresponding `AuthConfigProvider` such that `getAuthContext` will return
 non-null authentication context objects for all legitimate authContextID
 values acquired for the corresponding scope.
 
-=== [[a531]]Authentication Context Identifiers
+[[a531]]
+==== Authentication Context Identifiers
 
 This profile does NOT impose any profile
 specific requirements on authentication context identifiers. As defined
-in link:jaspic.html#a290[See Acquire AuthContext Identifier],
+in <<a290>>,
 the authentication context identifier used in the call to getAuthContext
 must be equivalent to the value that would be acquired by calling
 getAuthContextID with the MessageInfo that will be used in the
 corresponding call to secureRequest (by a client runtime) or
 validateRequest (by a server runtime).
 
-=== MessagePolicy Requirements
+==== MessagePolicy Requirements
 
 Each authentication context object obtained
-through getAuthContext must initialize its encapsulated authentication
+through `getAuthContext`  must initialize its encapsulated authentication
 modules with a non-null requestPolicy and/or a non-null responsePolicy,
 such that at least one of requestPolicy or responsePolicy is not null.
 
@@ -158,10 +158,11 @@ This section defines the requirements of this
 profile that must be satisfied by a runtime operating in the client
 role. A runtime may operate in both the client and server roles.
 
-=== Client-Side [[a537]]Application Context Identifier
+[[a537]]
+==== Client-Side Application Context Identifier
 
 The application context identifier used by a
-client-runtime to acquire the AuthConfigProvider and ClientAuthConfig
+client-runtime to acquire the `AuthConfigProvider`and ClientAuthConfig
 objects pertaining to the client side processing of a web service
 invocation shall begin with a client scope identifier that identifies
 the client. If the client-runtime may host multiple client applications,
@@ -176,8 +177,8 @@ will originate may be used as the client scope identifier.
 In addition to its client scope identifier,
 the application context identifier must include a client reference to
 the service. If a service reference is defined for the invocation (for
-example, by using a WebServiceRef annotation as defined in the JAXWS 2.0
-or JAXWS 2.1 Specifications), the client reference to the service must
+example, by using a WebServiceRef annotation as defined in the Jakarta XML Web Services specifications), 
+the client reference to the service must
 be the name value of the service reference. If a service reference was
 not defined for the invocation, the client reference to the service must
 be the web service URL.
@@ -187,32 +188,31 @@ be the String value composed by concatenating the client scope
 identifier, a blank separator character, and the client reference to the
 service.
 
-AppContextID ::= client-scope-identfier blank
-client-reference
+```
+AppContextID ::= client-scope-identfier blank client-reference
+```
 
-The following are examples of client
-application context identifiers.
+The following are examples of client application context identifiers.
 
-=== "petstoreAppID service/petstore/delivery-service"
+```
+"petstoreAppID service/petstore/delivery-service"
 
-"petstoreAppID
-http://localhost:8080/petstore/delivery-service/fish"
+"petstoreAppID http://localhost:8080/petstore/delivery-service/fish"
 
-"/home/fishkeeper/petstore-client.jar
-service/petstore/delivery-service"
+"/home/fishkeeper/petstore-client.jar service/petstore/delivery-service"
 
-"/home/fishkeeper/petstore-client.jar
-http://localhost:8080/petstore/delivery-service/fish"
-
+"/home/fishkeeper/petstore-client.jar http://localhost:8080/petstore/delivery-service/fish"
+```
 
 
 Systems or administrators that register
-AuthConfigProvider objects with specific client-side application context
+`AuthConfigProvider` objects with specific client-side application context
 identifiers must have an ability to determine the client scope
 identifier and the client reference for which they wish to perform the
 registration.
 
-=== [[a549]]CallbackHandler Requirements
+[[a549]]
+==== CallbackHandler Requirements
 
 Unless the client runtime is embedded in a
 server runtime (for example, an invocation of a web service by a servlet
@@ -222,38 +222,36 @@ ClientAuthModule.initialize must support the following callbacks:
 * NameCallback
 * PasswordCallback
 
-In either event, the CallbackHandler must
-also support the requirements in link:jaspic.html#a514[See
-CallbackHandler Requirements].”
+In either event, the CallbackHandler must also support the requirements in <<a514>>
 
-=== AuthConfigProvider Requirements
+==== AuthConfigProvider Requirements
 
-If a non-null AuthConfigProvider is returned
+If a non-null `AuthConfigProvider`is returned
 (by the call to getConfigProvider), the messaging runtime must call
-getClientAuthConfig on the provider to obtain the authentication context
+`getClientAuthConfig` on the provider to obtain the authentication context
 configuration object pertaining to the application context at the layer.
 The layer and appContext arguments of the call to getClientAuthConfig
 must be the same as those used to acquire the provider, and the handler
-argument must be as defined in link:jaspic.html#a549[See
-CallbackHandler Requirements],” for a client runtime.
+argument must be as defined in <<a549>> for a client runtime.
 
-=== [[a556]]Authentication Context Requirements
+[[a556]]
+==== Authentication Context Requirements
 
-The getAuthContext calls made on the
-ClientAuthConfig (obtained by calling getClientAuthConfig) must satisfy
+The `getAuthContext`  calls made on the
+`ClientAuthConfig` (obtained by calling `getClientAuthConfig`) must satisfy
 the requirements defined in the following subsections.
 
-=== getAuthContext Subject
+===== getAuthContext Subject
 
 A non-null Subject corresponding to the
-client must be passed as the clientSubject in the getAuthContext call.
+client must be passed as the clientSubject in the `getAuthContext`  call.
 
-=== Module Initialization Properties
+===== Module Initialization Properties
 
 A null value may be passed for the properties
-argument in all calls made to getAuthContext.
+argument in all calls made to `getAuthContext`.
 
-=== MessagePolicy Requirements
+===== MessagePolicy Requirements
 
 Each ClientAuthContext obtained through
 getAuthContext must initialize its encapsulated ClientAuthModule objects
@@ -264,7 +262,8 @@ capabilities of the client may be factored in the context acquisition
 and may effect the requestPolicy and responsePolicy objects passed to
 the authentication modules of the context.
 
-=== [[a564]]Message Processing Requirements
+[[a564]]
+==== Message Processing Requirements
 
 A client runtime, after having prepared
 (except for security) the SOAP request message to be sent to the
@@ -275,56 +274,62 @@ the response message, is operating at point (4) in the message
 processing model defined by this specification.
 
 If the client runtime obtained a non-null
-ClientAuthContext by using the authentication context identifier
+`ClientAuthContext` by using the authentication context identifier
 corresponding to the request message, then at point (1) in the message
 processing model, the runtime must call secureRequest on the
-ClientAuthContext, and at point (4) the runtime must call
-validateResponse on the ClientAuthContext.
+`ClientAuthContext`, and at point (4) the runtime must call
+validateResponse on the `ClientAuthContext`.
 
 When processing a one-way application message
 exchange pattern, the runtime must not proceed to point (4) unless the
 return value from secureRequest (or a from validateResponse) is
-AuthStatus.SEND_CONTINUE.
+`AuthStatus.SEND_CONTINUE`.
 
-=== [[a568]]MessageInfo Requirements
+[[a568]]
+===== MessageInfo Requirements
 
-The messageInfo argument used in a call to
+The  `messageInfo` argument used in a call to
 secureRequest must have been initialized by the runtime such that its
 getRequestMessage will return the SOAP request message being processed
 by the runtime.
 
 When a corresponding call is made to
-validateResponse, it must be made with the same messageInfo and
+validateResponse, it must be made with the same  `messageInfo` and
 clientSubject arguments used in the corresponding call to secureRequest,
 and it must have been initialized by the runtime such that its
-getResponseMessage method will return the SOAP response message being
+`getResponseMessage` method will return the SOAP response message being
 processed by the runtime.
 
-=== MessageInfo Properties
+*_MessageInfo Properties_*
 
 This profile requires that the message
 processing runtime establish the following key-value pairs within the
 Map of the MessageInfo passed in the calls to secureRequest and
 validateResponse.
 
-=== Client MessageInfo Map Properties
 
-key
+[caption="Table {doc-part}-{counter:table-number} ", title="Client MessageInfo Map Properties"]
+[.center, width=95%]
+[%header,cols="30%,70%"] 
+|===
+a| [.small]#+++<font size=".8em">key</font>+++#
+a| [.small]#+++<font size=".8em">value</font>+++#
 
-value
+a| [.small]#+++<font size=".8em">jakarta.xml.ws.wsdl.service</font>+++#
+| The value of the qualified service name,
+represented as a javax.xml.namespace.QName. 
+specification
+|===
 
-jakarta.xml.ws.wsdl.service
 
-The value of the qualified service name,
-represented as a javax.xml.namespace.QName.
+===== Subject Requirements
 
-=== Subject Requirements
+The `clientSubject` used in the call to
+`getAuthContext` must be used in the call to `secureRequest` and for any
+corresponding calls to `validateResponse`.
 
-The clientSubject used in the call to
-getAuthContext must be used in the call to secureRequest and for any
-corresponding calls to validateResponse.
-
-=== [[a580]]secureRequest Processing
+[[a580]]
+===== secureRequest Processing
 
 When secureRequest is called on a module that
 was initialized with a mandatory request policy (as defined by the
@@ -333,18 +338,18 @@ return AuthStatus.SEND_SUCCESS if it was able to completely satisfy the
 request policy. If the module was not able to completely satisfy the
 request policy, it must:
 
-* Return AuthStatus.SEND_CONTINUE – If it has
+* Return `AuthStatus.SEND_CONTINUE` – If it has
 established an initial request (available to the runtime by calling
 messageInfo.getRequestMessage) that must be sent by the runtime for the
 request to be effectively continued and when additional message
 exchanges will be required to achieve successful completion of the
 secureRequest processing.
-* Return AuthStatus.FAILURE – If it failed
+* `Return AuthStatus.FAILURE` – If it failed
 securing the request and only if it established a response message
 containing a SOAP fault element (available to the runtime by calling
-messageInfo.getResponseMessage) that may be returned to the application
+`messageInfo.getResponseMessage`) that may be returned to the application
 to indicate that the request failed.
-* Throw an AuthException – If it failed
+* Throw an `AuthException` – If it failed
 securing the request and did not establishing a failure response
 message. The runtime may choose to return a response message containing
 a SOAP fault element, in which case, the runtime must define the content
@@ -353,7 +358,7 @@ the AuthException.
 
 When secureRequest is called on a module that
 was initialized with an optional requestPolicy (that is,
-requestPolicy.isMandatory() returns false), the module may attempt to
+`requestPolicy.isMandatory()` returns false), the module may attempt to
 satisfy the request policy and may return AuthStatus.SEND_SUCCESS
 independent of whether the policy was satisfied.
 
@@ -367,9 +372,9 @@ When secureRequest is called on a module that
 was initialized with an undefined request policy (that is, requestPolicy
 === null), the module must return AuthStatus.SEND_SUCCESS.
 
-=== validateResponse Processing
+===== validateResponse Processing
 
-validateResponse may be called either prior
+`validateResponse` may be called either prior
 to the service invocation to process a response received during the
 secureRequest processing (when a multi-message dialog is required to
 secure the request), or after the service invocation and during the
@@ -377,7 +382,8 @@ process of securing the response generated by the service invocation.
 The module implementation is responsible for recording any state and
 performing any processing required to differentiate these contexts.
 
-=== [[a590]]validateResponse After Service Invocation
+[[a590]]
+*_validateResponse After Service Invocation_*
 
 When validateResponse is called after the
 service invocation on a module that was initialized with a mandatory
@@ -387,16 +393,16 @@ AuthStatus.SUCCESS if it was able to completely satisfy the response
 policy. If the module was not able to completely satisfy the response
 policy, it must:
 
-* Return AuthStatus.SEND_CONTINUE – If it has
+* Return `AuthStatus.SEND_CONTINUE` – If it has
 established a request (available to the runtime by calling
 messageInfo.getRequestMessage) that must be sent by the runtime for the
 response validation to be effectively continued by the client.
-* Return AuthStatus.FAILURE – If response
+* Return `AuthStatus.FAILURE` – If response
 validation failed and only if the module has established a response
 message containing a SOAP fault element (available to the runtime by
-calling messageInfo.getResponseMessage) that may be returned to the
+calling `messageInfo.getResponseMessage`) that may be returned to the
 application to indicate that the response validation failed.
-* Throw an AuthException – If response
+* Throw an `AuthException` – If response
 validation failed without establishing a failure response message. The
 runtime may choose to return a response message containing a SOAP fault
 element, in which case, the runtime must define the content of the
@@ -407,7 +413,7 @@ When validateResponse is called after the
 service invocation on a module that was initialized with an optional
 responsePolicy (that is, responsePolicy.isMandatory() returns false),
 the module should attempt to satisfy the response policy, but it must do
-so without initiatinglink:#a914[17] additional message
+so without initiatingfootnote:[The module may continue, or refresh an authentication dialog that has already been initiated (perhaps by the client) in the request, but it must not start an authentication dialog for a request which has not yet been associated with authentication information (as understood by the module).] additional message
 exchanges or interactions involving the service. Independent of whether
 the response policy is satisfied, the module may return
 AuthStatus.SUCCESS. If the module determines that an invalid or
@@ -419,27 +425,27 @@ process any return value other than AuthStatus.SUCCESS as it would be
 processed if it were returned for a response with a mandatory
 responsePolicy.
 
-When validateResponse is called after the
+When `validateResponse` is called after the
 service invocation on a module that was initialized with an undefined
-response policy (that is, responsePolicy == null), the module must
+response policy (that is, `responsePolicy == null`), the module must
 return AuthStatus.SUCCESS.
 
-=== validateResponse Before Service Invocationlink:#a915[18]
+*_validateResponse Before Service Invocation_*
 
 When validateResponse is called before the
-service invocation, the module must return AuthStatus.SEND_CONTINUE if
+service invocationfootnote:[Occurs when the module is challenged by the server during secureRequest processing.], the module must return AuthStatus.SEND_CONTINUE if
 the request dialog is to continue. This status value is used to inform
 the client runtime that, to successfully complete the request
 processing, it must be capable of continuing the message dialog by
 processing at least one additional request/response exchange. The module
-must have established (in messageInfo) a request message that will cause
+must have established (in `messageInfo`) a request message that will cause
 the service to continue the request processing. For the request
 processing to be successfully completed, the runtime must send the
 request message returned by the module.
 
 If the module returns AuthStatus.FAILURE, it
 must have established a SOAP message containing a SOAP fault element as
-the response in messageInfo and that may be returned to the application
+the response in `messageInfo` and that may be returned to the application
 to indicate that the request failed.
 
 If the module throws an AuthException, the
@@ -454,93 +460,95 @@ This section defines the requirements of this
 profile that must be satisfied by a runtime operating in the server
 role. A runtime may operate in both the client and server roles.
 
-=== [[a603]]Server-Side Application Context Identifier
+[[a603]]
+==== Server-Side Application Context Identifier
 
 The application context identifier used by a
-server-runtime to acquire the AuthConfigProvider and ServerAuthConfig
+server-runtime to acquire the `AuthConfigProvider` and `ServerAuthConfig`
 objects pertaining to the endpoint side processing of an invocation
 shall be the String value constructed by concatenating a host name, a
-blank separator character, and the pathlink:#a916[19] component
+blank separator character, and the pathfootnote:[For an http or https schema, the path must be the corresponding component of the "generic URI" syntax (that is, <scheme>://<authority><path>?<query>) described in section 3. of RFC 2396 "Uniform Resource Identifiers (URI): Generic Syntax". If the service is implemented as a Servlet, the path must begin with the context-path.] component
 of the service endpoint URI corresponding to the webservice.
 
-AppContextID ::= hostname blank
-service-endpoint-uri
+```
+AppContextID ::= hostname blank service-endpoint-uri
 
-For example: “aquarium
-/petstore/delivery-service/fish"
+For example: "aquarium /petstore/delivery-service/fish"
+```
 
 In the definition of server-side application
-context identifiers, this profile uses the term host name to refer to
+context identifiers, this profile uses the term `host name` to refer to
 the logical host that performs the service corresponding to a service
 invocation. Web service invocations may be directed to a logical host
-using various physical or virtual host names or addresses, and a message
+using various physical or `virtual host` names or addresses, and a message
 processing runtime may be composed of multiple logical hosts. Systems or
-administrators that register AuthConfigProvider objects with specific
+administrators that register `AuthConfigProvider`objects with specific
 server-side application context identifiers must have an ability to
 determine the hostname for which they wish to perform the registration.
 
-=== [[a608]]CallbackHandler Requirements
+[[a608]]
+==== CallbackHandler Requirements
 
-The CallbackHandler passed to
-ServerAuthModule.initialize must support the following callbacks:
+The `CallbackHandler` passed to
+`ServerAuthModule.initialize` must support the following callbacks:
 
 * CallerPrincipalCallback
 * GroupPrincipalCallback
 * PasswordValidationCallback
 
-The CallbackHandler must also support the
-requirements in link:jaspic.html#a514[See CallbackHandler
-Requirements].”
+The `CallbackHandler` must also support the
+requirements in <<a514>>
 
-=== AuthConfigProvider Requirements
+==== AuthConfigProvider Requirements
 
-If a non-null AuthConfigProvider is returned
-(by the call to getConfigProvider), the messaging runtime must call
+If a non-null `AuthConfigProvider` is returned
+(by the call to `getConfigProvider`), the messaging runtime must call
 getServerAuthConfig on the provider to obtain the authentication context
 configuration object pertaining to the application context at the layer.
 The layer and appContext arguments of the call to getServerAuthConfig
 must be the same as those used to acquire the provider, and the handler
-argument must be as defined in link:jaspic.html#a608[See
-CallbackHandler Requirements],” for a server runtime.
+argument must be as defined in <<a608>> for a server runtime.
 
-=== [[a616]]Authentication Context Requirements
+[[a616]]
+==== Authentication Context Requirements
 
-The getAuthContext calls made on the
-ServerAuthConfig object (obtained by calling getServerAuthConfig) must
+The `getAuthContext`  calls made on the
+ServerAuthConfig object (obtained by calling `getServerAuthConfig`) must
 satisfy the requirements defined in the following subsections.
 
-=== [[a618]]Module Initialization Properties
+[[a618]]
+===== Module Initialization Properties
 
-If the runtime is a JSR 115 compatible EJB or
-Servlet endpoint container, the properties argument passed in all calls
-to getAuthContext must contain the key-value pair shown in the following
+If the runtime is a Jakarta Authorization compatible Jakarta Enterprise Beans or
+Jakarta Servlet endpoint container, the properties argument passed in all calls
+to `getAuthContext`  must contain the key-value pair shown in the following
 table.
 
-=== JSR 115 Compatible Module Initialization Properties
+[caption="Table {doc-part}-{counter:table-number} ", title="Jakarta Authorization Compatible Module Initialization Properties"]
+[.center, width=95%]
+[%header,cols="30%,70%"] 
+|===
+a| [.small]#+++<font size=".8em">key</font>+++#
+a| [.small]#+++<font size=".8em">value</font>+++#
 
-key
-
-value
-
-javax.security.jacc.PolicyContext
-
-The PolicyContext identifier value that the
-container must set to satisfy the JSR 115 authorization requirements as
-described in “Setting the Policy Context” within the JSR 115
+a| [.small]#+++<font size=".8em">jakarta.security.jacc.PolicyContext</font>+++#
+| The PolicyContext identifier value that the container must set to satisfy the Jakarta Authorization authorization requirements as described in “Setting the Policy Context” within the Jakarta Authorization 
 specification
+|===
 
-When the runtime is not a JSR 115 compatible
+When the runtime is not a Jakarta Authorization compatible
 endpoint container, the properties argument used in all calls to
-getAuthContext must not include a javax.security.jacc.PolicyContext
-key-value pair, and a null value may be passed for the properties
+getAuthContext must not include a `javax.security.jacc.PolicyContext`
+key-value pair, and a null value may be passed for the `properties`
 argument.
 
-=== [[a626]]MessagePolicy Requirements
+[[a626]]
+===== MessagePolicy Requirements
 
-When a non-null requestPolicy is used to
-initialize the authentication modules of a ServerAuthContext, the
+When a non-null `requestPolicy` is used to
+initialize the authentication modules of a `ServerAuthContext`, the
 requestPolicy must be constructed such that the value obtained by
-calling isMandatory on the requestPolicy accurately reflects whether
+calling `isMandatory` on the requestPolicy accurately reflects whether
 (that is, true return value) or not (that is, false return value)
 message protection within the SOAP messaging layer is required to
 perform the web service invocation corresponding to the MessageInfo used
@@ -550,17 +558,17 @@ whether or not message protection is required (within the SOAP messaging
 layer) on the response (if there is one) resulting from the
 corresponding web service invocation
 
-Calling getTargetPolicies on the
+Calling `getTargetPolicies` on the
 requestPolicy corresponding to a web service invocation for which a SOAP
 layer client identity is to be established as the caller identity must
 return an array containing at least one TargetPolicy for which calling
-getProtectionPolicy.getID() returns one of the following values:
+`getProtectionPolicy.getID()` returns one of the following values:
 
 * ProtectionPolicy.AUTHENTICATE_SENDER
 * ProtectionPolicy.AUTHENTICATE_CONTENT
 
 When all of the operations of a web service
-endpoint require client authentication, each ServerAuthContext acquired
+endpoint require client authentication, each `ServerAuthContext` acquired
 for the endpoint must initialize its contained authentication modules
 with a requestPolicy that includes a TargetPolicy as described above and
 that mandates client authentication. When client authentication is
@@ -569,12 +577,13 @@ requestPolicy used to initialize the authentication modules of a
 ServerAuthContext acquired for the endpoint must include a TargetPolicy
 as described above and should only mandate client authentication if
 client authentication is required for all of the operations mapped to
-the ServerAuthContext. When none of the operations mapped to a
-ServerAuthContext require client authentication, the requestPolicy used
-to initialize the authentication modules of the ServerAuthContext must
+the `ServerAuthContext`. When none of the operations mapped to a
+`ServerAuthContext` require client authentication, the requestPolicy used
+to initialize the authentication modules of the `ServerAuthContext` must
 NOT mandate client authentication.
 
-=== [[a632]]Message Processing Requirements
+[[a632]]
+==== Message Processing Requirements
 
 A server runtime that has received a SOAP
 request message, and that has not yet performed any transformations on
@@ -594,20 +603,20 @@ If the server runtime obtained a non-null
 ServerAuthContext by using the authentication context identifier
 corresponding to the request message, then at point (2) in the message
 processing model, the runtime must call validateRequest on the
-ServerAuthContext, and at point (3) the runtime must call secureResponse
-on the ServerAuthContext.
+ServerAuthContext, and at point (3) the runtime must call `secureResponse`
+on the `ServerAuthContext`.
 
 If the call to validateRequest returns
 AuthStatus.SUCCESS, the runtime must perform any web service
-authorization processinglink:#a917[20] required as a
+authorization processingfootnote:[This authorization processing would NOT be expected to include the enforcement of Servlet Auth-Constraints since they are defined at url-pattern granularity.] required as a
 prerequisite to accessing the target resource. If authentication is
 required for the request to be authorized, the runtime must determine
 whether the authentication identity established in the clientSubject is
-authorized to access the resource. In a JSR 115 compatible runtime, the
+authorized to access the resource. In a Jakarta Authorization compatible runtime, the
 identity tested for authorization must be comprised of exactly the
 Principal objects of the clientSubject. If the request is NOT
 authorized, and the message-exchange pattern is not one-way, the runtime
-must set within the response (within messageInfo) a SOAP fault element
+must set within the response (within  `messageInfo`) a SOAP fault element
 as defined by the runtime. If the request was determined to be
 authorized, it must be dispatched to the resource. Otherwise the request
 must NOT be dispatched and the runtime must proceed to point (3) in the
@@ -617,13 +626,13 @@ pattern).
 If the invocation of the resource results in
 an exception being thrown by the resource to the runtime and the message
 exchange pattern is not one-way, the runtime must set within the
-response (within messageInfo) a SOAP fault element as defined by the
+response (within `messageInfo`) a SOAP fault element as defined by the
 runtime. Following the resource invocation, and if the message exchange
 pattern is not one-way, the runtime must proceed to point (3) in the
 message processing model. At point (3) in the message processing model,
-the runtime must call secureResponse on the same ServerAuthContext used
-in the corresponding call to validateRequest and with the same
-MessageInfo object.
+the runtime must call `secureResponse` on the same ServerAuthContext used
+in the corresponding call to `validateRequest` and with the same
+`MessageInfo` object.
 
 If the request is dispatched to the resource,
 and the resource was configured to run-as its caller, then for
@@ -631,52 +640,54 @@ invocations originating from the resource where caller propagation is
 required, the identity established using the CallerPrincipalCallback
 must be used as the propagated identity.
 
-=== MessageInfo Requirements
+===== MessageInfo Requirements
 
-The messageInfo argument used in a call to
-validateRequest must have been initialized by the runtime such that its
-getRequestMessage will return the SOAP request message being processed
+The `messageInfo` argument used in a call to
+`validateRequest` must have been initialized by the runtime such that its
+`getRequestMessage` will return the SOAP request message being processed
 by the runtime.
 
 When a corresponding call is made to
-secureResponse, it must be made with the same messageInfo and
-serviceSubject arguments used in the corresponding call to
-validateRequest, and it must have been initialized by the runtime such
-that its getResponseMessage method will return the SOAP response message
+`secureResponse`, it must be made with the same  `messageInfo` and
+`serviceSubject` arguments used in the corresponding call to
+`validateRequest`, and it must have been initialized by the runtime such
+that its `getResponseMessage` method will return the SOAP response message
 being processed by the runtime.
 
-=== [[a642]] MessageInfo Properties
+[[a642]]
+*_MessageInfo Properties_*
 
 This profile does not define any properties
-that must be included in the Map within the MessageInfo passed in calls
-to validateRequest and secureResponse.
+that must be included in the `Map` within the `MessageInfo` passed in calls
+to `validateRequest` and `secureResponse`.
 
-=== Subject Requirements
+===== Subject Requirements
 
-A new clientSubject must be instantiated and
-passed in any calls made to validateRequest.
+A new `clientSubject` must be instantiated and
+passed in any calls made to `validateRequest`.
 
-=== validateRequest Processing
+===== validateRequest Processing
 
-validateRequest may be called either before
+`validateRequest` may be called either before
 the service invocation (to validate and authorize the request) or after
 the service invocation (when a multi-message dialog is required to
 secure the response). The module implementation is responsible for
 recording any state and performing any processing required to
 differentiate these contexts.
 
-=== [[a648]]validateRequest Before Service Invocation
+[[a648]]
+*_validateRequest Before Service Invocation_*
 
-When validateRequest is called before the
+When `validateRequest` is called before the
 service invocation on a module initialized with a mandatory request
 policy (as defined by the return value from
-requestPolicy.isMandatory()), the module must only return
+`requestPolicy.isMandatory()`), the module must only return
 AuthStatus.SUCCESS if it was able to completely satisfy the request
 policy. If the satisfied request policy includes a TargetPolicy element
 with a ProtectionPolicy of AUTHENTICATE_SOURCE or AUTHENTICATE_CONTENT,
 then the module (or its context) must employ the CallbackHandler passed
-to it by the runtime to handle a CallerPrincipalCallback using the
-clientSubject as argument to the callback. If more than one module of a
+to it by the runtime to handle a `CallerPrincipalCallback` using the
+`clientSubject` as argument to the callback. If more than one module of a
 context uses the CallbackHandler to handle this callback, the context is
 responsible for coordinating the calls such that the appropriate caller
 principal value is established.
@@ -686,12 +697,12 @@ satisfy the request policy, it must:
 
 * Return AuthStatus.SEND_CONTINUE – If it has
 established a response (available to the runtime by calling
-messageInfo.getResponseMessage) that must be sent by the runtime for the
+`messageInfo.getResponseMessage`) that must be sent by the runtime for the
 request validation to be effectively continued by the client.
 * Return AuthStatus.SEND_FAILURE – If the
 request validation failed, and when the module has established a SOAP
 message containing a fault element (available to the runtime by calling
-messageInfo.getResponseMessage) that may be sent by the runtime to
+`messageInfo.getResponseMessage`) that may be sent by the runtime to
 inform the client that the request failed.
 * Throw an AuthException – If the request
 validation failed, and when the module has NOT defined a response, to be
@@ -699,11 +710,11 @@ sent by the runtime. If the runtime chooses to send a response, it must
 define a SOAP message containing a SOAP fault element, and may use the
 content of the AuthException to do so.
 
-When validateRequest is called before the
+When `validateRequest` is called before the
 service invocation on a module that was initialized with an optional
-request policy (that is, requestPolicy.isMandatory() returns false), the
+request policy (that is, `requestPolicy.isMandatory()` returns false), the
 module should attempt to satisfy the request policy, but it must do so
-without initiatinglink:#a918[21] additional message exchanges
+without initiatingfootnote:[The module may continue, or refresh an authentication dialog that has already been initiated (perhaps by the client) in the request, but it must not start an authentication dialog for a request which has not yet been associated with authentication information (as understood by the module).] additional message exchanges
 or interactions involving the client. Independent of whether the request
 policy is satisfied, the module may return AuthStatus.SUCCESS. If the
 module returns AuthStatus.SUCCESS, and the request policy was satisfied
@@ -724,17 +735,18 @@ mandatory requestPolicy. The runtime must process any return value other
 than AuthStatus.SUCCESS as it would be processed if it were returned for
 a request with a mandatory requestPolicy.
 
-When validateRequest is called before the
+When `validateRequest` is called before the
 service invocation on a module that was initialized with an undefined
-request policy (that is, requestPolicy == null), the module must return
+request policy (that is, `requestPolicy` == null), the module must return
 AuthStatus.SUCCESS.
 
-=== [[a656]]validateRequest After Service Invocation link:#a919[22]
+
+[[a656]]*_validateRequest After Service Invocation_*
 
 When validateRequest is called after the
-service invocation, the module must return AuthStatus.SEND_SUCCESS when
+service invocationfootnote:[Occurs when the module is challenged by the client during `secureResponse` processing.], the module must return AuthStatus.SEND_SUCCESS when
 the module has successfully secured the application response message and
-made it available through messageInfo.getResponseMessage. For the
+made it available through `messageInfo.getResponseMessage`. For the
 request to be successfully completed, the runtime must send the response
 message returned by the module.
 
@@ -744,7 +756,7 @@ module must return AuthStatus.SEND_FAILURE or throw an AuthException.
 
 If the module returns
 AuthStatus.SEND_FAILURE, it must have established a SOAP message
-containing a SOAP fault element as the response in messageInfo. The
+containing a SOAP fault element as the response in `messageInfo`. The
 runtime may choose not to send a response message, or to send a
 different response message.
 
@@ -758,19 +770,17 @@ status value is used to inform the calling runtime that, to successfully
 complete the response processing, it will need to be capable of
 continuing the message dialog by processing at least one additional
 request/response exchange (after having sent the response message
-returned in messageInfo). The module must have established (in
+returned in `messageInfo`). The module must have established (in
 messageInfo) a response message that will cause the client to continue
 the response processing. For the response processing to be successfully
 completed, the runtime must send the response message returned by the
 module.
 
-=== [[a662]]secureResponse Processing
+[[a662]]
+===== secureResponse Processing
 
- 
-
-When secureResponse is called on a module
+When `secureResponse` is called on a module
 that was initialized with an undefined responsePolicy (that is,
-responsePolicy == null), the module must return AuthStatus.SEND_SUCCESS.
+`responsePolicy == null`), the module must return AuthStatus.SEND_SUCCESS.
 Otherwise, the return value and AuthException semantics of
-secureResponse are as defined in link:jaspic.html#a656[See
-validateRequest After Service Invocation].”
+`secureResponse` are as defined in <<a656, "validateRequest After Service Invocation">>
