@@ -1,748 +1,533 @@
 [[a365]]
 == Servlet Container Profile
 
-This chapter defines a profile of the use of
-the interfaces defined in this specification by Servlet containers to
-enforce the declarative authentication constraints of the Servlet
-container security model.
+This chapter defines a profile of the use of the interfaces defined in this specification by Servlet containers to
+enforce the declarative authentication constraints of the Servlet container security model.
 
-This profile focuses on points 2 (and, to a
-lesser degree), 3 in the message processing model. This profile does not
-specify the behavior of the corresponding client runtime (that is,
-points 1 and 4 in the message processing model).
+This profile focuses on points 2 (and, to a lesser degree), 3 in the message processing model. This 
+profile does not specify the behavior of the corresponding client runtime (that is, points 1 and 4 in the 
+message processing model).
 
-The profile-specific requirements defined in
-this chapter are to be considered in addition to the generic
-requirements defined in Chapter 2. A compatible implementation of this
-profile is a servlet container that satisfies all of the requirements
-that apply to this profile.
+The profile-specific requirements defined in this chapter are to be considered in addition to the generic
+requirements defined in Chapter 2. A compatible implementation of this profile is a servlet container that 
+satisfies all of the requirements that apply to this profile.
 
-=== [[a369]]Message Layer Identifier
+[[a369]]
+=== Message Layer Identifier
 
-The message layer value used to select the
-AuthConfigProvider and ServerAuthConfig objects for this profile must be
-"HttpServlet".
+The message layer value used to select the `AuthConfigProvider` and `ServerAuthConfig` objects for this 
+profile must be "HttpServlet".
 
-=== [[a371]]Application Context Identifier
+[[a371]]
+=== Application Context Identifier
 
-The application context identifier (that is,
-the appContext parameter value) used to select the AuthConfigProvider
-and ServerAuthConfig objects for a specific application shall be the
-String value constructed by concatenating the host name, a blank
-separator character, and the decoded context path corresponding to the
-web module.
+The application context identifier (that is, the `appContext` parameter value) used to select the
+`AuthConfigProvider` and `ServerAuthConfig` objects for a specific application shall be the String value 
+constructed by concatenating the host name, a blank separator character, and the decoded context path 
+corresponding to the web module.
 
+```
 AppContextID ::= hostname blank context-path
 
 For example: "java-server /petstore"
+```
 
-This profile uses the term host name to refer
-to the name of a logical host that processes Servlet requests. Servlet
-requests may be directed to a logical host using various physical or
-virtual host names or addresses, and a message processing runtime may be
-composed of multiple logical hosts. Systems or administrators that
-register AuthConfigProvider objects with specific application context
-identifiers must have an ability to determine the host name for which
-they wish to perform the registration.
+This profile uses the term `host name` to refer to the name of a logical host that processes Servlet
+requests. Servlet requests may be directed to a logical host using various physical or `virtual host` names or 
+addresses, and a message processing runtime may be composed of multiple logical hosts. Systems or 
+administrators that register `AuthConfigProvider` objects with specific application context identifiers 
+must have an ability to determine the host name for which they wish to perform the registration.
 
-A Servlet container that implements a version
-of the Servlet specification that defines the getVirtualServerName
-method on the ServletContext interface, must construct its application
-context identifiers using a value for hostname that is equivalent to the
-value returned by calling getVirtualServerName on the ServletContext
-corresponding to the web application.
+A Jakarta Servlet container that implements a version of the Jakarta Servlet specification that defines the `getVirtualServerName` method on the `ServletContext` interface, must construct its application context 
+identifiers using a value for `hostname` that is equivalent to the value returned by calling 
+`getVirtualServerName` on the ServletContext corresponding to the web application.
 
 === Message Requirements
 
-The MessageInfo argument used in any call
-made by the message processing runtime to validateRequest or
-secureResponse must have been initialized such that the non-null objects
-returned by the getRequestMessage and getResponseMessage methods of the
-MessageInfo are an instanceof HttpServletRequest and
-HttpServletResponse, respectively.
+The `MessageInfo` argument used in any call made by the message processing runtime to `validateRequest` or
+`secureResponse` must have been initialized such that the non-null objects returned by the 
+`getRequestMessage` and `getResponseMessage` methods of the `MessageInfo` are an `instanceof` 
+`HttpServletRequest` and `HttpServletResponse`, respectively.
 
 === Module Requirements
 
-The getSupportedMessageTypes method of all
-authentication modules integrated for use with this profile must include
-jakarta.servlet.http.HttpServletRequest.class and
-jakarta.servlet.http.HttpServeletResponse.class in its return value.
+The `getSupportedMessageTypes` method of all authentication modules integrated for use with this profile 
+must include `jakarta.servlet.http.HttpServletRequest.class` and `jakarta.servlet.http.HttpServeletResponse.class` 
+in its return value.
 
-=== [[a381]]CallbackHandler Requirements
+[[a381]]
+=== CallbackHandler Requirements
 
-The CallbackHandler passed to
-ServerAuthModule.initialize is determined by the handler argument passed
-in the AuthConfigProvider.getServerAuthConfig call that acquired the
-corresponding authentication context configuration object. The handler
-argument must not be null, and the argument handler and the
-CallbackHandler passed to ServerAuthModule.initialize must support the
-following callbacks:
+The `CallbackHandler` passed to `ServerAuthModule.initialize` is determined by the `handler` argument 
+passed in the `AuthConfigProvider.getServerAuthConfig` call that acquired the corresponding authentication 
+context configuration object. The `handler` argument must not be null, and the argument `handler` and the
+`CallbackHandler` passed to `ServerAuthModule.initialize` must support the following callbacks:
 
 * CallerPrincipalCallback
 * GroupPrincipalCallback
 * PasswordValidationCallback
 
-The CallbackHandler passed to
-ServerAuthModule.initialize should also support the following callbacks,
-and it must be possible to configure the runtime such that the
-CallbackHandler passed to ServerAuthModule.initialize supports the
-following callbacks in addition to those listed above.
+The `CallbackHandler` passed to `ServerAuthModule.initialize` should also support the following 
+callbacks, and it must be possible to configure the runtime such that the `CallbackHandler` passed to `ServerAuthModule.initialize` supports the following callbacks in addition to those listed above.
 
 * CertStoreCallback
 * PrivateKeyCallback
 * SecretKeyCallback
 * TrustStoreCallback
 
-The argument handler and the CallbackHandler
-passed through to the authentication modules must be initialized with
-any application context required to process its supported callbacks on
-behalf of the corresponding application.
+The argument `handler` and the `CallbackHandler` passed through to the authentication modules must be 
+initialized with any application context required to process its supported callbacks on behalf of the 
+corresponding application.
 
-=== [[a392]]AuthConfigProvider Requirements
+[[a392]]
+=== AuthConfigProvider Requirements
 
-The factory implementation returned by
-calling the getFactory method of the abstract AuthConfigFactory class
-must have been configured such that it returns a non-null
-AuthConfigProvider for those application contexts for which pluggable
-authentication modules have been configured at the “HttpServlet” layer.
+The factory implementation returned by calling the `getFactory` method of the abstract `AuthConfigFactory` 
+class must have been configured such that it returns a non-null `AuthConfigProvider` for those application 
+contexts for which pluggable authentication modules have been configured at the “HttpServlet” layer.
 
-For each application context for which it is
-servicing requests, the runtime must call getConfigProvider to acquire
-the provider object corresponding to the layer and application context.
-The layer and appContext arguments to getConfigProvider must be as
-defined in link:jaspic.html#a369[See Message Layer
-Identifier],” and link:jaspic.html#a371[See Application Context
-Identifier],” respectively. If a non-null AuthConfigProvider is
-returned, the messaging runtime must call getServerAuthConfig on the
-provider to obtain the authentication context configuration object
-pertaining to the application context at the layer. The layer and
-appContext arguments of the call to getServerAuthConfig must be the same
-as those used to acquire the provider, and the handler argument must be
-as defined in link:jaspic.html#a381[See CallbackHandler
-Requirements].”
+For each application context for which it is servicing requests, the runtime must call 
+`getConfigProvider` to acquire the provider object corresponding to the layer and application context.
+The `layer` and `appContext` arguments to `getConfigProvider` must be as defined in <<Message Layer Identifier>>, 
+and <<Application Context Identifier>> respectively. If a non-null 
+`AuthConfigProvider` is returned, the messaging runtime must call `getServerAuthConfig` on the
+provider to obtain the authentication context configuration object pertaining to the application context at the layer. The `layer` and `appContext` arguments of the call to `getServerAuthConfig` must be the same as those used to 
+acquire the provider, and the handler argument must be as defined in <<a381>>.
 
-A null return value from getConfigProvider
-indicates that pluggable authentication modules have not been configured
-at the layer for the application context and that the messaging runtime
-must proceed to perform servlet security constraint processing (for the
-application context) without further reliance on this profile.
+A null return value from `getConfigProvider` indicates that pluggable authentication modules have not 
+been configured at the layer for the application context and that the messaging runtime must proceed to 
+perform servlet security constraint processing (for the application context) without further reliance on this 
+profile.
 
-=== [[a396]]Authentication Context Requirements
+[[a396]]
+=== Authentication Context Requirements
 
-When a non-null AuthConfigProvider is
-returned by the factory, the provider must have been configured with the
-information required to initialize the authentication contexts for the
-(one or more) authentication context configuration scopes (defined by
-layer and application context) for which the provider is registered (at
-the factory). The information (typically) required to initialize
-authentication contexts is described by example in
-Sectionlink:jaspic.html#a302[See What the Configuration Must
-Do].
+When a non-null AuthConfigProvider is returned by the factory, the provider must have been configured 
+with the information required to initialize the authentication contexts for the (one or more) authentication 
+context configuration scopes (defined by layer and application context) for which the provider is registered 
+(at the factory). The information (typically) required to initialize authentication contexts is described by 
+example in <<a302>>.
 
-When a non-null AuthConfigProvider is
-returned by the factory, the messaging runtime must call getAuthContext
-on the authentication context configuration object (obtained from the
-provider). The authContextID argument used in the call to getAuthContext
-must be the value as described in link:jaspic.html#a400[See
-Authentication Context Identifiers].”
+When a non-null `AuthConfigProvider` is returned by the factory, the messaging runtime must call 
+`getAuthContext` on the authentication context configuration object (obtained from the provider). The 
+`authContextID` argument used in the call to `getAuthContext` must be the value as described in <<a400>>.
 
-For all values of the authContextID argument
-that satisfy the requirements of
-Sectionlink:jaspic.html#a400[See Authentication Context
-Identifiers], the call to getAuthContext must return a non-null
-authentication context.
+For all values of the `authContextID` argument that satisfy the requirements of <<a400>>, the call to 
+`getAuthContext` must return a non-null authentication context.
 
-=== [[a400]]Authentication Context Identifiers
+[[a400]]
+==== Authentication Context Identifiers
 
-This profile does NOT impose any profile
-specific requirements on authentication context identifiers. As defined
-in link:jaspic.html#a290[See Acquire AuthContext Identifier],
-the authentication context identifier used in the call to getAuthContext
-must be equivalent to the value that would be acquired by calling
-getAuthContextID with the MessageInfo that will be used in the call to
-validateRequest.
+This profile does NOT impose any profile specific requirements on authentication context identifiers. As 
+defined in <<a290>>, the authentication context identifier used in the call to `getAuthContext`
+must be equivalent to the value that would be acquired by calling `getAuthContextID` with the `MessageInfo` 
+that will be used in the call to `validateRequest`.
 
-=== getAuthContext Subject
+==== getAuthContext Subject
 
-A null value may be passed as the Subject
-argument in the getAuthContext call.
+A null value may be passed as the `Subject` argument in the `getAuthContext` call.
 
-=== [[a404]]Module Initialization Properties
+[[a404]]
+==== Module Initialization Properties
 
-If the runtime is a JSR 115 compatible
-Servlet container, the properties argument passed in all calls to
-getAuthContext must contain the key-value pair shown in the following
+If the runtime is a Jakarta Authorization compatible Jakarta Servlet container, the `properties` argument passed 
+in all calls to `getAuthContext` must contain the key-value pair shown in the following
 table.
 
-=== Jakarta Authorization Compatible Module Initialization Properties
 
-key
+[caption="Table {doc-part}-{counter:table-number} ", title="Jakarta Authorization Compatible Module Initialization Properties"]
+[.center, width=95%]
+[%header,cols="30%,70%"] 
+|===
+a| [.small]#+++<font size=".8em">key</font>+++#
+a| [.small]#+++<font size=".8em">value</font>+++#
 
-value
-
-jakarta.security.jacc.PolicyContext
-
-The PolicyContext identifier value that the
-container must set to satisfy the Jakarta Authorization authorization requirements as
-described in “Setting the Policy Context” within the Jakarta Authorization 
+a| [.small]#+++<font size=".8em">jakarta.security.jacc.PolicyContext</font>+++#
+| The PolicyContext identifier value that the container must set to satisfy the Jakarta Authorization authorization requirements as described in “Setting the Policy Context” within the Jakarta Authorization 
 specification
+|===
 
-When the runtime is not a Jakarta Authorization compatible
-Jakarta Servlet container, the properties argument used in all calls to
-getAuthContext must not include a jakarta.security.jacc.PolicyContext
-key-value pair, and a null value may be passed for the properties
-argument.
 
-=== [[a412]]MessagePolicy Requirements
+When the runtime is not a Jakarta Authorization compatible Jakarta Servlet container, the `properties` argument used in all calls to `getAuthContext` must not include a `jakarta.security.jacc.PolicyContext` key-value pair, and a null value may be passed for the `properties` argument.
 
-Each ServerAuthContext obtained through
-getAuthContext must initialize its encapsulated ServerAuthModule objects
-with a non-null value for requestPolicy. The encapsulated authentication
-modules may be initialized with a null value for responsePolicy.
+[[a412]]
+==== MessagePolicy Requirements
 
-The requestPolicy used to initialize the
-authentication modules of the ServerAuthContext must be constructed such
-that the value obtained by calling isMandatory on the requestPolicy
-accurately reflects whether (that is, true return value) or not (that
-is, false return value) authentication is required to access the web
-resource corresponding to the HttpServletRequest to which the
-ServerAuthContext will be applied. The message processing runtime is
-responsible for determining if authentication is required and must
-convey the results of its determination as described in
-link:jaspic.html#a425[See MessageInfo Requirements].
+Each `ServerAuthContext` obtained through getAuthContext must initialize its encapsulated 
+`ServerAuthModule` objects with a non-null value for `requestPolicy`. The encapsulated authentication
+modules may be initialized with a null value for `responsePolicy`.
 
-Calling getTargetPolicies on the request
-MessagePolicy must return an array containing at least one TargetPolicy
-whose ProtectionPolicy will be interpreted by the modules of the context
-to mean that the source of the corresponding targets within the message
-is to be authenticated. To that end, calling the getID method on the
-ProtectionPolicy must return one of the following values:
+The `requestPolicy` used to initialize the authentication modules of the `ServerAuthContext` must be 
+constructed such that the value obtained by calling `isMandatory` on the `requestPolicy` accurately reflects 
+whether (that is, true return value) or not (that is, false return value) authentication is required to access 
+the web resource corresponding to the `HttpServletRequest` to which the `ServerAuthContext` will be applied. 
+The message processing runtime is responsible for determining if authentication is required and must
+convey the results of its determination as described in <<a425>>.
 
-* ProtectionPolicy.AUTHENTICATE_SENDER
-* ProtectionPolicy.AUTHENTICATE_CONTENT
+Calling `getTargetPolicies` on the request `MessagePolicy` must return an array containing at least one 
+`TargetPolicy` whose `ProtectionPolicy` will be interpreted by the modules of the context to mean that the 
+source of the corresponding targets within the message is to be authenticated. To that end, calling the `getID` 
+method on the `ProtectionPolicy` must return one of the following values:
 
-=== [[a418]]Message Processing Requirements
+* `ProtectionPolicy.AUTHENTICATE_SENDER`
+* `ProtectionPolicy.AUTHENTICATE_CONTENT`
 
-For this profile, point (2) of the messaging
-processing model occurs after the runtime determines that the connection
-on which the request was received satisfies the connection
-requirementslink:#a903[6] that apply to the request and before
-the runtime enforces the authorizationlink:#a904[7]
-requirements that apply to the request. At point (2) in the message
-processing model, the runtime must call validateRequest on the
-ServerAuthContext. The runtime must not call validateRequest if the
-request does not satisfy the connection requirements that apply to the
-request. If the request has satisfied the connection requirements, the
-message processing runtime must call validateRequest independent of
-whether or not access to the resource would be authorized prior to the
-call to validateRequestlink:#a905[8]. The validateRequest
-method must be called for all requests (to which the Servlet security
-model applieslink:#a906[9]), including submits of a form-based
-login form.
+[[a418]]
+=== Message Processing Requirements
 
-If the call to validateRequest returns any
-value other than AuthStatus.SUCCESS, the runtime should return a
+For this profile, point (2) of the messaging processing model occurs after the runtime determines that the 
+connection on which the request was received satisfies the connection requirementsfootnote:[In a Jakarta Authorization environment, connection requirements are tested by checking a `WebUserDataPermission` constructed with the `HttpServletRequest`. In a non-Jakarta Authorization environment, connection requirements are tested by comparing the security properties of the connection on which the request was received with the permitted connection types as defined through user-data-constraints in the corresponding web.xml.] that apply to the request and before the runtime enforces the authorizationfootnote:[In a Jakarta Authorization environment, authorization requirements are enforced by checking if the authenticated caller identity (such as it is) has been granted the `WebResourcePermission` corresponding to the `HttpServletRequest`. In a non-Jakarta Authorization environment, authorization requirements are enforced by checking if the role-mappings of the authenticated caller identity are sufficient to satisfy the auth-constraints (if any) that apply to the request as defined in the corresponding web.xml.] requirements that apply to the request. 
+At point (2) in the message processing model, the runtime must call `validateRequest` on the `ServerAuthContext`. 
+The runtime must not call `validateRequest` if the request does not satisfy the connection requirements that apply to the
+request. 
+If the request has satisfied the connection requirements, the message processing runtime must call `validateRequest` independent of whether or not access to the resource would be authorized prior to the call to validateRequestfootnote:[These unconditional calls to `validateRequest` are necessary to allow for delegation of servle tauthentication sessionmanagement to authentication contexts and their contained authentication modules.]
+The validateRequest method must be called for all requests (to which the Jakarta Servlet security model appliesfootnote:[Note that the Jakarta Servlet security model does not apply when a servlet uses a `RequestDispatcher` to invoke a static resource or servlet using a forward or an include.]
+, including submits of a form-based login form.
+
+If the call to `validateRequest` returns any value other than `AuthStatus.SUCCESS`, the runtime should return a
 response and must discontinue its processing of the request.
 
-If the call to validateRequest returns
-AuthStatus.SUCCESS, the runtime must establish return values for
-getUserPrincipal, getRemoteUser, and getAuthType as defined in
-link:jaspic.html#a464[See Setting the Authentication Results on
-the HttpServletRequest]”. After setting the authentication results, the
-runtime must determine whether the authentication identity established
-in the clientSubject is authorized to access the resource. The identity
-tested for authorization must be selected based on the nature, with
-respect to JSR 115 compatibility, of the calling runtime. In a JSR 115
-compatible runtime, the identity must be comprised of exactly the
-Principal objects of the clientSubject. In a non-JSR 115 compatible
-Servlet runtime, the identity must include the caller Principal
-(established during the validateRequest processing using the
-corresponding CallerPrincipalCallback) and may include any of the
-Principal objects of the clientSubject. Independent of the nature of the
-calling runtime, if the request is NOT authorized, the runtime must set,
-within the response, an HTTP status code as required by the Servlet
-specification. The request must be dispatched to the resource if the
-request was determined to be authorized; otherwise it must NOT be
-dispatched and the runtime must proceed to point (3) in the message
-processing model.
+If the call to `validateRequest` returns `AuthStatus.SUCCESS`, the runtime must establish return values 
+for `getUserPrincipal`, `getRemoteUser`, and `getAuthType` as defined in <<a464>>. 
+After setting the authentication results, the runtime must determine whether the authentication identity established
+in the `clientSubject` is authorized to access  the resource. The identity tested for authorization must be selected based on the nature, with respect to Jakarta Authorization compatibility, of the calling runtime.
+In a Jakarta Authorization compatible runtime, the identity must be comprised of exactly the `Principal` objects of the `clientSubject`. 
+In a non-Jakarta Authorization compatible Jakarta Servlet runtime, the identity must include the caller `Principal`
+(established during the `validateRequest` processing using the corresponding `CallerPrincipalCallback`) and may include 
+any of the `Principal` objects of the clientSubject. 
+Independent of the nature of the calling runtime, if the request is NOT authorized, the runtime must set,
+within the response, an HTTP status code as required by the Jakarta Servlet specification. The request must be 
+dispatched to the resource if the request was determined to be authorized; otherwise it must NOT be
+dispatched and the runtime must proceed to point (3) in the message processing model.
 
-If the request is dispatched to the resource
-and the resource invocation throws an exception to the runtime, the
-runtime must set, within the response, an HTTP status code which
-satisfies any applicable requirements defined within the servlet
-specification. In this case, the runtime should complete the processing
-of the request without calling secureResponse.
+If the request is dispatched to the resource and the resource invocation throws an exception to the runtime, the
+runtime must set, within the response, an HTTP status code which satisfies any applicable 
+requirements defined within the Jakarta Servlet specification. In this case, the runtime should complete the 
+processing of the request without calling `secureResponse`.
 
- If invocation of the resource completes
-without throwing an exception, the runtime must proceed to point (3) in
-the message processing model. At point (3) in the message processing
-model, the runtime must call secureResponse on the same
-ServerAuthContext used in the corresponding call to validateRequest and
-with the same MessageInfo object.
+If invocation of the resource completes without throwing an exception, the runtime must proceed to 
+point (3) in the message processing model. At point (3) in the message processing model, the runtime must 
+call `secureResponse` on the same `ServerAuthContext` used in the corresponding call to `validateRequest` and
+with the same `MessageInfo` object.
 
-If the request is dispatched to the resource,
-and the resource was configured to run-as its caller, then for
-invocations originating from the resource where caller propagation is
-required, the identity established using the CallerPrincipalCallback
-must be used as the propagated identity.
+If the request is dispatched to the resource, and the resource was configured to run-as its caller, then for
+invocations originating from the resource where caller propagation is required, the identity established 
+using the `CallerPrincipalCallback` must be used as the propagated identity.
 
-=== [[a425]]MessageInfo Requirements
+[[a425]]
+==== MessageInfo Requirements
 
-The messageInfo argument used in the call to
-validateRequest must have been initialized by the runtime such that its
-getRequestMessage and getResponseMessage methods will return the
-HttpServletRequest and HttpServletResponse objects corresponding to the
-messages (respectively) being processed by the runtime. This must be the
-case even when the target of the request is a static page (that is, not
-a Servlet).
+The `messageInfo` argument used in the call to `validateRequest` must have been initialized by the runtime 
+such that its `getRequestMessage` and `getResponseMessage` methods will return the `HttpServletRequest` and 
+`HttpServletResponse` objects corresponding to the messages (respectively) being processed by the runtime. 
+This must be the case even when the target of the request is a static page (that is, not a Servlet).
 
-=== MessageInfo Properties
+===== MessageInfo Properties
 
-This profile requires that the message
-processing runtime conditionally establish the following key-value pair
-within the Map of the MessageInfo object passed in the calls to
-getAuthContextID, validateRequest, and secureResponse.
+This profile requires that the message processing runtime conditionally establish the following key-value pair
+within the `Map` of the `MessageInfo` object passed in the calls to `getAuthContextID`, `validateRequest`, 
+and `secureResponse`.
 
-=== MessageInfo Map Properties
+[caption="Table {doc-part}-{counter:table-number} ", title="MessageInfo Map Properties"]
+[.center, width=95%]
+[%header,cols="50%,50%"] 
+|===
+a| [.small]#+++<font size=".8em">key</font>+++#
+a| [.small]#+++<font size=".8em">value</font>+++#
 
-key
-
-value
-
-jakarta.security.auth.message.MessagePolicy.isMandatory
-
-Any non-null String value, s, for which
+a| [.small]#+++<font size=".8em">jakarta.security.auth.message.MessagePolicy.isMandatory</font>+++#
+| Any non-null `String` value, s, for which
 Boolean.valueOf(s).booleanValue() == true
+|===
 
-=== jakarta.security.auth.message.MessagePolicy.isMandatory
+*_jakarta.security.auth.message.MessagePolicy.isMandatory_*
 
-The MessageInfo map must contain this key and
-its associated value, if and only if authentication is required to
-perform the resource access corresponding to the HttpServletRequest to
-which the ServerAuthContext will be applied. Authentication is required
-if use of the HTTP method of the HttpServletRequest at the resource
-identified by the HttpServletRequest is covered by a Servlet
-auth-constraintlink:#a907[10], or in a JSR 115 compatible
-runtime, if the corresponding WebResourcePermission is NOT
-grantedlink:#a908[11] to an unauthenticated caller. In a JSR
-115 compatible runtime, the corresponding WebResourcePermission may be
-constructed directly from the HttpServletRequest as follows:
+The `MessageInfo` map must contain this key and its associated value, if and only if authentication is 
+required to perform the resource access corresponding to the `HttpServletRequest` to which the 
+`ServerAuthContext` will be applied. Authentication is required if use of the HTTP method of the 
+`HttpServletRequest` at the resource identified by the `HttpServletRequest` is covered by a Jakarta Servlet
+`auth-constraint` footnote:[If the auth-constraint is an excluding auth-constraint (that is, an auth-constraint that authorizes no roles), the Servlet Specification requires that no access be permitted independent of authentication. Runtimes should reject requests to ex- cluded resources prior to proceeding to point (2) in the message processing model (that is, prior to the authentication processing).], or in a Jakarta Authorization compatible
+runtime, if the corresponding `WebResourcePermission` is NOT grantedfootnote:[Jakarta Authorization compatible runtimes should also reject requests to excluded resources prior to proceeding to point (2) in the message processing model (that is, prior to the authentication processing).] to an unauthenticated caller. In a Jakarta Authorization compatible runtime, the corresponding `WebResourcePermission` may be constructed directly from the `HttpServletRequest as follows`:
 
-public
-WebResourcePermission(HttpServletRequest request);
+```
+public WebResourcePermission(HttpServletRequest request);
+```
 
-The authentication context configuration
-system must use the value of this property to establish the
-corresponding value within the requestPolicy passed to the
-authentication modules of the ServerAuthContext acquired to process the
-MessageInfo.
+The authentication context configuration system must use the value of this property to establish the
+corresponding value within the `requestPolicy` passed to the authentication modules of the 
+`ServerAuthContext` acquired to process the `MessageInfo`.
 
-=== Subject Requirements
+==== Subject Requirements
 
-A new clientSubject must be instantiated and
-passed in the call to validateRequest.
+A new `clientSubject` must be instantiated and passed in the call to `validateRequest`.
 
-=== [[a440]]ServerAuth Processing
+[[a440]]
+==== ServerAuth Processing
 
-As described in
-link:jaspic.html#a418[See Message Processing Requirements], the
-profile requires that validateRequest be called on every request that
-satisfies the corresponding connection requirements (and to which the
-Servlet container security model applies). As such, validateRequest will
-be called either before the service invocation (to establish the caller
-identity) or after the service invocation (when a multi-message dialog
-is required to secure the response). The module implementation is
-responsible for recording any state and performing any processing
-required to differentiate these two different types of calls to
-validateRequest.
+As described in <<a418>>, the profile requires that 
+`validateRequest` be called on every request that satisfies the corresponding connection requirements (and to 
+which the Jakarta Servlet container security model applies). As such, `validateRequest` will be called either before 
+the service invocation (to establish the caller identity) or after the service invocation (when a multi-message 
+dialog is required to secure the response). The module implementation is responsible for 
+recording any state and performing any processing required to differentiate these two different types of 
+calls to `validateRequest`.
 
-=== [[a442]]validateRequest Before Service Invocation
+[[a442]]
+===== validateRequest Before Service Invocation
 
-When validateRequest is called before the
-service invocation on a module initialized with a mandatory
-requestPolicy (as defined by the return value from
-requestPolicy.isMandatory()), the module must only return
-AuthStatus.SUCCESS if it was able to completely satisfy the request
-authentication policy. In this case, the module (or its context) must
-also have used the CallbackHandler passed to it by the runtime to handle
-a CallerPrincipalCallback using the clientSubject as argument to the
-callback. If more than one module of a context uses the CallbackHandler
-to handle this callback, the context is responsible for coordinating the
-calls such that the appropriate caller principal value is established.
+When `validateRequest` is called before the service invocation on a module initialized with a mandatory
+requestPolicy (as defined by the return value from `requestPolicy.isMandatory()`), the module must only 
+return `AuthStatus.SUCCESS` if it was able to completely satisfy the request authentication policy. In this 
+case, the module (or its context) must also have used the `CallbackHandler` passed to it by the runtime to 
+handle a `CallerPrincipalCallback` using the `clientSubject` as argument to the callback. If more than one 
+module of a context uses the `CallbackHandler` to `handle` this callback, the context is responsible for 
+coordinating the calls such that the appropriate caller principal value is established.
 
-If the module was not able to completely
-satisfy the request authentication policy, it must:
+If the module was not able to completely satisfy the request authentication policy, it must:
 
-* return AuthStatus.SEND_CONTINUE – If it has
-established a response (available to the runtime by calling
-messageInfo.getResponseMessage) that must be sent by the runtime for the
-request validation to be effectively continued by the client. The module
-must have set the HTTP status code of the response to a value (for
-example, HTTP 401 unauthorized, HTTP 303 see other, or HTTP 307
-temporary redirect) that will indicate to the client that it should
-retry (or continue) the request. This, however, is solely the
-responsibility of the module, and the runtime must be liberal in its
-acceptance of continue responses, including responses with HTTP success
-status codes; such as might be returned with forms (including login
-forms and forms that depend on javascript to be relayed through the
-browser).
-* return AuthStatus.SEND_FAILURE – If the
-request validation failed, and when the client should not retry or
-continue with its processing of the request. The module must have
-established a response message (available to the runtime by calling
-messageInfo.getResponseMessage) that may be sent by the runtime to
-inform the client that the request failed. The module must have set the
-HTTP status code of the response to a value (for example, HTTP 403
-forbidden or HTTP 404 not found) that will indicate to the client that
-it should NOT continue the request. The runtime may choose not to send a
-response message, or to send a different response message (given that it
-also contains an analogous HTTP status code).
-* throw an AuthException – If the request
-validation failed, and when the client should not retry the request, and
-when the module has not defined a response to be sent by the runtime. If
-the runtime chooses to send a response, it must define the HTTP status
-code and descriptive content (of the response). The HTTP status code of
-the response must indicate to the client (for example, HTTP 403
-forbidden, HTTP 404 not found, or HTTP 500 internal server error) that
-the request failed and that it should NOT be retried. The descriptive
-content set in the response may be obtained from the AuthException.
+* return `AuthStatus.SEND_CONTINUE` – If it has established a response (available to the runtime by calling `messageInfo.getResponseMessage`) that must be sent by the runtime for the request validation to be effectively continued by the client. The module must have set the HTTP status code of the response to a value (for example, HTTP 401 unauthorized, HTTP 303 see other, or HTTP 307 temporary redirect) that will indicate to the client that it should retry (or continue) the request. This, however, is solely the responsibility of the module, and the runtime must be liberal in its acceptance of continue responses, including responses with HTTP success status codes; such as might be returned with forms (including login forms and forms that depend on javascript to be relayed through the browser).
+* return `AuthStatus.SEND_FAILURE` – If the request validation failed, and when the client should not retry or continue with its processing of the request. The module must have established a response message (available to the runtime by calling
+messageInfo.getResponseMessage) that may be sent by the runtime to inform the client that the request failed. The module must have set the HTTP status code of the response to a value (for example, HTTP 403 forbidden or HTTP 404 not found) that will indicate to the client that it should NOT continue the request. The runtime may choose not to send a response message, or to send a different response message (given that it also contains an analogous HTTP status code). 
+* throw an `AuthException` – If the request validation failed, and when the client should not retry the request, and when the module has not defined a response to be sent by the runtime. If the runtime chooses to send a response, it must define the HTTP status code and descriptive content (of the response). The HTTP status code of the response must indicate to the client (for example, HTTP 403 forbidden, HTTP 404 not found, or HTTP 500 internal server error) that the request failed and that it should NOT be retried. The descriptive content set in the response may be obtained from the AuthException.
 
-When validateRequest is called before the
-service invocation on a module that was initialized with an optional
-requestPolicy (that is, requestPolicy.isMandatory() returns false), the
-module should attempt to satisfy the request authentication policy, but
-it must do so without initiatinglink:#a909[12] additional
-message exchanges or interactions involving the client. Independent of
-whether the authentication policy is satisfied, the module may return
-AuthStatus.SUCCESS. If the module returns AuthStatus.SUCCESS (and the
-authentication policy was satisfied), the module (or its context) must
-employ a CallerPrincipalCallback as described above. If the
-authentication policy was not satisfied, and yet the module chooses to
-return AuthStatus.SUCCESS, the module (or its context) must use a
-CallerPrincipalCallback to establish the container’s representation of
-the unauthenticated caller within the clientSubject. If the module
-determines that an invalid or incomplete security context was used to
-secure the request, then the module may return AuthStatus.SEND_FAILURE,
-AuthStatus.SEND_CONTINUE, or throw an AuthException. If the module
-throws an AuthException, or returns any value other that
-AuthStatus.SUCCESS, the runtime must NOT proceed to the service
-invocation. The runtime must process an AuthException as described above
-for a request with a mandatory requestPolicy. The runtime must process
-any return value other than AuthStatus.SUCCESS as it would be processed
-if it were returned for a request with a mandatory requestPolicy.
+When `validateRequest` is called before the service invocation on a module that was initialized with an 
+optional requestPolicy (that is, `requestPolicy.isMandatory()` returns false), the module should attempt to 
+satisfy the request authentication policy, but it must do so without initiatingfootnote:[The module may continue, or refresh an authentication dialog that has already been initiated (perhaps by the client) in the request, but it must not start an authentication dialog for a request which has not yet been associated with authentication information (as understood by the module).] additional message exchanges 
+or interactions involving the client. Independent of whether the authentication policy is satisfied, the 
+module may return `AuthStatus.SUCCESS`. If the module returns `AuthStatus.SUCCESS` (and the
+authentication policy was satisfied), the module (or its context) must employ a `CallerPrincipalCallback` as 
+described above. If the authentication policy was not satisfied, and yet the module chooses to return 
+`AuthStatus.SUCCESS`, the module (or its context) must use a `CallerPrincipalCallback` to establish the 
+container’s representation of the unauthenticated caller within the `clientSubject`. If the module determines 
+that an invalid or incomplete security context was used to secure the request, then the module may return `AuthStatus.SEND_FAILURE`, `AuthStatus.SEND_CONTINUE`, or throw an `AuthException`. If the module
+throws an `AuthException`, or returns any value other than `AuthStatus.SUCCESS`, the runtime must NOT 
+proceed to the service invocation. The runtime must process an `AuthException` as described above for a 
+request with a mandatory `requestPolicy`. The runtime must process any return value other than 
+`AuthStatus.SUCCESS` as it would be processed if it were returned for a request with a mandatory 
+`requestPolicy`.
 
-=== [[a449]]validateRequest After Service Invocationlink:#a910[13]
+[[a449]]
+===== validateRequest After Service Invocation 
 
-When validateRequest is called after the
-service invocation has completed, the module must return
-AuthStatus.SEND_SUCCESS when the module has successfully secured the
-application response message and made it available through
-messageInfo.getResponseMessage. For the request to be successfully
-completed, the runtime must send the response message returned by the
-module.
+When `validateRequest` is called after the service invocation has completedfootnote:[“After the service invocation” effectively means after the first call to secureResponse; as distinct from the case where authenticate might call validateRequest from within the service invocation and before it completes.], the module must return
+`AuthStatus.SEND_SUCCESS` when the module has successfully secured the application response message 
+and made it available through `messageInfo.getResponseMessage`. For the request to be successfully
+completed, the runtime must send the response message returned by the module.
 
-When securing of the application response
-message has failed, and the response dialog is to be terminated, the
-module must return AuthStatus.SEND_FAILURE or throw an AuthException.
+When securing of the application response message has failed, and the response dialog is to be 
+terminated, the module must return `AuthStatus.SEND_FAILURE` or throw an `AuthException`.
 
-If the module returns
-AuthStatus.SEND_FAILURE, it must have established a response message in
-messageInfo, and it must have set the HTTP status code within the
-response to HTTP 500 (internal server error). The runtime may choose not
-to send a response message, or to send a different response message
+If the module returns `AuthStatus.SEND_FAILURE`, it must have established a response message in
+`messageInfo`, and it must have set the HTTP status code within the response to HTTP 500 (internal server 
+error). The runtime may choose not to send a response message, or to send a different response message
 (given that it also contains an HTTP 500 status code).
 
-When the module throws an AuthException, the
-runtime may choose not to send a response. If the runtime sends a
-response, the runtime must set the HTTP status code to HTTP 500
-(internal server error), and the runtime must define the descriptive
-content of the response (perhaps by obtaining it from the
-AuthException).
+When the module throws an `AuthException`, the runtime may choose not to send a response. If the runtime sends a
+response, the runtime must set the HTTP status code to HTTP 500 (internal server error), 
+and the runtime must define the descriptive content of the response (perhaps by obtaining it from the
+`AuthException`).
 
-The module must return
-AuthStatus.SEND_CONTINUE if the response dialog is to continue. This
-status value is used to inform the calling runtime that, to successfully
-complete the response processing, it must be capable of continuing the
-message dialog by processing at least one additional request/response
-exchange (after having sent the response message returned in
-messageInfo). The module must have established (in messageInfo) a
-response message that will cause the client to continue the response
-processing (that is, retry the request). For the response processing to
-be successfully completed, the runtime must send the response message
-returned by the module.
+The module must return `AuthStatus.SEND_CONTINUE` if the response dialog is to continue. This
+status value is used to inform the calling runtime that, to successfully complete the response processing, it
+must be capable of continuing the message dialog by processing at least one additional request/response
+exchange (after having sent the response message returned in `messageInfo`). The module must have 
+established (in `messageInfo`) a response message that will cause the client to continue the response
+processing (that is, retry the request). For the response processing to be successfully completed, the 
+runtime must send the response message returned by the module.
 
-=== [[a455]]secureResponse Processing
+[[a455]]
+===== secureResponse Processing
 
-The return value and AuthException semantics
-of secureResponse are as defined in link:jaspic.html#a449[See
-validateRequest After Service Invocation].” This profile places no
-requirements on authentication modules with respect to interpreting
-responsePolicy values.
+The return value and `AuthException` semantics
+of secureResponse are as defined in <<a449>>. This profile places no requirements on authentication 
+modules with respect to interpreting `responsePolicy` values.
 
-=== [[a457]]Forwards and Includes by Server Authentication Modules
+[[a457]]
+===== Forwards and Includes by Server Authentication Modules
 
-The message processing runtime must support
-the acquisition and use of RequestDispatcher objects by authentication
-modules within their processing of validateRequest. Under the
-constraints defined by RequestDispatcher, authentication modules must be
-able to forward and include using the request and response objects
-passed in MessageInfo. In particular, an authentication module must be
-able to acquire a RequestDispatcher from the request obtained from
-MessageInfo, and uses it to forward the request (and response) to a
-login form. Authentication modules should catch and rethrow as an
-AuthException any exception thrown by these methods.
+The message processing runtime must support the acquisition and use of `RequestDispatcher` objects by 
+authentication modules within their processing of `validateRequest`. Under the constraints defined by 
+`RequestDispatcher`, authentication modules must be able to `forward` and `include` using the request and 
+response objects passed in `MessageInfo`. In particular, an authentication module must be able to acquire a `RequestDispatcher` from the request obtained from `MessageInfo`, and uses it to forward the request 
+(and response) to a login form. Authentication modules should catch and rethrow as an `AuthException` any 
+exception thrown by these methods.
 
-=== [[a459]]Wrapping and UnWrapping of Requests and Responses
+[[a459]]
+===== Wrapping and UnWrapping of Requests and Responses
 
-A ServerAuthModule must only call
-MessageInfo.setResponseMessage() to wrap or unwrap the existing response
-within MessageInfo. That is, if a ServerAuthModule calls
-MessageInfo.setResponseMessage(), the response argument must be an
-HtppServletResponseWrapper that wraps the HttpServletResponse within
-MessageInfo, or the response argument must be an HttpServletResponse
-that is wrapped by the HttpServletResponseWrapper within MessageInfo.
-The analogous requirements apply to MessageInfo.setRequestMessage().
+A `ServerAuthModule` must only call `MessageInfo.setResponseMessage()` to wrap or unwrap the existing 
+response within `MessageInfo`. That is, if a `ServerAuthModule` calls `MessageInfo.setResponseMessage()`, 
+the response argument must be an `HtppServletResponseWrapper` that wraps the `HttpServletResponse` 
+within `MessageInfo`, or the response argument must be an `HttpServletResponse` that is wrapped by the `HttpServletResponseWrapper` within `MessageInfo`. The analogous requirements apply to 
+`MessageInfo.setRequestMessage()`.
 
-During secureResponse processing, a
-ServerAuthModule must unwrap the messages in MessageInfo that it wrapped
-during its validateRequest processing. The unwrapped values must be
-established in MessageInfo when secureResponse returns. The module
-should not remove wrappers for which it is not responsible.
+During `secureResponse` processing, a `ServerAuthModule` must unwrap the messages in `MessageInfo` 
+that it wrapped during its `validateRequest` processing. The unwrapped values must be established in 
+`MessageInfo` when `secureResponse` returns. The module should not remove wrappers for which it is not 
+responsible.
 
-During validateRequest processing, a
-ServerAuthModule must NOT unwrap a message in MessageInfo, and must NOT
-establish a wrapped message in MessageInfo unless the ServerAuthModule
-returns AuthStatus.SUCCESS. For example, if during validateRequest
-processing a ServerAuthModule calls MessageInfo.setResponseMessage(),
-the response argument must be an HttpServletResponseWrapper that wraps
-the HttpServletResponse within MessageInfo.
+During `validateRequest` processing, a `ServerAuthModule` must NOT unwrap a message in 
+`MessageInfo`, and must NOT establish a wrapped message in `MessageInfo` unless the `ServerAuthModule`
+returns `AuthStatus.SUCCESS`. For example, if during `validateRequest` processing a `ServerAuthModule` 
+calls `MessageInfo.setResponseMessage()`, the response argument must be an `HttpServletResponseWrapper`
+that wraps the `HttpServletResponse` within `MessageInfo`.
 
-When a ServerAuthModule returns a wrapped
-message in MessageInfo, or unwraps a message in MessageInfo, the message
-processing runtime must ensure that the HttpServletRequest and
-HttpServletResponse objects established by the ServerAuthModule are used
-in downstream processing.
+When a `ServerAuthModule` returns a wrapped message in `MessageInfo`, or unwraps a message in 
+`MessageInfo`, the message processing runtime must ensure that the `HttpServletRequest` and
+`HttpServletResponse` objects established by the `ServerAuthModule` are used in downstream processing.
 
-=== [[a464]]Setting the Authentication Results on the HttpServletRequest
+[[a464]]
+==== Setting the Authentication Results on the HttpServletRequest
 
-The requirements defined in this section must
-be fulfilled by a message processing runtime, when (at point (2) in the
-messaging model, validateRequest returns AuthStatus.SUCCESS. The
-requirements must also be fulfilled by HttpServletRequest.authenticate
-when its call to validateRequest returns AuthStatus.SUCCESS. In both
-cases, the HttpServletRequest must be modified as necessary to ensure
-that the Principal returned by getUserPrincipal and the String returned
-by getRemoteUser correspond, respectively, to the Principal established
-by validateRequest (via the CallerPrincipalCallback) and to the String
-obtained by calling getName on the established
-Principallink:#a911[14]. Both cases, must also ensure that the
-value returned by calling getAuthType on the HttpServletRequest is
-consistent in terms of being null or non-null with the value returned by
-getUserPrincipal.
+The requirements defined in this section must be fulfilled by a message processing runtime, when (at point 
+(2) in the messaging model, `validateRequest` returns `AuthStatus.SUCCESS`. The requirements must also be 
+fulfilled by `HttpServletRequest.authenticate` when its call to validateRequest returns 
+`AuthStatus.SUCCESS`. In both cases, the `HttpServletRequest` must be modified as necessary to ensure that 
+the `Principal` returned by `getUserPrincipal` and the `String` returned by `getRemoteUser` correspond, 
+respectively, to the `Principal` established by `validateRequest` (via the `CallerPrincipalCallback`) and to the 
+`String` obtained by calling `getName` on the established `Principal` footnote:Except when getUserPrincipal returns null; in which case the value returned by getRemoteUser must be null]. 
+Both cases, must also ensure that the
+value returned by calling `getAuthType` on the `HttpServletRequest` is consistent in terms of being null or 
+non-null with the value returned by `getUserPrincipal`.
 
-When getAuthType is to return a non-null
-value, the Map of the MessageInfo object used in the call to
-validateRequest must be consulted to determine if it contains an entry
-for the key identified in link:jaspic.html#a467[See
-Authentication Type (Callback) Property]. If the Map contains an entry
-for the key, the corresponding value must be obtained from the Map and
-established as the getAuthType return value. If the Map does not contain
-an entry for the key, and an auth-method is defined in the login-config
-element of the deployment descriptor for the web application, the value
-from the auth-method must be established as the getAuthType return
-value. If the Map does not contain an entry for the key, and the
-deployment descriptor does not define an auth-method, a product defined
-default non-null value must be established the getAuthType return value,
-and the same default value need not be used for both cases.
+When `getAuthType` is to return a non-null value, the `Map` of the `MessageInfo` object used in the call to
+`validateRequest` must be consulted to determine if it contains an entry for the key identified in <<a467>>. If 
+the `Map` contains an entry for the key, the corresponding value must be obtained from the `Map` and
+established as the `getAuthType` return value. If the `Map` does not contain an entry for the key, and an 
+`auth-method` is defined in the `login-config` element of the deployment descriptor for the web application, the 
+value from the `auth-method` must be established as the `getAuthType` return value. If the `Map` does not 
+contain an entry for the key, and the deployment descriptor does not define an `auth-method`, a product defined
+default non-null value must be established as the `getAuthType` return value, and the same default 
+value need not be used for both cases.
 
-=== [[a467]]Authentication Type (Callback) Property
 
-key
+[[a467]]
+[caption="Table {doc-part}-{counter:table-number} ", title="Authentication Type (Callback) Property"]
+[.center, width=95%]
+[%header,cols="50%,50%"] 
+|===
+a| [.small]#+++<font size=".8em">key</font>+++#
+a| [.small]#+++<font size=".8em">value</font>+++#
 
-value
-
-jakarta.servlet.http.authType
-
-A non-null String value that identifies the
+a| [.small]#+++<font size=".8em">jakarta.servlet.http.authType</font>+++#
+| A non-null `String` value that identifies the
 authentication mechanism
+|===
 
-If a non-null Principal was established by
-validateRequest (via the CallerPrincipalCallback), the Map of the
-MessageInfo object used in the call to validateRequest must be consulted
-to determine if it contains an entry for the key identified in
-link:jaspic.html#a473[See Authentication Session Registration
-(Callback) Property]. If the Map contains an entry for the key, the
-authentication session machinery of the container must be used to create
-(or update) a container authentication session to represent the caller
-Principal, authType, and the additional container authentication state
-established by the call to validateRequest. The resulting container
-authentication session must be bound to the HttpServletResponse such
-that the container will be able to restore the caller authentication
-results on subsequent calls to the application.
 
-=== [[a473]]Authentication Session Registration (Callback) Property
+If a non-null `Principal` was established by `validateRequest` (via the `CallerPrincipalCallback`), the `Map` 
+of the `MessageInfo` object used in the call to `validateRequest` must be consulted to determine if it contains 
+an entry for the key identified in <<473>>. If the `Map` contains an entry for the key, the authentication 
+session machinery of the container must be used to create (or update) a container authentication session to 
+represent the caller `Principal`, `authType`, and the additional container authentication state established by the 
+call to `validateRequest`. The resulting container authentication session must be bound to the 
+`HttpServletResponse` such that the container will be able to restore the caller authentication results on 
+subsequent calls to the application.
 
-key
+[[a473]]
+[caption="Table {doc-part}-{counter:table-number} ", title="Authentication Session Registration (Callback) Property"]
+[.center, width=95%]
+[%header,cols="50%,50%"] 
+|===
+a| [.small]#+++<font size=".8em">key</font>+++#
+a| [.small]#+++<font size=".8em">value</font>+++#
 
-value
+a| [.small]#+++<font size=".8em">jakarta.servlet.http.registerSession</font>+++#
+| Any non-null `String` value, s, for which Boolean.valueOf(s).booleanValue() == true
+|===
 
-jakarta.servlet.http.registerSession
 
-Any non-null String value, s, for which
-Boolean.valueOf(s).booleanValue() == true
+The authentication type and session registration properties are callback propertiesfootnote:[Unlike CallbackHandler processed Callback objects, callback properties are not acted upon until the authentication module returns to the runtime.]
+and are intended to provide a way for an authentication module to request a corresponding service from its encompassing runtime. As such, all authentication modules must ensure that they do not inadvertently
+relay these properties should they be included in their input `MessageInfo` arguments.
 
-The authentication type and session
-registration properties are callback propertieslink:#a912[15];
-and are intended to provide a way for an authentication module to
-request a corresponding service from its encompassing runtime. As such,
-all authentication modules must ensure that they do not inadvertently
-relay these properties should they be included in their input
-MessageInfo arguments.
+[[a479]]
+=== Sub-profile for authenticate, login, and logout of HttpServletRequest
 
-=== [[a479]]Sub-profile for authenticate, login, and logout of HttpServletRequest
-
-Servlet 3.0 added the authenticate, login,
-and logout methods to the HttpServletRequest interface. A compatible
-implementation of the Servlet Container Profile must satisfy the
-requirements defined in this sub-profile. This sub-profile differs from
-the larger profile in which it is contained, in that it describes the
-handling of calls that would typically be expected to occur within the
-service invocation; while the focus of the larger profile, is on points
-(2) and (3) in the messaging model (which occur on either side of the
+Servlet 3.0 added the `authenticate`, `login`, and `logout` methods to the `HttpServletRequest` interface. 
+A compatible implementation of the Servlet Container Profile must satisfy the requirements defined in this sub-profile. This sub-profile differs from the larger profile in which it is contained, in that it describes the
+handling of calls that would typically be expected to occur within the service invocation; while the focus of 
+the larger profile, is on points (2) and (3) in the messaging model (which occur on either side of the
 service invocation).
 
-=== Authentication Configuration Requirements
+==== Authentication Configuration Requirements
 
-When an application calls
-HttpServletRequest.authenticate, HttpServletRequest.login, or
-HttpServletRequest.logout, the container implementation of the called
-method must determine (as defined in link:jaspic.html#a392[See
-AuthConfigProvider Requirements]” if there is an AuthConfigProvider
-configured for the application context and layer. If not, the called
-method must proceed to perform the required authenticate, login, or
-logout functionality without further reliance on this sub-profile.
+When an application calls `HttpServletRequest.authenticate`, `HttpServletRequest.login`, or
+`HttpServletRequest.logout`, the container implementation of the called method must determine (as defined 
+in <<a392>>) if there is an `AuthConfigProvider` configured for the application context and layer. If not, the called
+method must proceed to perform the required `authenticate`, `login`, or `logout` functionality without further reliance on this sub-profile.
 
-If an AuthConfigProvider is determined to be
-configured, the called method must proceed to obtain the corresponding
-ServerAuthConfig also as defined in link:jaspic.html#a392[See
-AuthConfigProvider Requirements]”.
+If an `AuthConfigProvider` is determined to be configured, the called method must proceed to obtain the 
+corresponding `ServerAuthConfig` also as defined in <<a392>>.
 
-As described in
-link:jaspic.html#a273[See Acquire AuthConfigProvider], the
-called method may reuse the results of a previous AuthConfigProvider
-determination and ServerAuthConfig acquisition (such as that performed
-by the message processing runtime) during its processing of the servlet
-request within which the authenticate, login, or logout method is being
-called.
+As described in <<a273>>, the called method may reuse the results 
+of a previous `AuthConfigProvider` determination and `ServerAuthConfig` acquisition (such as that 
+performed by the message processing runtime) during its processing of the servlet
+request within which the `authenticate`, `login`, or `logout` method is being called.
 
-=== Processing for HttpServletRequest.login
+==== Processing for HttpServletRequest.login
 
-The container implementation of login must
-throw a ServletException which may convey that the exception was caused
-by an incompatibility between the login method and the configured
-authentication mechanism.
+The container implementation of `login` must throw a `ServletException` which may convey that the exception was caused
+by an incompatibility between the login method and the configured authentication mechanism.
 
-=== [[a487]]Processing for HttpServletRequest.authenticate
+[[a487]]
+==== Processing for HttpServletRequest.authenticate
 
-If authenticate is called in the context of a
-call it made to validateRequest, it must not recall validateRequest, but
-must perform the container authentication processing that it performs
-when it determines that an AuthConfigProvider is not configured for the
-application context and layer.
+If `authenticate` is called in the context of a call it made to `validateRequest`, it must not recall 
+`validateRequest`, but must perform the container authentication processing that it performs when it 
+determines that an `AuthConfigProvider` is not configured for the application context and layer.
 
-Otherwise, authenticate must acquire the
-corresponding ServerAuthContext object as defined in
-link:jaspic.html#a396[See Authentication Context Requirements]”
-(and its subsections), while satisfying the additional requirement that
-the authentication context identifier used to obtain the
-ServerAuthContext must be the identifier that would be acquired by
-calling getAuthContextID with MessageInfo as defined in
-link:jaspic.html#a425[See MessageInfo Requirements]” and while
-satisfying the additional requirement that the MessageInfo map must
-unconditionally contain the
-jakarta.security.auth.message.MessagePolicy.isMandatory key (with
-associated true value).
+Otherwise, `authenticate` must acquire the corresponding `ServerAuthContext` object as defined in
+<<a396>> (and its subsections), while satisfying the additional 
+requirement that the authentication context identifier used to obtain the `ServerAuthContext` must be the identifier that would be acquired by
+calling `getAuthContextID` with `MessageInfo` as defined in <<a425>> and while satisfying the additional requirement that the `MessageInfo` map must unconditionally contain the
+`jakarta.security.auth.message.MessagePolicy.isMandatory` key (with associated `true` value).
 
-Authenticate must call validateRequest on the
-acquired ServerAuthContext. The MessageInfo argument to the call to
-validateRequest must be as defined above. The clientSubject argument
-must be a non-null Subject and should be the Subject resulting from the
-call to validateRequest prior to the service invocation as described in
-link:jaspic.html#a442[See validateRequest Before Service
-Invocation]”. If the prior Subject is not used, A new (empty)
+`Authenticate` must call `validateRequest` on the acquired `ServerAuthContext`. The `MessageInfo` 
+argument to the call to `validateRequest` must be as defined above. The `clientSubject` argument must be a 
+non-null `Subject` and should be the `Subject` resulting from the call to `validateRequest` prior to the service 
+invocation as described in <<a442>>. If the prior 
+Subject is not used, A new (empty)
 clientSubject must be instantiated and passed in the call to
 validateRequest. A null value may be used for the serviceSubject.
 
-If the call to validateRequest returns
-AuthStatus.SUCCESS, the authenticate method must perform the processing
-defined in link:jaspic.html#a464[See Setting the Authentication
-Results on the HttpServletRequest]”. This processing includes
-establishing return values for getUserPrincipal, getRemoteUser, and
-getAuthType and may include the registration of the authentication
-results in a container authentication sessionlink:#a913[16].
-Following this processing, the authenticate method must return the
-boolean value true, and if the calling context is configured to run-as
-its caller, the results of the authentication must be reflected in the
+If the call to validateRequest returns `AuthStatus.SUCCESS`, the authenticate method must perform the processing
+defined in <<a464>>. 
+This processing includes establishing return values for `getUserPrincipal`, `getRemoteUser`, and `getAuthType` and 
+may include the registration of the authentication results in a container authentication sessionfootnote:[Note that the authenticate method must not perform the pre-dispatch container authorization check that the message processing runtime would typically perform on successful return from `validateRequest`.]
+Following this processing, the `authenticate` method must return the boolean value `true`, and if the calling context is configured to run-as its caller, the results of the authentication must be reflected in the run-as identity.
+
+If the call to `validateRequest` throws an `AuthException`, the `authenticate` method must catch the `AuthException` and
+throw a `ServletException`.
+
+If the call to `validateRequest` returns any value other than `AuthStatus.SUCCESS`, the `authenticate` method must return
+`false`.
+
+==== Processing for HttpServletRequest.logout
+
+If logout is called in the context of a call it made to cleanSubject, it must not recall `cleanSubject`, but it must
+perform the logout processing that it performs when it determines that an `AuthConfigProvider` is not configured for the application context and layer.
+
+Otherwise, `logout` must acquire the corresponding `ServerAuthContext` object as defined in <<a396>>
+(and its subsections), while satisfying the additional requirement that the authentication context identifier used to obtain the `ServerAuthContext` must be the identifier that would be acquired by calling `getAuthContextID` with `MessageInfo` as defined in <<a425>> and while satisfying the additional requirement that the `MessageInfo` map must
+unconditionally contain the `jakarta.security.auth.message.MessagePolicy.isMandatory` key (with
+associated `true` value). Logout should attempt to satisfy the requirement
+of <<a425>>, that `MessageInfo` be initialized such that its `getResponseMessage` will return
+the `HttpServletResponse`, but need not do so if the response is unavailable or committed.
+
+The container implementation of `logout` must call `cleanSubject` on the acquired `ServerAuthContext`. 
+The `MessageInfo` argument to the call to `cleanSubject` must be as defined above. The `clientSubject` 
+argument must be a non-null `Subject` and should be the `Subject` resulting from the most recent call to `validateRequest` which may have occurred either as described in <<a442>> or as described in <<a487>. 
+If the prior `Subject` is not used, a new `clientSubject` must be instantiated and passed in the call.
+
+Following the return from `cleanSubject`, `logout` must perform the logout processing that it performs 
+when it determines that an `AuthConfigProvider` is not configured for the application context and layer, 
+and if the calling context is configured to run-as its caller, the results of the logout must be reflected in the
 run-as identity.
 
-If the call to validateRequest throws an
-AuthException, the authenticate method must catch the AuthException and
-throw a ServletException.
+==== Calls from within ServerAuthContext
 
-If the call to validateRequest returns any
-value other than AuthStatus.SUCCESS, the authenticate method must return
-false.
-
-=== Processing for HttpServletRequest.logout
-
-If logout is called in the context of a call
-it made to cleanSubject, it must not recall cleanSubject, but it must
-perform the logout processing that it performs when it determines that
-an AuthConfigProvider is not configured for the application context and
-layer.
-
-Otherwise, logout must acquire the
-corresponding ServerAuthContext object as defined in
-link:jaspic.html#a396[See Authentication Context Requirements]”
-(and its subsections), while satisfying the additional requirement that
-the authentication context identifier used to obtain the
-ServerAuthContext must be the identifier that would be acquired by
-calling getAuthContextID with MessageInfo as defined in
-link:jaspic.html#a425[See MessageInfo Requirements]” and while
-satisfying the additional requirement that the MessageInfo map must
-unconditionally contain the
-jakarta.security.auth.message.MessagePolicy.isMandatory key (with
-associated true value). Logout should attempt to satisfy the requirement
-of link:jaspic.html#a425[See MessageInfo Requirements], that
-MessageInfo be initialized such that its getResponseMessage will return
-the HttpServletResponse, but need not do so if the response is
-unavailable or committed.
-
-The container implementation of logout must
-call cleanSubject on the acquired ServerAuthContext. The MessageInfo
-argument to the call to cleanSubject must be as defined above. The
-clientSubject argument must be a non-null Subject and should be the
-Subject resulting from the most recent call to validateRequest which may
-have occurred either as described in link:jaspic.html#a442[See
-validateRequest Before Service Invocation]” or as described in
-link:jaspic.html#a487[See Processing for
-HttpServletRequest.authenticate]”. If the prior Subject is not used, A
-new clientSubject must be instantiated and passed in the call.
-
-Following the return from cleanSubject,
-logout must perform the logout processing that it performs when it
-determines that an AuthConfigProvider is not configured for the
-application context and layer, and if the calling context is configured
-to run-as its caller, the results of the logout must be reflected in the
-run-as identity.
-
-=== Calls from within ServerAuthContext
-
-If HttpServletRequest.authenticate or
-HttpServletRequest.logout is called from within the methods of the
-ServerAuthContext interface (for example, from within validateRequest,
-secureResponse, or cleanSubject), it is the responsibility of the
-implementation of the ServerAuthContext to interpret the results of the
-call and to establish appropriate ServerAuthContext return values. This
-profile is silent on the details of the interpretation and mapping of
-return values.
+If `HttpServletRequest.authenticate` or `HttpServletRequest.logout` is called from within the methods of the
+`ServerAuthContext` interface (for example, from within `validateRequest`, `secureResponse`, or `cleanSubject`),
+it is the responsibility of the implementation of the `ServerAuthContext` to interpret the results of the
+call and to establish appropriate `ServerAuthContext` return values. This profile is silent on the details of the interpretation and mapping of return values.
