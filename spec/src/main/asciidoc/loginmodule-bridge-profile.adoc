@@ -2,416 +2,106 @@
 
 
 This chapter defines an internal contract that specifies how a server-side message layer authentication module
-(that is, an implementation of the ServerAuthModule interface as defined
+(that is, an implementation of the `ServerAuthModule` interface as defined
 by this specification) may delegate some of its security processing
-responsibilities to a (JAAS) LoginModule. A LoginModule is an object
-that implements the javax.security.auth.spi.LoginModule interface in the
+responsibilities to a (JAAS) `LoginModule`. A `LoginModule` is an object
+that implements the `javax.security.auth.spi.LoginModule` interface in the
 Java Platform, Standard Edition.
 
-=== [[a685]]Processing Model
+[[a685]]
+=== Processing Model
 
-The ServerAuthModule must create an instance
-of a javax.security.auth.login.LoginContext. If the options argument
-passed to the initialize method of the ServerAuthModule contains a
-non-null String value for the String key
-"javax.security.auth.login.LoginContext", then the ServerAuthModule must
-pass this value as the name parameter in its calls to the LoginContext
+The `ServerAuthModule` must create an instance
+of a `javax.security.auth.login.LoginContext`. If the `options` argument
+passed to the initialize method of the `ServerAuthModule` contains a
+non-null `String` value for the `String` key
+"javax.security.auth.login.LoginContext", then the `ServerAuthModule` must
+pass this value as the name parameter in its calls to the `LoginContext`
 constructor. If the options argument does not contain a non-null String
-value for this key, the ServerAuthModule must use its own fully
+value for this key, the `ServerAuthModule` must use its own fully
 qualified class name in its calls to the constructor. In either case,
-the administrator of the javax.security.auth.login.Configuration system
-of the LoginContext is responsible for establishing the
-javax.security.auth.login.AppConfigurationEntry objects (with
+the administrator of the `javax.security.auth.login.Configuration` system
+of the `LoginContext` is responsible for establishing the
+`javax.security.auth.login.AppConfigurationEntry` objects (with
 corresponding login module name, control flag, and initialization
-options) to be returned for the entry name used by the ServerAuthModule
+options) to be returned for the entry name used by the `ServerAuthModule`
 and for the default entry name "other".
 
-If the ServerAuthModule passes a Subject to
-the LoginContext constructor, it must pass its client Subject. The
-ServerAuthModule must pass a CallbackHandler to the constructor and the
-passed CallbackHandler must conform to the requirements of
-link:jaspic.html#a692[See Standard Callbacks]."
+If the `ServerAuthModule` passes a `Subject` to
+the LoginContext constructor, it must pass its client `Subject`. The
+`ServerAuthModule` must pass a `CallbackHandler` to the constructor and the
+passed `CallbackHandler` must conform to the requirements of
+<<a692>>
 
 A new LoginContext instance should be created
-for each new request, and a LoginContext instance should not be shared
-across different requests. Once a LoginContext object has been created,
-the LoginContext.login method may be invoked from within the
-ServerAuthModule.validateRequest method to delegate security processing
-to the LoginModule objects configured in the LoginContext.
+for each new request, and a `LoginContext` instance should not be shared
+across different requests. Once a `LoginContext` object has been created,
+the `LoginContext.login` method may be invoked from within the
+`ServerAuthModule.validateRequest` method to delegate security processing
+to the `LoginModule` objects configured in the `LoginContext`.
 
 === Division of Responsibility
 
-A ServerAuthModule must only interact with a
-LoginModule in a protocol-independent fashion. Specifically, a
-ServerAuthModule is the only entity that may interpret protocol-specific
+A `ServerAuthModule` must only interact with a
+`LoginModule` in a protocol-independent fashion. Specifically, a
+`ServerAuthModule` is the only entity that may interpret protocol-specific
 messages (a SOAP request or an HTTP Servlet request, for example). A
-LoginModule must only perform protocol-independent security processing
+`LoginModule` must only perform protocol-independent security processing
 (for example, verifying a username/password that was transmitted in the
 request).
 
-A LoginModule requests information from the
-ServerAuthModule using the ServerAuthModule provided CallbackHandler.
-Since the LoginModule must only perform protocol-independent operations,
+A `LoginModule` requests information from the
+`ServerAuthModule` using the `ServerAuthModule` provided `CallbackHandler`.
+Since the `LoginModule` must only perform protocol-independent operations,
 it follows that any callback it requests from the handler must also be
 protocol-independent. It is the responsibility of the provided
-CallbackHandler implementation to return the requested
-protocol-independent information to the LoginModule. The CallbackHandler
+`CallbackHandler` implementation to return the requested
+protocol-independent information to the `LoginModule`. The `CallbackHandler`
 is responsible for any protocol-specific message parsing required to
 extract the protocol-independent information returned by the
-CallbackHandler.
+`CallbackHandler`.
 
-=== [[a692]]Standard Callbacks
+[[a692]]
+=== Standard Callbacks
 
 This profile requires that the
-CallbackHandler provided by the ServerAuthModule to the LoginContext
-constructor support the javax.security.auth.callback.NameCallback and
-the javax.security.auth.callback.PasswordCallback. If the
-ServerAuthModule passes its client Subject to the LoginContext
-constructor, the CallbackHandler provided to the LoginContext
-constructor must also support the GroupPrincipalCallback. Future
+`CallbackHandler` provided by the `ServerAuthModule` to the `LoginContext`
+constructor support the `javax.security.auth.callback.NameCallback` and
+the `javax.security.auth.callback.PasswordCallback`. If the
+`ServerAuthModule` passes its client `Subject` to the `LoginContext`
+constructor, the `CallbackHandler` provided to the `LoginContext`
+constructor must also support the `GroupPrincipalCallback`. Future
 versions of this profile may require that additional callbacks be
 supported by the handler.
 
-=== [[a694]]Subjects
+[[a694]]
+=== Subjects
 
-If authentication succeeds, a LoginModule may
-update its Subject instance with authenticated Principal and credential
-objects. If the ServerAuthModule did not pass its client Subject to the
-LoginContext constructor, then it must transfer the Principals and
-credentials from the LoginContext Subject to the client Subject.
+If authentication succeeds, a `LoginModule` may
+update its `Subject` instance with authenticated Principal and credential
+objects. If the `ServerAuthModule` did not pass its client `Subject` to the
+`LoginContext` constructor, then it must transfer the Principals and
+credentials from the `LoginContext` `Subject` to the client `Subject`.
 
-If the ServerAuthModule is implementing a
+If the `ServerAuthModule` is implementing a
 profile of this specification that requires the module to employ the
-CallerPrincipalCallback, then the ServerAuthModule must satisfy this
-requirement using the CallbackHandler provided to the ServerAuthModule,
-and the CallerPrincipalCallback must be constructed using the
-namelink:#a920[23] value that would be obtained by the
-LoginModule if it were to use its CallbackHandler to handle a
+`CallerPrincipalCallback`, then the `ServerAuthModule` must satisfy this
+requirement using the `CallbackHandler` provided to the `ServerAuthModule`,
+and the `CallerPrincipalCallback` must be constructed using the
+namefootnote:[The `CallerPrincipalCallback` may be constructed with a `String` argument containing the `name` value, or with a `Principal` argument whose `getName` method returns the name value.] value that would be obtained by the
+`LoginModule` if it were to use its `CallbackHandler` to handle a
 NameCallback.
 
 === Logout
 
-When ServerAuthModule.cleanSubject is called
-on the client Subject, the cleanSubject method must invoke the
-LoginContext.logout method.
+When `ServerAuthModule.cleanSubject` is called
+on the client `Subject`, the `cleanSubject` method must invoke the
+`LoginContext.logout` method.
 
 === LoginExceptions
 
-If the LoginContext instance throws a
-LoginException, the ServerAuthModule must throw a corresponding
-AuthException. The LoginException may be established as the cause of the
-AuthException.
+If the `LoginContext` instance throws a
+`LoginException`, the `ServerAuthModule` must throw a corresponding
+`AuthException`. The `LoginException` may be established as the cause of the
+`AuthException`.
 
-=== APPENDIX 
-
-=== Related Documents
-
-This specification refers to the following
-documents. The terms used to refer to the documents in this
-specification are included in brackets.
-
-S. Bradner, “Key words for use in RFCs to
-Indicate Requirement Levels,” RFC 2119, Harvard University, March 1997,
-[Keywords].
-
- _Java™ 2 Platform, Enterprise Edition
-Specification Version 1.4_ [J2EE Specification], available at:
-_http://java.sun.com/j2ee/docs.html_ .
-
- _Java™ Platform, Enterprise Edition 5
-Specification,_ [Java EE 5 Specification], available at:
-http://java.sun.com/javaee
-
- _Java™ 2 Platform, Standard Edition, Version
-5.0 API Specification_ , [Java SE 5 Specification], available at:
-_http://java.sun.com/javase_
-
- _Enterprise JavaBeans™ Specification, Version
-3.0_ [EJB Specification], available at:
-_http://java.sun.com/products/ejb_
-
- _Java™ Servlet Specification, Version 2.5_
-[Servlet Specification], available at:
-_http://java.sun.com/products/servlet_
-
- _Java™ Authentication and Authorization
-Service_ (JAAS) 1.0 [JAAS Specification], available at:
-_http://java.sun.com/products/jaas_
-
- _Java™_ API for XML-Based Web Services
-(JAX-WS) 2.0 [JAXWS-2.0 Specification], available at:
-https://jax-ws.dev.java.net/ or
-http://jcp.org/aboutJava/communityprocess/final/jsr224
-
- _Java™_ API for XML-Based Web Services
-(JAX-WS) 2.1 [JAXWS-2.1 Specification], available at:
-https://jax-ws.dev.java.net/ or
-http://jcp.org/aboutJava/communityprocess/final/jsr224
-
-SOAP Version 1.2 Part 0: Primer, W3C
-Recommendation, 24 June 2003 [SOAP Specification], available at:
-http://www.w3.org/TR/soap12-part0
-
- _Java™_ Message Service Specification Version
-1.1 [JMS Sp ecification], available at:
-http://java.sun.com/products/jms/docs.html
-
-Common Secure Interoperability, Version 2
-(CSIv2),OMG standard [CSIv2 Specification], available at:
-http://www.omg.org/technology/documents/formal/omg_security.htm
-
-Portable Interceptors, OMG Standard [PI
-Specification], available at:
-http://www.omg.org/docs/formal/04-03-19.pdf
-
-===  _ApPenDIX_ [[a717]]
-
-=== Issues
-
-The following sections document the more
-noteworthy issues that have been discussed by the Expert Group (EG). The
-expectation is that standardization of the interfaces defined by this
-specification will depend on satisfactory resolution of these issues.
-
-=== Implementing getCallerPrincipal and getUserPrincipal
-
-J2EE containers and other messaging runtimes
-are required to support various forms of these methods. When the
-authentication identity is provided to the container as a bag of
-principals in a Subject, the container needs some way to recognize which
-of the principals in the subject should be returned as the caller or
-user Principal.
-
-
-
-image:authn-4.png[image]
-
-Defined the CallerPrincipalCallback and GroupPrincipalCallback. The
-container provided CallbackHandler will handle these callbacks by
-distinguishing (in some container specific way) the Principals
-identified in the corresponding Callback within a Subject passed in the
-Callback.
-
-image:authn-4.png[image]
-
-=== Alternative Supported Mechanisms at an Endpoint
-
-How does one use this SPI to configure and
-invoke alternative “sufficient” providers, such that satisfying any
-alternative within the context results in a successful outcome as seen
-by the calling container or runtime?
-
-
-
-image:authn-4.png[image]
-
-The getAuthContext method of ClientAuthConfig and ServerAuthConfig was
-modified to include the credentials of the client or service subject
-respectively so that they may be applied in the context acquisition. The
-presence of the credentials during context selection will allow the
-acquired context to be matched to the credentials, which will eliminate
-one of the reasons, that is, support for alternative credential types,
-why a context might need to support alternative (sufficient) modules.
-AuthContext objects could achieve transactional semantics by passing
-message copies to modules, or they could pass properties requiring
-transaction behavior of modules. There seems to be consensus within the
-EG that we should facilitate the use of single module contexts by
-empowering the config layer to select an appropriate context (containing
-a single module).
-
-image:authn-4.png[image]
-
-=== Access by Module to Other Layer Authentication Results
-
-How does an authentication module gain access
-to authentication results established at a “lower” authentication layer?
-For example, acceptance of an identity assertion for subject S conveyed
-within the message at layer Y may be dependent on being able to
-authenticate at some lower layer (for example, SSL or perhaps message
-layer X), the entity (perhaps other than S) providing or making the
-identity assertion.
-
-
-
-
-
-image:authn-4.png[image]
-
-The ServletRequest object includes attributes that define the security
-properties of the transport connection on which a protected request
-arrived at the Servlet container. For the Servlet profile of this
-specification, we would expect the existing attribute mechanism to be
-employed. The general issue remains open, and may be resolved by the
-definition of one or more new Callback objects (for example,
-getTransportProtection and/or getLayerSubject) to be handled by the
-container or runtime.
-
-image:authn-4.png[image]
-
-=== How Are Target Credentials Acquired by Client Authentication Modules?
-
-When a client must obtain a short-lived,
-service-targeted security token (such as a Kerberos Service Ticket), how
-are such tokens acquired, and how might the SPI defined by this
-specification be applied to secure any network interactions required for
-token acquisition? If the client authentication module is to perform
-token acquisition directly, it must be provided with sufficient
-information to acquire a suitable token. If token acquisition is done by
-the runtime (perhaps) in advance of the authentication module invocation
-(for example, during name context interpretation), the authentication
-module must be provided with a means to obtain a suitable token from the
-runtime.
-
-
-
-image:authn-4.png[image]
-
-Extended the AuthConfig SPI to provide for the communication of
-properties such as service name at module initialization. Message
-exchanges required to acquire security tokens may be encapsulated in any
-of the AuthConfig, AuthContext, or AuthModule elements of the processing
-model. Also added Subject parameter to getAuthContext call such that the
-acquired credential can be passed back to the runtime.
-
-image:authn-4.png[image]
-
-=== How Does a Module Issue a Challenge?
-
-How does an authentication module return a
-message to inform its network peer that it must do some additional
-security processing as required by the network authentication mechanism
-being implemented by the module?
-
-
-
-image:authn-4.png[image]
-
-Defined AuthStatus.SEND_CONTINUE and related semantics. Improved the
-overview and message authentication chapters to describe multi-message
-exchanges.
-
-image:authn-4.png[image]
-
-=== Message Correlation for Multi-Message Dialogs
-
-How are the messages that comprise a
-multi-message authentication dialog correlated, and where is any state
-relating to the authentication kept?
-
-
-
-
-
-image:authn-4.png[image]
-
-Based on the premise that message-specific knowledge is held within the
-authentication modules and that authentication modules are responsible
-for control of the dialog, it is assumed that authentication modules are
-responsible for tying together or correlating the messages that comprise
-the multi-message authentication dialog. Modules are expected to record
-and recover any necessary state, and may do so using the facilities of
-the containing runtime (for example, persisted sessions). It is also
-recognized that there are security mechanisms where message correlation
-is dependent on context external to the exchanged messages, such as the
-transport connection or session on which the messages were received, and
-that in such cases authentication modules will be dependent on
-correlation related facilities provided by the runtime. This draft of
-the specification does not standardize such facilities. The expert group
-discussed two alternatives for providing such facilities: 1) provide one
-or more callbacks to allow a module to set and get state associated with
-the current transport session; 2) define a module return value to be
-used to signal the runtime when it must record and reuse the same
-(stateful) messageInfo parameter when it calls the module to process the
-next message on the same transport session.
-
-image:authn-4.png[image]
-
-=== Compatibility With Load-Balancing Mechanisms
-
-In a load-balanced environment, must the
-messages that comprise a multi-message authentication dialog (for
-example, the messages of a challenge-response dialog) be processed by
-the same authentication module instance, and if so how will that be
-accomplished?
-
-
-
-image:authn-4.png[image]
-
-Modules may choose to persist any state required to complete the dialog
-in a centralized repository. In other cases, such modules may choose to
-employ persisted session facilities of the runtime (for example,
-HttpSession) that have already been reconciled with load balancing. In
-other cases, it may be feasible to extend train the load-balancer to
-recognize security-mechanisms specific correlation identifiers in
-messages.
-
-image:authn-4.png[image]
-
-=== Use of Generics and Typesafe Enums in Interface Definition
-
-Should the SPI be modified to use new Java
-language features, specifically generics and typesafe enums, introduced
-in Java SE 5?
-
-
-
-image:authn-4.png[image]
-
-There is a requirement that the SPI be used in J2SE 1.4 environments,
-and an interest has been expressed in using the SPI in J2ME
-environments. As such, the specification does not employ these language
-features. There has been discussion regarding the use of these features
-in the SPI definition, while allowing for implementations matched to
-Java environments where these features are not available.
-
-image:authn-4.png[image]
-
-=== [[a746]]HttpServletResponse Buffering and Header Commit Semantics
-
-The Servlet Specification defines buffering
-of the HttpServletResponse body such that filling the response
-bodylink:#a921[24] (for the first time) can cause the response
-status code, HTTP response headers, and first buffer’s worth of response
-body to be sent. Similarly, during processing of an HttpServletRequest,
-methods may be called on the corresponding HttpServletResponse (for
-example, sendRedirect or flushbuffer) that will cause the analogous
-content to be sent. In all such cases, the response has effectively been
-committed with respect to the status code, headers, and first response
-body buffer that will be returned to the client. After a response has
-committed, subsequent changes are not permitted to the status code or
-headers, and change to the response body is only permitted to the extent
-that more content may be appended. As such, when response buffering
-triggers a commit, for example during processing within the servlet, a
-call to secureResponse, following return from the servlet, will be
-unable to effect the response status code, the response headers, or any
-response body content that has already been sent (any or all of which
-may be necessary to secure the response).
-
-
-
-image:authn-4.png[image]
-
-The Servlet Specification defines the HttpServletResponseWrapper class,
-which can be used to extend the buffering capacity of the response, and
-thereby delay commit until the response is complete. When a
-ServerAuthModule requires that responses be buffered until they are
-explicitly completed, the module’s validateRequest method should install
-a response wrapper when it returns AuthStatus.SUCCESS. Just prior to its
-return, the secureResponse method of the ServerAuthModule should write
-the completed message to the wrapped response and remove the wrapper.
-
-image:authn-4.png[image]
-
-=== [[a749]]Reporting New Issues
-
-
-
-image:authn-4.png[image]
-
-http://java.net/projects/jaspic-spec%20[]http://java.net/jira/browse/JASPIC_SPEC[The
-maintenance project for this specification is located on the web at:
-http://java.net/projects/jaspic-spec where you will find the technology
-issue tracker at: http://java.net/jira/browse/JASPIC_SPEC]
-
-image:authn-4.png[image]
