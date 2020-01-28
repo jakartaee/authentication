@@ -9,13 +9,13 @@ This profile would use the interfaces defined
 in this specification to apply pluggable security mechanisms to JMS
 message exchanges.
 
-=== Message Abstraction
+==== Message Abstraction
 
-This profile would employ javax.jms.Message
+This profile would employ `jakarta.jms.Message`
 as its message abstraction. Properties would be set on the Message to
 convey security credentials and security results.
 
-=== Destinations
+==== Destinations
 
 In this profile, application contexts could
 be defined for JMS destinations, such that authentication configuration
@@ -23,10 +23,10 @@ providers could be registered for interactions with destinations, and
 such that authentication context configuration objects could be defined
 for interactions with destinations.
 
-=== Message Processing Model
+==== Message Processing Model
 
 A client profile could require that
-secureRequest be called when a Message is sent by a MessageProducer to a
+`secureRequest` be called when a Message is sent by a MessageProducer to a
 Destination and that validateResponse be called when a Message is
 received by a MessageConsumer from a Destination.
 
@@ -35,7 +35,8 @@ validateRequest be called when a Destination receives a message from a
 MessageProducer, and that secureResponse be called when a Destination
 sends a message to a MessageConsumer.
 
-=== [[a677]]RMI/IIOP Portable Interceptor Profile
+[[a677]]
+=== RMI/IIOP Portable Interceptor Profile
 
 This profile would be implemented within
 portable interceptors, where it could be used secure RMI/IIOP message
@@ -45,6 +46,6 @@ the portable interceptor processing framework.
 === Message Abstraction
 
 The profile would employ
-org.omg.PortableInterceptor.ClientRequestInfo for its client-side
-message abstraction, and org.omg.PortableInterceptor.ServerRequestInfo
+`org.omg.PortableInterceptor.ClientRequestInfo` for its client-side
+message abstraction, and `org.omg.PortableInterceptor.ServerRequestInfo`
 for its server-side message abstraction.
