@@ -11,7 +11,7 @@ Jakarta Authentication can be built by executing the following from the project 
 
 ``mvn clean package``
 
-The API jar can then be found in /app/target.
+The API jar can then be found in /api/target.
 
 Making Changes
 --------------
