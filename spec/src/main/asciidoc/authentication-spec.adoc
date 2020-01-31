@@ -50,4 +50,7 @@ include::loginmodule-bridge-profile.adoc[]
 :doc-part: A
 include::related-documents.adoc[]
 
+:doc-part: B
+include::issues.adoc[]
+
 include::Authentication.adoc[]
