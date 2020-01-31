@@ -1,0 +1,28 @@
+[appendix]
+== Related Documents
+
+This specification refers to the following documents. The terms used to refer to the documents in this
+specification are included in brackets.
+
+_S. Bradner, “Key words for use in RFCs to Indicate Requirement Levels,” RFC 2119, Harvard University, March 1997, [Keywords]_
+
+ _Jakarta EE 9 Specification_ [Jakarta EE 9 Specification], available at:
+https://github.com/eclipse-ee4j/jakartaee-platform
+ 
+_Jakarta Servlet Specification, Version 5.0 [Jakarta Servlet Specification], available at: https://github.com/eclipse-ee4j/servlet-api_
+
+_Jakarta XML Web Services 3.0 [Jakarta XML Web Services Specification], available at: https://github.com/eclipse-ee4j/jax-ws-api_
+
+_Jakarta Messaging Specification Version 3.0 [Jakarta Messaging Specification], available at: https://github.com/eclipse-ee4j/jms-api_
+
+Jakarta Enterprise Beans, Version 4.0_ [Jakarta Enterprise Beans Specification], available at: _https://github.com/eclipse-ee4j/ejb-api_
+
+_Java™, Standard Edition, Version 8.0 API Specification [Java SE 8 Specification], available at: https://docs.oracle.com/javase/8/docs/api_
+
+_Java™ Authentication and Authorization Service_ (JAAS) [JAAS Specification], available at: https://docs.oracle.com/javase/8/docs/technotes/guides/security/jaas/JAASRefGuide.html_
+
+_SOAP Version 1.2 Part 0: Primer, W3C Recommendation, 24 June 2003 [SOAP Specification], available at: http://www.w3.org/TR/soap12-part0_
+
+_Common Secure Interoperability, Version 2 (CSIv2),OMG standard [CSIv2 Specification], available at: http://www.omg.org/technology/documents/formal/omg_security.htm_
+
+_Portable Interceptors, OMG Standard [PI Specification], available at: https://omg.org/spec/CORBA/3.3/Interfaces/PDF_

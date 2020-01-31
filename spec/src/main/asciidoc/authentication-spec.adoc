@@ -47,4 +47,7 @@ include::future-profiles.adoc[]
 :doc-part: 6
 include::loginmodule-bridge-profile.adoc[]
 
+:doc-part: A
+include::related-documents.adoc[]
+
 include::Authentication.adoc[]
