@@ -53,4 +53,5 @@ include::related-documents.adoc[]
 :doc-part: B
 include::issues.adoc[]
 
-include::Authentication.adoc[]
+:doc-part: C
+include::revision-history.adoc[]
