@@ -417,7 +417,7 @@ authentication mechanism
 
 If a non-null `Principal` was established by `validateRequest` (via the `CallerPrincipalCallback`), the `Map` 
 of the `MessageInfo` object used in the call to `validateRequest` must be consulted to determine if it contains 
-an entry for the key identified in <<473>>. If the `Map` contains an entry for the key, the authentication 
+an entry for the key identified in <<a473>>. If the `Map` contains an entry for the key, the authentication 
 session machinery of the container must be used to create (or update) a container authentication session to 
 represent the caller `Principal`, `authType`, and the additional container authentication state established by the 
 call to `validateRequest`. The resulting container authentication session must be bound to the 

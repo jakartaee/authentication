@@ -27,7 +27,7 @@ include::license-efsl.adoc[]
 
 // == Toc
 :sectnums:
-/include::preface.adoc[]
+include::preface.adoc[]
 
 :doc-part: 1
 include::overview.adoc[]
