@@ -4,14 +4,19 @@ Specification: {doctitle}
 
 Version: {revnumber}
 
+ifeval::["{revremark}" != ""]
 Status: {revremark}
+endif::[]
+ifeval::["{revremark}" == ""]
+Status: Final Release
+endif::[]
 
 Release: {revdate}
 ....
 
 Copyright (c) 2019 Eclipse Foundation.
 
-=== Eclipse Foundation Specification License
+== Eclipse Foundation Specification License
 
 By using and/or copying this document, or the Eclipse Foundation
 document from which this statement is linked, you (the licensee) agree
@@ -25,10 +30,10 @@ granted, provided that you include the following on ALL copies of the
 document, or portions thereof, that you use:
 
 * link or URL to the original Eclipse Foundation document.
-* All existing copyright notices, or if one does not exist, a notice
+* +All existing copyright notices, or if one does not exist, a notice
   (hypertext is preferred, but a textual representation is permitted)
   of the form: "Copyright (c) [$date-of-document]
-  Eclipse Foundation, Inc. <<url to this license>>"
+  Eclipse Foundation, Inc. <<url to this license>>"+
 
 Inclusion of the full text of this NOTICE must be provided. We
 request that authorship attribution be provided in any software,
@@ -51,7 +56,7 @@ The notice is:
 document includes material copied from or derived from [title and URI
 of the Eclipse Foundation specification document]."
 
-==== Disclaimers
+=== Disclaimers
 
 THIS DOCUMENT IS PROVIDED &quot;AS IS,&quot; AND THE COPYRIGHT
 HOLDERS AND THE ECLIPSE FOUNDATION MAKE NO REPRESENTATIONS OR
