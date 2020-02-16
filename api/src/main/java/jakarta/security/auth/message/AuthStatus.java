@@ -70,7 +70,7 @@ public class AuthStatus {
 		case 3:
 			return "AuthStatus.SEND_SUCCESS";
 		case 4:
-			return "AuthStatus.SEND_FAILUR";
+			return "AuthStatus.SEND_FAILURE";
 		case 5:
 			return "AuthStatus.SEND_CONTINUE";
 		default:
