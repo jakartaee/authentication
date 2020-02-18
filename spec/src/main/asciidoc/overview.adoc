@@ -613,7 +613,7 @@ with sent requests.
 The interfaces defined by this specification must comply with the following:
 
 . Be compatible with versions of Java beginning
-with 1.4.
+with 1.8.
 
 . Be compatible with a wide range of messaging
 protocols and runtimes.
