@@ -538,7 +538,7 @@ specification
 
 When the runtime is not a Jakarta Authorization compatible
 endpoint container, the properties argument used in all calls to
-getAuthContext must not include a `javax.security.jacc.PolicyContext`
+getAuthContext must not include a `jakarta.security.jacc.PolicyContext`
 key-value pair, and a null value may be passed for the `properties`
 argument.
 
