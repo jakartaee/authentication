@@ -29,6 +29,18 @@
 
     <name>Jakarta Authentication Specification</name>
 
+    <scm>
+        <connection>scm:git:git@github.com:eclipse-ee4j/jakarta-authentication.git</connection>
+        <developerConnection>scm:git:git@github.com:eclipse-ee4j/jakarta-authentication.git</developerConnection>
+        <url>https://github.com/eclipse-ee4j/jakarta-authentication</url>
+        <tag>HEAD</tag>
+    </scm>
+    <distributionManagement>
+        <site>
+            <url>scm:git:git@github.com:eclipse-ee4j/jakarta-authentication.git</url>
+        </site>
+    </distributionManagement>
+
     <properties>
         <site.output.dir>${project.build.directory}/staging</site.output.dir>
         <maven.site.skip>true</maven.site.skip>
@@ -44,19 +56,6 @@
             Easy to override when building with a system property -->
         <spec.version>${project.version}</spec.version>
     </properties>
-
-    <scm>
-        <connection>scm:git:git@github.com:eclipse-ee4j/jakarta-authentication.git</connection>
-        <developerConnection>scm:git:git@github.com:eclipse-ee4j/jakarta-authentication.git</developerConnection>
-        <url>https://github.com/eclipse-ee4j/jakarta-authentication</url>
-        <tag>HEAD</tag>
-    </scm>
-
-    <distributionManagement>
-        <site>
-            <url>scm:git:git@github.com:eclipse-ee4j/jakarta-authentication.git</url>
-        </site>
-    </distributionManagement>
 
     <build>
         <defaultGoal>package</defaultGoal>
