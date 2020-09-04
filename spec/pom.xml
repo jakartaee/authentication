@@ -30,14 +30,14 @@
     <name>Jakarta Authentication Specification</name>
 
     <scm>
-        <connection>scm:git:git@github.com:eclipse-ee4j/jakarta-authentication.git</connection>
-        <developerConnection>scm:git:git@github.com:eclipse-ee4j/jakarta-authentication.git</developerConnection>
-        <url>https://github.com/eclipse-ee4j/jakarta-authentication</url>
+        <connection>scm:git:git@github.com:eclipse-ee4j/authentication.git</connection>
+        <developerConnection>scm:git:git@github.com:eclipse-ee4j/authentication.git</developerConnection>
+        <url>https://github.com/eclipse-ee4j/authentication</url>
         <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <site>
-            <url>scm:git:git@github.com:eclipse-ee4j/jakarta-authentication.git</url>
+            <url>scm:git:git@github.com:eclipse-ee4j/authentication.git</url>
         </site>
     </distributionManagement>
 
