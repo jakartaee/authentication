@@ -11,18 +11,18 @@ and pass an authenticated identity (such as name and groups) to the container.
 Jakarta Authentication consists of several profiles, with each profile telling how a specific container
 (such as Jakarta Servlet) can integrate with- and adapt to this SPI.
 
-* https://projects.eclipse.org/projects/ee4j.jaspic
+* https://projects.eclipse.org/projects/ee4j.authentication
 
 ## Developer resources
 
 Information regarding source code management, builds, coding standards, and
 more.
 
-* https://projects.eclipse.org/projects/ee4j.jaspic/developer
+* https://projects.eclipse.org/projects/ee4j.authentication/developer
 
 The project maintains the following source code repositories
 
-* https://github.com/eclipse-ee4j/jaspic
+* https://github.com/eclipse-ee4j/authentication
 
 ## Eclipse Contributor Agreement
 
