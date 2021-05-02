@@ -15,8 +15,12 @@ Run the full build:
 
 `mvn install`
 
-Locate the html files:
-- target/generated-docs/Authentication.html
 
-Locate the PDF files:
-- target/generated-docs/Authentication.pdf
+Locate the html file:
+- target/generated-docs/jakarta-authentication-spec-{project.version}.html
+
+Locate the PDF file:
+- target/generated-docs/jakarta-authentication-spec-{project.version}.html
+
+Locate the zip archive containing both formats of the specification:
+- target/authentication-spec-{project.version}.zip
