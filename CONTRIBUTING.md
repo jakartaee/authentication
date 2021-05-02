@@ -56,6 +56,10 @@ Jakarta EE specification projects.
 
 ## Contact
 
-Contact the project developers via the project's "dev" list.
+The project developers can be contacted via the jaspic-dev@eclipse.org mailing
+list.
 
-*
+Before emailing the list you must subscribe at:
+
+* https://accounts.eclipse.org/mailing-list/jaspic-dev
+
