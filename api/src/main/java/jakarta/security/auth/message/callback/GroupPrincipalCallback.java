@@ -30,53 +30,53 @@ import javax.security.auth.callback.Callback;
  */
 public class GroupPrincipalCallback implements Callback {
 
-	private Subject subject;
-	private String[] groups;
+    private Subject subject;
+    private String[] groups;
 
-	/**
-	 * Create a GroupPrincipalCallback to establish the container's representation of the corresponding group principals
-	 * within the Subject.
-	 * 
-	 * <p>
-	 * When a null value is passed to the <code>groups</code> argument, the handler will establish the container's
-	 * representation of no group principals within the Subject. Otherwise, the handler's processing of this callback is
-	 * additive, yielding the union (without duplicates) of the principals existing within the Subject, and those created
-	 * with the names occurring within the argument array. The CallbackHandler will define the type of the created
-	 * principals.
-	 *
-	 * @param subject The Subject in which the container will create group principals.
-	 *
-	 * @param groups An array of Strings, where each element contains the name of a group that will be used to create a
-	 * corresponding group principal within the Subject.
-	 */
-	public GroupPrincipalCallback(Subject subject, String[] groups) {
-		this.subject = subject;
-		this.groups = groups;
-	}
+    /**
+     * Create a GroupPrincipalCallback to establish the container's representation of the corresponding group principals
+     * within the Subject.
+     * 
+     * <p>
+     * When a null value is passed to the <code>groups</code> argument, the handler will establish the container's
+     * representation of no group principals within the Subject. Otherwise, the handler's processing of this callback is
+     * additive, yielding the union (without duplicates) of the principals existing within the Subject, and those created
+     * with the names occurring within the argument array. The CallbackHandler will define the type of the created
+     * principals.
+     *
+     * @param subject The Subject in which the container will create group principals.
+     *
+     * @param groups An array of Strings, where each element contains the name of a group that will be used to create a
+     * corresponding group principal within the Subject.
+     */
+    public GroupPrincipalCallback(Subject subject, String[] groups) {
+        this.subject = subject;
+        this.groups = groups;
+    }
 
-	/**
-	 * Get the Subject in which the handler will establish the group principals.
-	 *
-	 * @return The subject.
-	 */
-	public Subject getSubject() {
-		return subject;
-	}
+    /**
+     * Get the Subject in which the handler will establish the group principals.
+     *
+     * @return The subject.
+     */
+    public Subject getSubject() {
+        return subject;
+    }
 
-	/**
-	 * Get the array of group names.
-	 * 
-	 * <p>
-	 * When the return value is null, the handler will establish the container's representation of no group principals
-	 * within the Subject.
-	 *
-	 * Otherwise, the handler's processing of this callback is additive, yielding the union (without duplicates) of the
-	 * principals created with the names in the returned array and those existing within the Subject.
-	 *
-	 * @return Null, or an array containing 0 or more String group names.
-	 */
-	public String[] getGroups() {
-		return groups;
-	}
+    /**
+     * Get the array of group names.
+     * 
+     * <p>
+     * When the return value is null, the handler will establish the container's representation of no group principals
+     * within the Subject.
+     *
+     * Otherwise, the handler's processing of this callback is additive, yielding the union (without duplicates) of the
+     * principals created with the names in the returned array and those existing within the Subject.
+     *
+     * @return Null, or an array containing 0 or more String group names.
+     */
+    public String[] getGroups() {
+        return groups;
+    }
 
 }

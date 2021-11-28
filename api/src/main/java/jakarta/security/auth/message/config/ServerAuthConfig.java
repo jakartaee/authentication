@@ -44,40 +44,40 @@ import jakarta.security.auth.message.AuthException;
  */
 public interface ServerAuthConfig extends AuthConfig {
 
-	/**
-	 * Get a ServerAuthContext instance from this ServerAuthConfig.
-	 *
-	 * <p>
-	 * The implementation of this method returns a ServerAuthContext instance that encapsulates the ServerAuthModules used
-	 * to validate requests and secure responses associated with the given <i>authContextID</i>.
-	 *
-	 * <p>
-	 * Specifically, this method accesses this ServerAuthConfig object with the argument <i>authContextID</i> to determine
-	 * the ServerAuthModules that are to be encapsulated in the returned ServerAuthContext instance.
-	 * 
-	 * <P>
-	 * The ServerAuthConfig object establishes the request and response MessagePolicy objects that are passed to the
-	 * encapsulated modules when they are initialized by the returned ServerAuthContext instance. It is the modules'
-	 * responsibility to enforce these policies when invoked.
-	 * 
-	 * @param authContextID An identifier used to index the provided <i>config</i>, or null. This value must be identical to
-	 * the value returned by the <code>getAuthContextID</code> method for all <code>MessageInfo</code> objects passed to the
-	 * <code>validateRequest</code> method of the returned ServerAuthContext.
-	 *
-	 * @param serviceSubject A Subject that represents the source of the service response to be secured by the acquired
-	 * authentication context. The principal and credentials of the Subject may be used to select or acquire the
-	 * authentication context. If the Subject is not null, additional Principals or credentials (pertaining to the source of
-	 * the response) may be added to the Subject. A null value may be passed for this parameter.
-	 *
-	 * @param properties A Map object that may be used by the caller to augment the properties that will be passed to the
-	 * encapsulated modules at module initialization. The null value may be passed for this parameter.
-	 *
-	 * @return A ServerAuthContext instance that encapsulates the ServerAuthModules used to secure and validate
-	 * requests/responses associated with the given <i>authContextID</i>, or null (indicating that no modules are
-	 * configured).
-	 *
-	 * @exception AuthException If this method fails.
-	 */
-	ServerAuthContext getAuthContext(String authContextID, Subject serviceSubject, Map properties) throws AuthException;
+    /**
+     * Get a ServerAuthContext instance from this ServerAuthConfig.
+     *
+     * <p>
+     * The implementation of this method returns a ServerAuthContext instance that encapsulates the ServerAuthModules used
+     * to validate requests and secure responses associated with the given <i>authContextID</i>.
+     *
+     * <p>
+     * Specifically, this method accesses this ServerAuthConfig object with the argument <i>authContextID</i> to determine
+     * the ServerAuthModules that are to be encapsulated in the returned ServerAuthContext instance.
+     * 
+     * <P>
+     * The ServerAuthConfig object establishes the request and response MessagePolicy objects that are passed to the
+     * encapsulated modules when they are initialized by the returned ServerAuthContext instance. It is the modules'
+     * responsibility to enforce these policies when invoked.
+     * 
+     * @param authContextID An identifier used to index the provided <i>config</i>, or null. This value must be identical to
+     * the value returned by the <code>getAuthContextID</code> method for all <code>MessageInfo</code> objects passed to the
+     * <code>validateRequest</code> method of the returned ServerAuthContext.
+     *
+     * @param serviceSubject A Subject that represents the source of the service response to be secured by the acquired
+     * authentication context. The principal and credentials of the Subject may be used to select or acquire the
+     * authentication context. If the Subject is not null, additional Principals or credentials (pertaining to the source of
+     * the response) may be added to the Subject. A null value may be passed for this parameter.
+     *
+     * @param properties A Map object that may be used by the caller to augment the properties that will be passed to the
+     * encapsulated modules at module initialization. The null value may be passed for this parameter.
+     *
+     * @return A ServerAuthContext instance that encapsulates the ServerAuthModules used to secure and validate
+     * requests/responses associated with the given <i>authContextID</i>, or null (indicating that no modules are
+     * configured).
+     *
+     * @exception AuthException If this method fails.
+     */
+    ServerAuthContext getAuthContext(String authContextID, Subject serviceSubject, Map properties) throws AuthException;
 
 }
