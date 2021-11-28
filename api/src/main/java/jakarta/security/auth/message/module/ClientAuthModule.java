@@ -59,7 +59,7 @@ public interface ClientAuthModule extends ClientAuth {
      * @exception AuthException If module initialization fails, including for the case where the options argument contains
      * elements that are not supported by the module.
      */
-    void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options) throws AuthException;
+    void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map<String, Object> options) throws AuthException;
 
     /**
      * Get the one or more Class objects representing the message types supported by the module.
@@ -68,6 +68,6 @@ public interface ClientAuthModule extends ClientAuth {
      * return an array containing at least one element. An empty array indicates that the module will attempt to support any
      * message type. This method never returns null.
      */
-    Class[] getSupportedMessageTypes();
+    Class<?>[] getSupportedMessageTypes();
 
 }
