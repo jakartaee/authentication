@@ -54,12 +54,12 @@ public interface ClientAuthConfig extends AuthConfig {
      * <p>
      * Specifically, this method accesses this ClientAuthConfig object with the argument <i>authContextID</i> to determine
      * the ClientAuthModules that are to be encapsulated in the returned ClientAuthContext instance.
-     * 
+     *
      * <P>
      * The ClientAuthConfig object establishes the request and response MessagePolicy objects that are passed to the
      * encapsulated modules when they are initialized by the returned ClientAuthContext instance. It is the modules'
      * responsibility to enforce these policies when invoked.
-     * 
+     *
      * @param authContextID An String identifier used to index the provided <i>config</i>, or null. This value must be
      * identical to the value returned by the <code>getAuthContextID</code> method for all <code>MessageInfo</code> objects
      * passed to the <code>secureRequest</code> method of the returned ClientAuthContext.
@@ -78,6 +78,6 @@ public interface ClientAuthConfig extends AuthConfig {
      *
      * @exception AuthException If this method fails.
      */
-    ClientAuthContext getAuthContext(String authContextID, Subject clientSubject, Map properties) throws AuthException;
+    ClientAuthContext getAuthContext(String authContextID, Subject clientSubject, Map<String, Object> properties) throws AuthException;
 
 }

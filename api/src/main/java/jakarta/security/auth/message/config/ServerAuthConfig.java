@@ -54,12 +54,12 @@ public interface ServerAuthConfig extends AuthConfig {
      * <p>
      * Specifically, this method accesses this ServerAuthConfig object with the argument <i>authContextID</i> to determine
      * the ServerAuthModules that are to be encapsulated in the returned ServerAuthContext instance.
-     * 
+     *
      * <P>
      * The ServerAuthConfig object establishes the request and response MessagePolicy objects that are passed to the
      * encapsulated modules when they are initialized by the returned ServerAuthContext instance. It is the modules'
      * responsibility to enforce these policies when invoked.
-     * 
+     *
      * @param authContextID An identifier used to index the provided <i>config</i>, or null. This value must be identical to
      * the value returned by the <code>getAuthContextID</code> method for all <code>MessageInfo</code> objects passed to the
      * <code>validateRequest</code> method of the returned ServerAuthContext.
@@ -78,6 +78,6 @@ public interface ServerAuthConfig extends AuthConfig {
      *
      * @exception AuthException If this method fails.
      */
-    ServerAuthContext getAuthContext(String authContextID, Subject serviceSubject, Map properties) throws AuthException;
+    ServerAuthContext getAuthContext(String authContextID, Subject serviceSubject, Map<String, Object> properties) throws AuthException;
 
 }

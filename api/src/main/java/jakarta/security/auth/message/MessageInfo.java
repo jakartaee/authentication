@@ -69,6 +69,6 @@ public interface MessageInfo {
      * @return the Map object of this MessageInfo. This method never returns null. If a Map has not been associated with the
      * MessageInfo, this method instantiates a Map, associates it with this MessageInfo, and then returns it.
      */
-    Map getMap();
+    Map<String, Object> getMap();
 
 }

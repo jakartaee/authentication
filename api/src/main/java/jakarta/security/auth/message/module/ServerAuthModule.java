@@ -59,13 +59,13 @@ public interface ServerAuthModule extends ServerAuth {
      * @exception AuthException If module initialization fails, including for the case where the options argument contains
      * elements that are not supported by the module.
      */
-    void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options) throws AuthException;
+    void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map<String, Object> options) throws AuthException;
 
     /**
      * Get the one or more Class objects representing the message types supported by the module.
      *
      * @return An array of Class objects, with at least one element defining a message type supported by the module.
      */
-    Class[] getSupportedMessageTypes();
+    Class<?>[] getSupportedMessageTypes();
 
 }
