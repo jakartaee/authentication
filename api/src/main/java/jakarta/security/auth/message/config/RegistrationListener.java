@@ -25,25 +25,25 @@ package jakarta.security.auth.message.config;
  */
 public interface RegistrationListener {
 
-	/**
-	 * Notify the listener that a registration with which it was associated was replaced or unregistered.
-	 *
-	 * <p>
-	 * When a <code>RegistrationListener</code> is associated with a provider registration within the factory, the factory
-	 * must call its <code>notify</code> method when the corresponding registration is unregistered or replaced.
-	 * 
-	 * <p>
-	 * The factory detaches the listener from the corresponding registration once the listener has been notified for the
-	 * registration.
-	 * 
-	 * The <code>detachListerner</code> method must be called to detach listeners that are no longer in use.
-	 * 
-	 * @param layer A String identifying the one or more message layers corresponding to the registration for which the
-	 * listener is being notified.
-	 *
-	 * @param appContext A String value identifying the application contexts corresponding to the registration for which the
-	 * listener is being notified.
-	 */
-	void notify(String layer, String appContext);
+    /**
+     * Notify the listener that a registration with which it was associated was replaced or unregistered.
+     *
+     * <p>
+     * When a <code>RegistrationListener</code> is associated with a provider registration within the factory, the factory
+     * must call its <code>notify</code> method when the corresponding registration is unregistered or replaced.
+     * 
+     * <p>
+     * The factory detaches the listener from the corresponding registration once the listener has been notified for the
+     * registration.
+     * 
+     * The <code>detachListerner</code> method must be called to detach listeners that are no longer in use.
+     * 
+     * @param layer A String identifying the one or more message layers corresponding to the registration for which the
+     * listener is being notified.
+     *
+     * @param appContext A String value identifying the application contexts corresponding to the registration for which the
+     * listener is being notified.
+     */
+    void notify(String layer, String appContext);
 
 }

@@ -41,33 +41,33 @@ import jakarta.security.auth.message.config.ClientAuthContext;
  */
 public interface ClientAuthModule extends ClientAuth {
 
-	/**
-	 * Initialize this module with request and response message policies to enforce, a CallbackHandler, and any
-	 * module-specific configuration properties.
-	 *
-	 * <p>
-	 * The request policy and the response policy must not both be null.
-	 *
-	 * @param requestPolicy The request policy this module must enforce, or null.
-	 *
-	 * @param responsePolicy The response policy this module must enforce, or null.
-	 *
-	 * @param handler CallbackHandler used to request information.
-	 *
-	 * @param options A Map of module-specific configuration properties.
-	 *
-	 * @exception AuthException If module initialization fails, including for the case where the options argument contains
-	 * elements that are not supported by the module.
-	 */
-	void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options) throws AuthException;
+    /**
+     * Initialize this module with request and response message policies to enforce, a CallbackHandler, and any
+     * module-specific configuration properties.
+     *
+     * <p>
+     * The request policy and the response policy must not both be null.
+     *
+     * @param requestPolicy The request policy this module must enforce, or null.
+     *
+     * @param responsePolicy The response policy this module must enforce, or null.
+     *
+     * @param handler CallbackHandler used to request information.
+     *
+     * @param options A Map of module-specific configuration properties.
+     *
+     * @exception AuthException If module initialization fails, including for the case where the options argument contains
+     * elements that are not supported by the module.
+     */
+    void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options) throws AuthException;
 
-	/**
-	 * Get the one or more Class objects representing the message types supported by the module.
-	 *
-	 * @return An array of Class objects where each element defines a message type supported by the module. A module should
-	 * return an array containing at least one element. An empty array indicates that the module will attempt to support any
-	 * message type. This method never returns null.
-	 */
-	Class[] getSupportedMessageTypes();
+    /**
+     * Get the one or more Class objects representing the message types supported by the module.
+     *
+     * @return An array of Class objects where each element defines a message type supported by the module. A module should
+     * return an array containing at least one element. An empty array indicates that the module will attempt to support any
+     * message type. This method never returns null.
+     */
+    Class[] getSupportedMessageTypes();
 
 }

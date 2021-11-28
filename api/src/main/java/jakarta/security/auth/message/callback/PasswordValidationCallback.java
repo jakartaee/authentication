@@ -32,83 +32,83 @@ import javax.security.auth.callback.Callback;
  */
 public class PasswordValidationCallback implements Callback {
 
-	private Subject subject;
-	private String username;
-	private char[] password;
-	private boolean result;
+    private Subject subject;
+    private String username;
+    private char[] password;
+    private boolean result;
 
-	/**
-	 * Create a PasswordValidationCallback.
-	 *
-	 * @param subject The subject for authentication
-	 *
-	 * @param username The username to authenticate
-	 *
-	 * @param password The user's password, which may be null.
-	 */
-	public PasswordValidationCallback(Subject subject, String username, char[] password) {
-		this.subject = subject;
-		this.username = username;
-		if (password != null) {
-			this.password = password.clone();
-		}
-	}
+    /**
+     * Create a PasswordValidationCallback.
+     *
+     * @param subject The subject for authentication
+     *
+     * @param username The username to authenticate
+     *
+     * @param password The user's password, which may be null.
+     */
+    public PasswordValidationCallback(Subject subject, String username, char[] password) {
+        this.subject = subject;
+        this.username = username;
+        if (password != null) {
+            this.password = password.clone();
+        }
+    }
 
-	/**
-	 * Get the subject.
-	 *
-	 * @return The subject.
-	 */
-	public Subject getSubject() {
-		return subject;
-	}
+    /**
+     * Get the subject.
+     *
+     * @return The subject.
+     */
+    public Subject getSubject() {
+        return subject;
+    }
 
-	/**
-	 * Get the username.
-	 *
-	 * @return The username.
-	 */
-	public String getUsername() {
-		return username;
-	}
+    /**
+     * Get the username.
+     *
+     * @return The username.
+     */
+    public String getUsername() {
+        return username;
+    }
 
-	/**
-	 * Get the password.
-	 *
-	 * <p>
-	 * Note that this method returns a reference to the password. If a clone of the array is created it is the caller's
-	 * responsibility to zero out the password information after it is no longer needed.
-	 *
-	 * @return The password, which may be null.
-	 */
-	public char[] getPassword() {
-		return password;
-	}
+    /**
+     * Get the password.
+     *
+     * <p>
+     * Note that this method returns a reference to the password. If a clone of the array is created it is the caller's
+     * responsibility to zero out the password information after it is no longer needed.
+     *
+     * @return The password, which may be null.
+     */
+    public char[] getPassword() {
+        return password;
+    }
 
-	/**
-	 * Clear the password.
-	 */
-	public void clearPassword() {
-		if (password != null) {
-			Arrays.fill(password, ' ');
-		}
-	}
+    /**
+     * Clear the password.
+     */
+    public void clearPassword() {
+        if (password != null) {
+            Arrays.fill(password, ' ');
+        }
+    }
 
-	/**
-	 * Set the authentication result.
-	 *
-	 * @param result True if authentication succeeded, false otherwise
-	 */
-	public void setResult(boolean result) {
-		this.result = result;
-	}
+    /**
+     * Set the authentication result.
+     *
+     * @param result True if authentication succeeded, false otherwise
+     */
+    public void setResult(boolean result) {
+        this.result = result;
+    }
 
-	/**
-	 * Get the authentication result.
-	 *
-	 * @return True if authentication succeeded, false otherwise
-	 */
-	public boolean getResult() {
-		return result;
-	}
+    /**
+     * Get the authentication result.
+     *
+     * @return True if authentication succeeded, false otherwise
+     */
+    public boolean getResult() {
+        return result;
+    }
 }

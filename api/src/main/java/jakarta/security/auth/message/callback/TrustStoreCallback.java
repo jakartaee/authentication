@@ -29,23 +29,23 @@ import javax.security.auth.callback.Callback;
  */
 public class TrustStoreCallback implements Callback {
 
-	private KeyStore trustStore;
+    private KeyStore trustStore;
 
-	/**
-	 * Used by the CallbackHandler to set the trusted certificate keystore within the Callback.
-	 *
-	 * @param trustStore The trusted certificate KeyStore, which must already be loaded.
-	 */
-	public void setTrustStore(KeyStore trustStore) {
-		this.trustStore = trustStore;
-	}
+    /**
+     * Used by the CallbackHandler to set the trusted certificate keystore within the Callback.
+     *
+     * @param trustStore The trusted certificate KeyStore, which must already be loaded.
+     */
+    public void setTrustStore(KeyStore trustStore) {
+        this.trustStore = trustStore;
+    }
 
-	/**
-	 * Used by the TrustStore user to obtain the TrustStore set within the Callback.
-	 *
-	 * @return The trusted certificate KeyStore. The KeyStore is guaranteed to already be loaded.
-	 */
-	public KeyStore getTrustStore() {
-		return trustStore;
-	}
+    /**
+     * Used by the TrustStore user to obtain the TrustStore set within the Callback.
+     *
+     * @return The trusted certificate KeyStore. The KeyStore is guaranteed to already be loaded.
+     */
+    public KeyStore getTrustStore() {
+        return trustStore;
+    }
 }
