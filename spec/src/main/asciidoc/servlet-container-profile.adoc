@@ -444,7 +444,7 @@ relay these properties should they be included in their input `MessageInfo` argu
 [[a479]]
 === Sub-profile for authenticate, login, and logout of HttpServletRequest
 
-Servlet 3.0 added the `authenticate`, `login`, and `logout` methods to the `HttpServletRequest` interface. 
+The Servlet `HttpServletRequest` interface contains methods related to authentication, namely: the `authenticate`, `login`, and `logout` methods.
 A compatible implementation of the Servlet Container Profile must satisfy the requirements defined in this sub-profile. This sub-profile differs from the larger profile in which it is contained, in that it describes the
 handling of calls that would typically be expected to occur within the service invocation; while the focus of 
 the larger profile, is on points (2) and (3) in the messaging model (which occur on either side of the
@@ -480,8 +480,8 @@ determines that an `AuthConfigProvider` is not configured for the application co
 Otherwise, `authenticate` must acquire the corresponding `ServerAuthContext` object as defined in
 <<a396>> (and its subsections), while satisfying the additional 
 requirement that the authentication context identifier used to obtain the `ServerAuthContext` must be the identifier that would be acquired by
-calling `getAuthContextID` with `MessageInfo` as defined in <<a425>> and while satisfying the additional requirement that the `MessageInfo` map must unconditionally contain the
-`jakarta.security.auth.message.MessagePolicy.isMandatory` key (with associated `true` value).
+calling `getAuthContextID` with `MessageInfo` as defined in <<a425>> and while satisfying the additional requirement that the `MessageInfo` map must unconditionally contain both the
+`jakarta.security.auth.message.MessagePolicy.isMandatory` key (with associated `true` value) and the `jakarta.servlet.http.isAuthenticationRequest` key (with associated `true` value).
 
 `Authenticate` must call `validateRequest` on the acquired `ServerAuthContext`. The `MessageInfo` 
 argument to the call to `validateRequest` must be as defined above. The `clientSubject` argument must be a 
