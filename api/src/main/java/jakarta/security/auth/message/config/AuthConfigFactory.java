@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2020, 2021 Contributors to Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates and others.
  * All rights reserved.
  *
@@ -202,12 +203,13 @@ public abstract class AuthConfigFactory {
                     AuthConfigFactory.factory = AccessController.doPrivileged(new PrivilegedExceptionAction<AuthConfigFactory>() {
 
                         @Override
-                        public AuthConfigFactory run() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+                        public AuthConfigFactory run() throws ClassNotFoundException, ReflectiveOperationException, IllegalAccessException {
                             return (AuthConfigFactory)
                                     Class.forName(
                                             className,
                                             true,
                                             Thread.currentThread().getContextClassLoader())
+                                         .getDeclaredConstructor()
                                          .newInstance();
                         }
                     });
