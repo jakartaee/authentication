@@ -26,14 +26,13 @@ import javax.security.auth.login.LoginException;
  */
 public class AuthException extends LoginException {
 
-    private static final long serialVersionUID = 1560420530928138346L;
+    private static final long serialVersionUID = -1156951780670243758L;
 
     /**
      * Constructs an AuthException with no detail message. A detail message is a String that describes this particular
      * exception.
      */
     public AuthException() {
-        super();
     }
 
     /**
