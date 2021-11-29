@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2020, 2021 Contributors to Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates and others.
  * All rights reserved.
  *
@@ -17,13 +18,15 @@
 
 package jakarta.security.auth.message;
 
+import javax.security.auth.login.LoginException;
+
 /**
  * A generic authentication exception.
  *
  */
-public class AuthException extends javax.security.auth.login.LoginException {
+public class AuthException extends LoginException {
 
-    private static final long serialVersionUID = -1156951780670243758L;
+    private static final long serialVersionUID = 1560420530928138346L;
 
     /**
      * Constructs an AuthException with no detail message. A detail message is a String that describes this particular
@@ -41,5 +44,32 @@ public class AuthException extends javax.security.auth.login.LoginException {
      */
     public AuthException(String msg) {
         super(msg);
+    }
+
+    /**
+     * Constructs an AuthException with the specified detail message and cause.
+     *
+     * @param msg The detail message.
+     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A {@code null} value
+     * is permitted, and indicates that the cause is nonexistent or unknown.)
+     * @since 3.0
+     */
+    public AuthException(String msg, Throwable cause) {
+        super(msg);
+        initCause(cause);
+    }
+
+    /**
+     * Constructs an AuthException with the specified cause and a detail message of
+     * {@code (cause==null ? null : cause.toString())} (which typically contains the class and detail message of
+     * {@code cause}).
+     *
+     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A {@code null} value
+     * is permitted, and indicates that the cause is nonexistent or unknown.)
+     * @since 3.0
+     */
+    public AuthException(Throwable cause) {
+        super();
+        initCause(cause);
     }
 }
