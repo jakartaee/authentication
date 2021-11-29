@@ -125,28 +125,24 @@ public abstract class AuthConfigFactory {
      * The name of the SecurityPermission to be used to authorize access to the update methods of the factory implementation
      * class.
      */
-
     public static final String PROVIDER_REGISTRATION_PERMISSION_NAME = ("setProperty." + PROVIDER_SECURITY_PROPERTY);
 
     /**
      * The SecurityPermission, with name {@link #GET_FACTORY_PERMISSION_NAME}, that is used to authorize access to the
      * getFactory method.
      */
-
     public static final SecurityPermission getFactorySecurityPermission = new SecurityPermission(GET_FACTORY_PERMISSION_NAME);
 
     /**
      * The SecurityPermission, with name {@link #SET_FACTORY_PERMISSION_NAME}, that is used to authorize access to the
      * setFactory method.
      */
-
     public static final SecurityPermission setFactorySecurityPermission = new SecurityPermission(SET_FACTORY_PERMISSION_NAME);
 
     /**
      * An instance of the SecurityPermission (with name {@link #PROVIDER_REGISTRATION_PERMISSION_NAME}) for use in
      * authorizing access to the update methods of the factory implementation class.
      */
-
     public static final SecurityPermission providerRegistrationSecurityPermission = new SecurityPermission(PROVIDER_REGISTRATION_PERMISSION_NAME);
 
     /**
@@ -436,7 +432,7 @@ public abstract class AuthConfigFactory {
     public abstract String[] getRegistrationIDs(AuthConfigProvider provider);
 
     /**
-     * Get the the registration context for the identified registration.
+     * Get the registration context for the identified registration.
      *
      * @param registrationID A String that identifies a provider registration at the factory
      *
