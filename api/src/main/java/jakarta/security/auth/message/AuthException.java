@@ -68,7 +68,6 @@ public class AuthException extends LoginException {
      * @since 3.0
      */
     public AuthException(Throwable cause) {
-        super();
         initCause(cause);
     }
 }
