@@ -225,5 +225,5 @@ the request
 
 ==== Changes to Servlet Container Profile
 
- . Added the `jakarta.servlet.http.isAuthenticationRequest` key, so modules can distinguish between being called at the very start of a request and in the middle of it following a call to `HttpServletRequest.authenticate`. This could be needed to determine if certain contexts are certainly not active (such as the Faces context in Jakarta Faces).
+ . Added the `jakarta.servlet.http.isAuthenticationRequest` key, so modules can distinguish between being called at the very start of a request and in the middle of it following a call to `HttpServletRequest.authenticate`. This could be needed to determine if certain contexts are effectively active (such as the Faces context in Jakarta Faces).
 
