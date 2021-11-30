@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2020, 2021 Contributors to Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates and others.
  * All rights reserved.
  *
@@ -22,7 +23,7 @@ import javax.security.auth.Subject;
 /**
  * An implementation of this interface is used to secure service request messages, and validate received service
  * response messages.
- * 
+ *
  * @see MessageInfo
  * @see Subject
  */
@@ -30,11 +31,11 @@ public interface ClientAuth {
 
     /**
      * Secure a service request message before sending it to the service.
-     * 
+     *
      * <p>
      * This method is called to transform the request message acquired by calling getRequestMessage (on messageInfo) into
      * the mechanism-specific form to be sent by the runtime.
-     * 
+     *
      * <p>
      * This method conveys the outcome of its message processing either by returning an AuthStatus value or by throwing an
      * AuthException.
@@ -76,13 +77,13 @@ public interface ClientAuth {
 
     /**
      * Validate a received service response.
-     * 
+     *
      * <p>
      * This method is called to transform the mechanism-specific response message acquired by calling getResponseMessage (on
      * messageInfo) into the validated application message to be returned to the message processing runtime. If the response
      * message is a (mechanism-specific) meta-message, the method implementation must attempt to transform the meta-message
      * into the next mechanism-specific request message to be sent by the runtime.
-     * 
+     *
      * <p>
      * This method conveys the outcome of its message processing either by returning an AuthStatus value or by throwing an
      * AuthException.
@@ -108,7 +109,7 @@ public interface ClientAuth {
      *
      *   <li>AuthStatus.SEND_CONTINUE to indicate that response validation is incomplete, and that a continuation request was
      *       returned as the request message within messageInfo.
-     * 
+     *
      *       This status value serves to inform the calling runtime that (to successfully complete the message exchange) it will
      *       need to be capable of continuing the message dialog by conducting at least one additional request/response exchange.
      *
@@ -119,7 +120,9 @@ public interface ClientAuth {
      * @exception AuthException When the message processing failed without establishing a failure response message (in
      * messageInfo).
      */
-    AuthStatus validateResponse(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException;
+    default AuthStatus validateResponse(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException {
+        return AuthStatus.SUCCESS;
+    }
 
     /**
      * Remove implementation specific principals and credentials from the subject.
@@ -132,5 +135,7 @@ public interface ClientAuth {
      *
      * @exception AuthException If an error occurs during the Subject processing.
      */
-    void cleanSubject(MessageInfo messageInfo, Subject subject) throws AuthException;
+    default void cleanSubject(MessageInfo messageInfo, Subject subject) throws AuthException {
+
+    }
 }

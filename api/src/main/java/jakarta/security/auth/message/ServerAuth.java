@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2020, 2021 Contributors to Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates and others.
  * All rights reserved.
  *
@@ -37,7 +38,7 @@ public interface ServerAuth {
      * message is a (mechanism-specific) meta-message, the method implementation must attempt to transform the meta-message
      * into a corresponding mechanism-specific response message, or to the validated application request message. The
      * runtime will bind a validated application message into the the corresponding service invocation.
-     * 
+     *
      * <p>
      * This method conveys the outcome of its message processing either by returning an AuthStatus value or by throwing an
      * AuthException.
@@ -123,7 +124,9 @@ public interface ServerAuth {
      * @exception AuthException When the message processing failed without establishing a failure response message (in
      * messageInfo).
      */
-    AuthStatus secureResponse(MessageInfo messageInfo, Subject serviceSubject) throws AuthException;
+    default AuthStatus secureResponse(MessageInfo messageInfo, Subject serviceSubject) throws AuthException {
+        return AuthStatus.SEND_SUCCESS;
+    }
 
     /**
      * Remove method specific principals and credentials from the subject.
@@ -136,6 +139,8 @@ public interface ServerAuth {
      *
      * @exception AuthException If an error occurs during the Subject processing.
      */
-    void cleanSubject(MessageInfo messageInfo, Subject subject) throws AuthException;
+    default void cleanSubject(MessageInfo messageInfo, Subject subject) throws AuthException {
+
+    }
 
 }
