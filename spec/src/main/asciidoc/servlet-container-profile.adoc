@@ -531,3 +531,43 @@ If `HttpServletRequest.authenticate` or `HttpServletRequest.logout` is called fr
 `ServerAuthContext` interface (for example, from within `validateRequest`, `secureResponse`, or `cleanSubject`),
 it is the responsibility of the implementation of the `ServerAuthContext` to interpret the results of the
 call and to establish appropriate `ServerAuthContext` return values. This profile is silent on the details of the interpretation and mapping of return values.
+
+=== Interaction with other specifications 
+
+When this profile is used as part of a Jakarta EE compatible implementation, the requirements as stated in the sub-sections below MUST be satisfied. 
+
+When this profile is NOT used in a Jakarta EE compatible implementation, but this implementation uses one or more of the specifications as outlined in the sub-sections below, 
+then the requirements as stated in the relevant sub-sections SHOULD be satisfied.
+
+==== Availability of Jakarta EE component namespaces
+
+The Jakarta EE JNDI component namespaces (`java:global`, `java:app`, `java:module`, `java:comp`) MUST be made available to code running in the context of a call to
+`validateRequest`, `secureResponse` and `cleanSubject` on the acquired `ServerAuthContext`.
+
+A practical use case for this is obtaining (application scoped) data sources, which a `ServerAuthModule` could use to validate credentials. 
+
+
+Example: 
+```
+new InitialContext().lookup("java:app/myds") 
+```
+
+==== Availability of CDI scopes
+
+The CDI built-in scopes according to "2.4.1. Built-in scope types" of the CDI specification MUST be made available to code running in the context of a call to
+`validateRequest`, `secureResponse` and `cleanSubject` on the acquired `ServerAuthContext`.
+ 
+A practical use case for this is obtaining application scoped identity stores, which a `ServerAuthModule` could use to validate credentials.
+
+
+Example:
+```
+CDI.current().select(SomeBean.class); // SomeBean is @RequestScoped 
+```
+
+Note that it is a non-requirement that a `ServerAuthModule` is itself a CDI managed bean, and as such it is not required that services such as injection using the `@Inject` annotation are
+available to a `ServerAuthModule`. It is only required that programmatic lookup such as shown in the example above works correctly.
+
+
+
+
