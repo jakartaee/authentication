@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021, 2021 Contributors to Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates and others.
  * All rights reserved.
  *
@@ -17,11 +18,13 @@
 
 package jakarta.security.auth.message;
 
+import javax.security.auth.login.LoginException;
+
 /**
  * A generic authentication exception.
  *
  */
-public class AuthException extends javax.security.auth.login.LoginException {
+public class AuthException extends LoginException {
 
     private static final long serialVersionUID = -1156951780670243758L;
 
@@ -30,7 +33,6 @@ public class AuthException extends javax.security.auth.login.LoginException {
      * exception.
      */
     public AuthException() {
-        super();
     }
 
     /**
@@ -41,5 +43,39 @@ public class AuthException extends javax.security.auth.login.LoginException {
      */
     public AuthException(String msg) {
         super(msg);
+    }
+
+    /**
+     * Constructs an AuthException with the specified detail message and cause.
+     *
+     * <p>
+     * <strong>NOTE:</strong> Providing a cause could potentially disclose information about the security system to an outside party.
+     * Utter care should be taken that this is either not the case, or the exception is correctly handled to prevent this.
+     *
+     * @param msg The detail message.
+     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A {@code null} value
+     * is permitted, and indicates that the cause is nonexistent or unknown.)
+     * @since 3.0
+     */
+    public AuthException(String msg, Throwable cause) {
+        super(msg);
+        initCause(cause);
+    }
+
+    /**
+     * Constructs an AuthException with the specified cause and a detail message of
+     * {@code (cause==null ? null : cause.toString())} (which typically contains the class and detail message of
+     * {@code cause}).
+     *
+     * *<p>
+     * <strong>NOTE:</strong> Providing a cause could potentially disclose information about the security system to an outside party.
+     * Utter care should be taken that this is either not the case, or the exception is correctly handled to prevent this.
+     *
+     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A {@code null} value
+     * is permitted, and indicates that the cause is nonexistent or unknown.)
+     * @since 3.0
+     */
+    public AuthException(Throwable cause) {
+        initCause(cause);
     }
 }
