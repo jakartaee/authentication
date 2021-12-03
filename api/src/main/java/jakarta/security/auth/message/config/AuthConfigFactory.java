@@ -27,6 +27,8 @@ import java.security.SecurityPermission;
 import java.util.Map;
 import java.util.Properties;
 
+import jakarta.security.auth.message.module.ServerAuthModule;
+
 /**
  * This class is used to obtain <code>AuthConfigProvider</code> objects that can be used to obtain authentication
  * context configuration objects, that is, <code>ClientAuthConfig</code> and <code>ServerAuthConfig</code> objects.
@@ -125,28 +127,24 @@ public abstract class AuthConfigFactory {
      * The name of the SecurityPermission to be used to authorize access to the update methods of the factory implementation
      * class.
      */
-
     public static final String PROVIDER_REGISTRATION_PERMISSION_NAME = ("setProperty." + PROVIDER_SECURITY_PROPERTY);
 
     /**
      * The SecurityPermission, with name {@link #GET_FACTORY_PERMISSION_NAME}, that is used to authorize access to the
      * getFactory method.
      */
-
     public static final SecurityPermission getFactorySecurityPermission = new SecurityPermission(GET_FACTORY_PERMISSION_NAME);
 
     /**
      * The SecurityPermission, with name {@link #SET_FACTORY_PERMISSION_NAME}, that is used to authorize access to the
      * setFactory method.
      */
-
     public static final SecurityPermission setFactorySecurityPermission = new SecurityPermission(SET_FACTORY_PERMISSION_NAME);
 
     /**
      * An instance of the SecurityPermission (with name {@link #PROVIDER_REGISTRATION_PERMISSION_NAME}) for use in
      * authorizing access to the update methods of the factory implementation class.
      */
-
     public static final SecurityPermission providerRegistrationSecurityPermission = new SecurityPermission(PROVIDER_REGISTRATION_PERMISSION_NAME);
 
     /**
@@ -381,6 +379,35 @@ public abstract class AuthConfigFactory {
     public abstract String registerConfigProvider(AuthConfigProvider provider, String layer, String appContext, String description);
 
     /**
+     * Registers within the (in-memory) factory, an instance of a <code>ServerAuthModule</code> for a
+     * message layer and application context identifier as identified by a profile specific context object.
+     *
+     * <p>
+     * This will override any other modules that have already been registered, either via proprietary
+     * means or using the standard API.
+     *
+     * @param serverAuthModule the <code>ServerAuthModule</code> instance to be registered
+     * @param context the profile specific context of the application for which the module is registered
+     * @return A String identifier assigned by the factory to the provider registration, and that may be used to remove the
+     * registration from the factory.
+     */
+    public abstract String registerServerAuthModule(ServerAuthModule serverAuthModule, Object context);
+
+    /**
+     * Remove the <code>ServerAuthModule</code> (and potentially encompassing wrappers/factories) that was previously registered via a call
+     * to <code>registerServerAuthModule</code>.
+     *
+     * <p>
+     * Note that this method is a convenience method that can be used instead of <code>removeRegistration</code>, but should ultimately
+     * have the same effect. That is calling <code>removeRegistration</code> with the return value from <code>registerServerAuthModule</code>
+     * must have the same effect in that the <code>ServerAuthModule</code> is removed.
+     *
+     * @param context the profile specific context of the application for which the module is removed.
+     */
+    public abstract void removeServerAuthModule(Object context);
+
+
+    /**
      * Remove the identified provider registration from the factory (and from the persistent declarative representation of
      * provider registrations, if appropriate) and invoke any listeners associated with the removed registration.
      *
@@ -436,7 +463,7 @@ public abstract class AuthConfigFactory {
     public abstract String[] getRegistrationIDs(AuthConfigProvider provider);
 
     /**
-     * Get the the registration context for the identified registration.
+     * Get the registration context for the identified registration.
      *
      * @param registrationID A String that identifies a provider registration at the factory
      *
