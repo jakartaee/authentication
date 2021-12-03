@@ -161,7 +161,7 @@
                 </executions>
             </plugin>
         
-            <!-- Restricts the Java version to 1.8 -->
+            <!-- Restricts the Java version to 11 -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
@@ -204,7 +204,6 @@
                         <supportedProjectType>jar</supportedProjectType>
                     </supportedProjectTypes>
                     <instructions>
-                        <Automatic-Module-Name>jakarta.security.auth.message</Automatic-Module-Name>
                         <Bundle-Version>${spec.bundle.version}</Bundle-Version>
                         <Bundle-SymbolicName>${spec.bundle.symbolic-name}</Bundle-SymbolicName>
                         <Extension-Name>${spec.extension.name}</Extension-Name>
@@ -259,7 +258,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <source>1.8</source>
+                            <source>11</source>
                             <additionalJOption>-Xdoclint:none</additionalJOption>
                             <description>Jakarta Authentication API documentation</description>
                             <doctitle>Jakarta Authentication API documentation</doctitle>
