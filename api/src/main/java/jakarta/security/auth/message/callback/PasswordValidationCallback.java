@@ -18,17 +18,60 @@
 package jakarta.security.auth.message.callback;
 
 import java.util.Arrays;
+
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 
 /**
  * Callback for PasswordValidation.
- * 
+ *
  * <p>
  * This callback may be used by an authentication module to employ the password validation facilities of its containing
  * runtime. This Callback would typically be called by a <code>ServerAuthModule</code> during
  * <code>validateRequest</code> processing.
  *
+ * <p>
+ * This callback causes the following actions to be done:
+ *
+ * <ol>
+ * <li> Validate the credentials
+ * <li> If validated set caller principal (conceptually just like <code>CallerPrincipalCallback</code> does)
+ * <li> If validated and groups available set groups (conceptually just like <code>GroupPrincipalCallback</code> does)
+ * </ol>
+ *
+ * The code below shows a hypothetical example of how a <code>PasswordValidationCallback</code> could be
+ * implemented by a Jakarta Authentication implementation provided <code>CallbackHandler</code>:
+ *
+ * <pre>
+ * {@code
+ * protected void processPasswordValidation(PasswordValidationCallback pwdCallback) {
+ *
+ *    // 1. Validate the credentials
+ *    Caller caller = ContainerSpecificStore.validate(pwdCallback.getUsername(), getPassword(pwdCallback));
+ *
+ *    if (caller != null) {
+ *        // 2. If validated set caller principal, just like CallerPrincipalCallback does
+ *        processCallerPrincipal(new CallerPrincipalCallback(pwdCallback.getSubject(), caller.getCallerPrincipal()));
+ *
+ *        if (!caller.getGroups().isEmpty()) {
+ *            // 3. If validated and groups available set groups, just like GroupPrincipalCallback does
+ *            processGroupPrincipal(new GroupPrincipalCallback(pwdCallback.getSubject(), caller.getGroupsAsArray()));
+ *        }
+ *
+ *        pwdCallback.setResult(true);
+ *    }
+ * }
+ * }
+ * </pre>
+ *
+ * Note that in this example: <br>
+ * <ul>
+ * <li> <code>processCallerPrincipal</code> represents how the <code>CallbackHandler</code> would handle
+ * the <code>CallerPrincipalCallback</code>.
+ * <li> <code>processGroupPrincipal</code> represents how the <code>CallbackHandler</code> would handle
+ * the <code>GroupPrincipalCallback</code>.
+ * <li> <code>Caller</code> and <code>ContainerSpecificStore</code> are hypothetical implementation specific types.
+ * </ul>
  */
 public class PasswordValidationCallback implements Callback {
 
