@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, 2021 Contributors to Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2020, 2022 Contributors to Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates and others.
  * All rights reserved.
  *
@@ -132,27 +132,44 @@ public abstract class AuthConfigFactory {
     /**
      * The SecurityPermission, with name {@link #GET_FACTORY_PERMISSION_NAME}, that is used to authorize access to the
      * getFactory method.
+     *
+     * @deprecated
+     * Following JEP 411
+     *
      */
+    @Deprecated(forRemoval = true)
     public static final SecurityPermission getFactorySecurityPermission = new SecurityPermission(GET_FACTORY_PERMISSION_NAME);
 
     /**
      * The SecurityPermission, with name {@link #SET_FACTORY_PERMISSION_NAME}, that is used to authorize access to the
      * setFactory method.
+     *
+     * @deprecated
+     * Following JEP 411
      */
+    @Deprecated(forRemoval = true)
     public static final SecurityPermission setFactorySecurityPermission = new SecurityPermission(SET_FACTORY_PERMISSION_NAME);
 
     /**
      * An instance of the SecurityPermission (with name {@link #PROVIDER_REGISTRATION_PERMISSION_NAME}) for use in
      * authorizing access to the update methods of the factory implementation class.
+     *
+     * @deprecated
+     * Following JEP 411
      */
+    @Deprecated(forRemoval = true)
     public static final SecurityPermission providerRegistrationSecurityPermission = new SecurityPermission(PROVIDER_REGISTRATION_PERMISSION_NAME);
 
     /**
      * Utility method to check for permission to operate on the factory.
      *
+     * @deprecated
+     * Following JEP 411
+     *
      * @exception SecurityException if the SecurityManager is enabled and the calling access control context has not been
      * granted the argument permission.
      */
+    @Deprecated(forRemoval = true)
     private static void checkPermission(Permission permission) throws SecurityException {
         SecurityManager securityManager = System.getSecurityManager();
         if (securityManager != null) {
