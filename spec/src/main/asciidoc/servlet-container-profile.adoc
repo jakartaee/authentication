@@ -79,6 +79,19 @@ The argument `handler` and the `CallbackHandler` passed through to the authentic
 initialized with any application context required to process its supported callbacks on behalf of the 
 corresponding application.
 
+=== State
+
+For this profile it is RECOMMENDED that the `CallbackHandler` does not keep any state for a single HTTP request or HTTP session.
+That is, the `CallbackHandler` SHOULD be considered to have an application scope lifetime equivalent to an `HttpServlet` instance, and
+expect to handle calls concurrently from different requests.
+
+To that end it's RECOMMENDED that the `CallbackHandler` uses the `Subject` that's passed in to the following callbacks to store per-request state:
+
+* CallerPrincipalCallback
+* GroupPrincipalCallback
+* PasswordValidationCallback
+
+
 [[a392]]
 === AuthConfigProvider Requirements
 
