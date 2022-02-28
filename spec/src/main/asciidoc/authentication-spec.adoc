@@ -3,7 +3,7 @@
 //
 
 = Jakarta Authentication
-:authors: Jakarta Authentication Team, https://projects.eclipse.org/projects/ee4j.jaspic
+:authors: Jakarta Authentication Team, https://projects.eclipse.org/projects/ee4j.authentication
 :email: https://dev.eclipse.org/mailman/listinfo/jaspic-dev
 :version-label!:
 :doctype: book
