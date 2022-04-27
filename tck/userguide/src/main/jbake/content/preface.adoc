@@ -74,10 +74,6 @@ You should be familiar with the {TechnologyShortName}
 {TechnologyVersion}, version {TechnologyVersion} Specification, 
 which can be found at {SpecificationURL}.
 
-Before running the tests in the {TechnologyShortName} TCK, you should
-familiarize yourself with the JavaTest documentation which can be
-accessed at the
-link:https://wiki.openjdk.java.net/display/CodeTools/JT+Harness[JT Harness web site].
 
 [[TCJRS00036]][[GBFWF]]
 

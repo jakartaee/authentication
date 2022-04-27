@@ -24,8 +24,8 @@ JavaTest Harness Software."]
 =======================================================================
 
 In these instructions, variables in angle brackets need to be expanded
-for each platform. For example, `<TS_HOME>` becomes `$TS_HOME` on
-Solaris/Linux and `%TS_HOME%` on Windows. In addition, the forward
+for each platform. For example, `<JAVA_HOME>` becomes `$JAVA_HOME` on
+Solaris/Linux and `%JAVA_HOME%` on Windows. In addition, the forward
 slashes (`/`) used in all of the examples need to be replaced with
 backslashes (`\`) for Windows. Finally, be sure to use the appropriate
 separator for your operating system when specifying multiple path
@@ -60,152 +60,7 @@ property in the `ts.jte` file to `standalone`.
   b.  `TS_HOME` to the directory in which the {TechnologyShortName} TCK
   {TechnologyVersion} software is installed
   c.  `PATH` to include the following directories: `JAVA_HOME/bin`,
-  +{TechnologyHomeEnv}/bin+, and `ANT_HOME/bin`
-2.  Copy <TS_HOME>/bin/ts.jte.jdk11 as <TS_HOME>/bin/ts.jte if JAVA_HOME is Java SE 11.
-Edit your `<TS_HOME>/bin/ts.jte` file and set the following
-environment variables:
-  a.  `pathsep` to the type of path separator used by your operating
-  system +
-  The default is `:` for Solaris/Linux. Windows users should change this
-  value to `;`.
-  b.  Set the `jaspic.home` property to the root directory of
-  implementation under test.
-  c.  Set the `orb.host` property to the name of the machine on which you
-  are running the {TechnologyShortName} TCK tests.
-  d.  Set the `orb.port` property to the port number of the machine on
-  which you are running the {TechnologyShortName} TCK tests.
-  e.  Set the `sigTestClasspath` property to point to the implementation
-  classes that are to be validated for signature compliance. This
-  classpath must also include any other classes that are referenced,
-  implemented, or extended by your implementation .
-  f.  Set the `servlet.is.jsr115.compatible` property based on whether or
-  not you are running the Servlet profile in a Jakarta Authorization 2.0 compatible
-  container.
-  g.  Set the `soap.is.jsr115.compatible` property based on whether or not
-  you are running the SOAP profile in a Jakarta Authorization 2.0 compatible container.
-  h.  Set the `log.file.location` property to the location where your
-  implementation's log files and the {TechnologyShortName} log file will be written.
-  i.  Set the `logical.hostname.servlet` property to the logical host that
-  will process Servlet requests. +
-  Servlet requests may be directed to a logical host using various
-  physical or virtual host names or addresses. A message processing
-  runtime may be composed of multiple logical hosts. This setting is
-  required to properly identify the Servlet profile's application context
-  identifier hostname. If the logical host that will process Servlet
-  requests does not exist, you can set this to the default hostname of
-  your implementation's Web server.
-  j. Set the `logical.hostname.soap` property to the name of the logical
-  host that will process SOAP requests. +
-  This hostname is used in the implementation runtime's application
-  context identifier in the SOAP profile.
-  k. Set the `vendor.authconfig.factory` property to specify your
-  `AuthConfigFactory` class. +
-  This property setting will be used by the {TechnologyShortName} tests to register the
-  test suite's provider in your `AuthConfigFactory`.
-3.  Run `ant config.vi`. +
-This task configures the implementation under test to run the {TechnologyShortName} TCK
-tests by doing the following:
-  a.  Copies `jaspic.jar` and `tsharness.jar` to the lib extension
-  directory (for example, `/glassfish/domains/domain1/lib/ext`)
-  b.  Set up users and passwords for your implementation. +
-  For the purpose of running the CTS test suite, these should be set as
-  follows:
-+
---
-[width="100%",cols="33%,33%,34%",options="header",]
-|=========================================
-|User |Password |Groups
-|`j2ee_vi` |`j2ee_vi` |`staff`
-|`javajoe` |`javajoe` |`guest`
-|`j2ee` |`j2ee` |`staff`, `mgr`, `asadmin`
-|=========================================
-Also make sure the principal to role-mappings that are specified in the
-runtime XML files are properly mapped in your environment. Note that the
-principal-to-role mappings may vary for each application.
---
-+
-  c.  Install the client-side certificate in the `trustStore` in your
-  implementation. +
-  Certificates are located `<TS_HOME>/bin/certificates`. +
-  Use the certificate that suits your environment:
-  * `cts_cert` - For importing the CTS client certificate into a
-  `truststore`
-  * `clientcert.jks` - Used by the J2SE runtime to identify the CTS
-  client's identity
-  * `clientcert.p12` – Contains CTS client certificate in `pkcs12` format
-  d.  Append the file `<TS_HOME>/bin/server_policy.append` to the Java
-  policy file or files on your implementation. +
-  This file contains the grant statements used by the test harness,
-  signature tests, and API tests.
-  e.  Appends the file `<TS_HOME>/bin/client_policy.append` to the
-  application client's Java policy file, which is referenced in the
-  `TestExecuteAppClient` section of the `ts.jte` file.
-  f.  Creates a JVM option that increases the MaxPermSize for your
-  implementation.
-+
-4.  Run `ant enable.jaspic`. +
-This task performs the configuration necessary for adding the test
-suite's `SPI Verifier(TSSV)` to your implementation. Specifically,
-`ant enable.jaspic` performs the following operations:
-  a.  Sets the `jvm` option `-Dlog.file.location` in your implementation. +
-  This is the location of the log file where the Test Suite SPI Verifier
-  (TSSV) creates log messages, which will be used by the {TechnologyShortName} TCK tests,
-  to identify the test status.
-  b.  Sets the `jvm` option `-Dprovider.configuration.file` in your
-  implementation. +
-  This option is used to identify the provider configuration file that
-  will be used by `TSAuthConfigFactory` to load the providers required by
-  the {TechnologyShortName} TCK tests.
-  c.  Sets the `jvm` option
-  `-Dschema.file.location=${schema.file.location}` in your implementation. +
-  This option is used to identify the location of the schema file that is
-  used by the `Provider-Configuration.xml` file.
-  d.  Sets up your implementation to use the test suite's
-  `AuthConfigFactory`. +
-  This can be done in one of the following ways:
-  * Copy `<TS_HOME>/bin/ts.java.security` to the location in your
-  implementation where the security configuration files reside. For
-  example, the Eclipse GlassFish Server security configuration files are in the
-  `<JAVAEE_HOME>glassfish/domains/domain1/config` directory. After the
-  file has been copied, use the `-Djava.security.properties` JVM option to
-  direct your implementation to use this security property file.  For
-  example, to direct Eclipse GlassFish Server to use the `ts.java.security` file,
-  you would use this JVM option:
-+
-[source,oac_no_warn]
-----
--Djava.security.properties=glassfish/domains/domain1/config/ts.java.security
-----
-+
-  * Add the following lines as a single line to the
-  `JAVA_HOME/jre/lib/security/java.security` file:
-+
---
-[source,oac_no_warn]
-----
-authconfigprovider.factory=
-com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigFactory
-----
-Adding this property to the `java.security` file forces your
-implementation to load the test suite's `AuthConfigFactory`.
---
-+
-  e.  Copies the `TS_HOME/lib/tssv.jar` file to your implementation
-  instance library directory. +
-  The `tssv.jar` file includes the class files necessary to load
-  `TSAuthConfigFactory` and related classes.
-  f.  Copies the TSSV configuration files (`ProviderConfiguration.xml`,
-  `provider-configuration.xsd`) to your implementation instance library
-  directory.
-  g.  Deploys the Jakarta Authentication file processor,
-  `com/sun/ts/tests/jaspic/util/jaspic_util_web.war`.
-+
-5.  If necessary, provide your own implementations of the porting
-package interface provided with the Jakarta Authentication TCK. +
-`TSURLInterface.java` obtains URL strings for web resources in an
-implementation-specific manner. API documentation for the
-`TSURLInterface.java` porting package interface is available in the
-documentation bundle in the `docs/api` directory.
+  +{TechnologyHomeEnv}/bin+, and `M2_HOME/bin`
 
 
 [[GCLHU]][[configuring-your-environment-to-repackage-and-run-the-tck-against-the-vendor-implementation]]
@@ -214,16 +69,15 @@ documentation bundle in the `docs/api` directory.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After configuring your environment as described in this section,
-continue with the instructions in link:#GBFUY[Section 4.4, "Using the
-JavaTest Harness Software."]
+continue with the instructions to run the TCK.
 
 
 [NOTE]
 =======================================================================
 
 In these instructions, variables in angle brackets need to be expanded
-for each platform. For example, `<TS_HOME>` becomes `$TS_HOME` on
-Solaris/Linux and `%TS_HOME%` on Windows. In addition, the forward
+for each platform. For example, `<JAVA_HOME>` becomes `$JAVA_HOME` on
+Solaris/Linux and `%JAVA_HOME%` on Windows. In addition, the forward
 slashes (`/`) used in all of the examples need to be replaced with
 backslashes (`\`) for Windows. Finally, be sure to use the appropriate
 separator for your operating system when specifying multiple path
