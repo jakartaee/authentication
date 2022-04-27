@@ -31,7 +31,20 @@
             <directory>${project.basedir}/</directory>
             <excludes>
                 <exclude>**/target/**</exclude>
+                <exclude>**/userguide/**</exclude>
             </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/userguide</directory>
+            <excludes>
+                <exclude>**/src/**</exclude>
+                <exclude>**/pom.xml</exclude>
+            </excludes>
+            <includes>
+                <include>*.*</include>
+                <include>**/generated-docs/**</include>
+                <include>**/staging/**</include>
+            </includes>
         </fileSet>
     </fileSets>
 
