@@ -306,7 +306,6 @@
                 <version>3.0.0-M5</version>
                 <configuration>
                     <trimStackTrace>false</trimStackTrace>
-                    <argLine>-XX:+ShowCodeDetailsInExceptionMessages</argLine>
                 </configuration>
             </plugin>
             <plugin>
