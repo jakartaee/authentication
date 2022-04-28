@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,13 +20,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>tck</artifactId>
-        <version>7.0.0-SNAPSHOT</version>
-    </parent>
-
-    <artifactId>glassfish-external-tck-authentication</artifactId>
+    <groupId>org.glassfish.main.tests.tck</groupId>
+    <version>3.0.0</version>
+    <artifactId>glassfish-tck-authentication</artifactId>
     <packaging>pom</packaging>
 
     <name>TCK: authentication</name>
@@ -34,23 +30,26 @@
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
-        
+        <ant.version>1.10.11</ant.version>
         <tck.home>${project.build.directory}/authentication-tck</tck.home>
-        <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jsf</tck.tests.home> 
-         
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jaspic</tck.tests.home> 
+        <tck.authentication.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-authentication-tck-3.0.0.zip</tck.authentication.url>
+        <!-- Use the below url of promoted bundle once the TCK is final -->
+        <!--tck.authentication.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-authentication-tck-3.0.0.zip</tck.authentication.url-->
+
         <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
-        <glassfish.version>${project.version}</glassfish.version>
+        <glassfish.version>7.0.0-M4</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
        
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
         
-        <port.admin>14848</port.admin>
-        <port.derby>11527</port.derby>
-        <port.http>18080</port.http>
-        <port.https>18181</port.https>
-        <port.jms>17676</port.jms>
-        <port.jmx>18686</port.jmx>
-        <port.orb>13700</port.orb>
+        <port.admin>4848</port.admin>
+        <port.derby>1527</port.derby>
+        <port.http>8080</port.http>
+        <port.https>8181</port.https>
+        <port.jms>7676</port.jms>
+        <port.jmx>8686</port.jmx>
+        <port.orb>3700</port.orb>
         <port.orb.mutual>13920</port.orb.mutual>
         <port.orb.ssl>13820</port.orb.ssl>
         <port.harness.log>12000</port.harness.log>
@@ -64,19 +63,32 @@
             <type>zip</type>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
             <artifactId>jakarta-authentication-tck</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
-        </dependency>
+        </dependency-->
     </dependencies>
+
+
+    <repositories>
+        <repository>
+            <id>jakarta-snapshots</id>
+            <url>https://jakarta.oss.sonatype.org/content/repositories/staging/</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>com.googlecode.maven-download-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
+                <version>1.6.7</version>
                 <executions>
                     <execution>
                         <id>download-ant</id>
@@ -84,14 +96,26 @@
                         <goals>
                             <goal>wget</goal>
                         </goals>
+                    <configuration>
+                        <skip>${skipITs}</skip>
+                        <url>${ant.zip.url}</url>
+                        <unpack>true</unpack>
+                        <outputDirectory>${project.build.directory}</outputDirectory>
+                    </configuration>
+                    </execution>
+                    <execution>
+                        <id>download-authentication-tck</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>${tck.authentication.url}</url>
+                            <unpack>true</unpack>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <skip>${skipITs}</skip>
-                    <url>${ant.zip.url}</url>
-                    <unpack>true</unpack>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
             </plugin>
 
             <plugin>
@@ -111,22 +135,12 @@
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>unpack-tck</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeArtifactIds>jakarta-authentication-tck</includeArtifactIds>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
 
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.ant</groupId>
@@ -176,19 +190,23 @@
                                 <!-- Change configuration -->
                                 <tck-setting key="jaspic.home" value="${glassfish.home}/glassfish"/>
                                 <tck-setting key="harness.log.traceflag" value="true"/>
-                                <tck-setting key="s1as.jvm.options" value="-Dj2eelogin.name=${user}:-Dj2eelogin.password=${password}"/>
+                                <!--tck-setting key="s1as.jvm.options" value="-Dj2eelogin.name=${user}:-Dj2eelogin.password=${password}"/-->
                                 
                                 <tck-setting key="webServerHost" value="localhost"/>
                                 <tck-setting key="webServerPort" value="${port.http}"/>
-                                <tck-setting key="securedWebServicePort" value="${port.https}"/>
+                                <!--tck-setting key="securedWebServicePort" value="${port.https}"/>
                                 <tck-setting key="s1as.admin.port" value="${port.admin}"/>
-                                <tck-setting key="glassfish.admin.port" value="${port.admin}"/>
+                                <tck-setting key="glassfish.admin.port" value="${port.admin}"/-->
                                 <tck-setting key="orb.port" value="${port.orb}"/>
-                                <tck-setting key="database.port" value="${port.derby}"/>
-                                <tck-setting key="harness.log.port" value="${port.harness.log}"/>
+                                <!--tck-setting key="database.port" value="${port.derby}"/>
+                                <tck-setting key="harness.log.port" value="${port.harness.log}"/-->
+                                <tck-setting key="wsgen.ant.classname" value="com.sun.tools.ws.ant.WsGen"/>
+                                <tck-setting key="wsimport.ant.classname" value="com.sun.tools.ws.ant.WsImport"/>
+
                                 
-                                <tck-setting key="report.dir" value="${tck.home}/authenticationreport/authentication"/>
-                                <tck-setting key="work.dir" value="${tck.home}/authenticationwork/authentication"/>
+                                
+                                <tck-setting key="report.dir" value="${tck.home}/authenticationtckreport/authenticationtck"/>
+                                <tck-setting key="work.dir" value="${tck.home}/authenticationtckwork/authenticationtck"/>
                                 
                                 <!-- 
                                     # It's an open question why these settings are not just part of ts.jte to begin with.
@@ -205,18 +223,12 @@
                                 <tck-add key="jpa.provider.implementation.specific.properties" value="eclipselink.logging.level=OFF"/>
                                 <tck-add key="persistence.second.level.caching.supported" value="true"/>
                           
-                                <limit maxwait="60">
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                <limit maxwait="240">
+                                    <!--exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="delete-domain"/>
                                         <arg value="domain1" />
-                                    </exec>
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
-                                        <arg value="create-domain"/>
-                                        <arg value="--domainproperties=domain.adminPort=${port.admin}:domain.instancePort=${port.http}:http.ssl.port=${port.https}:jms.port=${port.jms}:domain.jmxPort=${port.jmx}:orb.listener.port=${port.orb}:orb.ssl.port=${port.orb.ssl}:orb.mutualauth.port=${port.orb.mutual}" />
-                                        <arg value="--user=admin" />
-                                        <arg value="--nopassword" />
-                                        <arg value="domain1" />
-                                    </exec>
+                                    </exec-->
+
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="start-domain"/>
                                     </exec>
@@ -238,6 +250,8 @@
                                 </limit>
                                 <mkdir dir="${tck.home}/authenticationtckreport"/>
                                 <mkdir dir="${tck.home}/authenticationtckreport/authenticationtck"/>
+                                <mkdir dir="${tck.home}/authenticationtckwork"/>
+
                                 
                                 <replace file="${tck.home}/bin/xml/ts.top.import.xml">
                                   <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
@@ -267,11 +281,11 @@
                             <target>
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
-                                <limit maxwait="20">
+                                <!--limit maxwait="120">
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="start-domain"/>
                                     </exec>
-                                </limit>
+                                </limit-->
                                 
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="config.vi"  />
@@ -279,6 +293,15 @@
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="enable.jaspic"  />
                                 </exec>
+                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="stop-domain"/>
+                                        <arg value="domain1"/>
+                                </exec>
+                                <limit maxwait="120">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="start-domain"/>
+                                    </exec>
+                                </limit>
                             </target>
                         </configuration>
                     </execution>
@@ -295,10 +318,12 @@
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
 
-                                <echo level="info" message="Start running all tests" />
-                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" resultproperty="testResult">
+                                <echo level="info" message="Start running all tests" unless:set="run.test"/>
+                                <echo level="info" message="Start running single test" if:set="run.test"/>
+                                <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" resultproperty="testResult">
                                     <arg value="-Dmultiple.tests=${run.test}" if:set="run.test" />
-                                    <arg value="run.all"/>
+                                    <arg value="run.all" unless:set="run.test"/>
+                                    <arg value="runclient" if:set="run.test" />
                                     <env key="LC_ALL" value="C" />
                                 </exec>
 
