@@ -34,7 +34,7 @@
 
         <!-- The readme included in the distribution zip -->
         <file>
-            <source>src/main/readme/README.md</source>
+            <source>README.md</source>
             <destName>README.md</destName>
         </file>
 

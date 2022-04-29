@@ -184,8 +184,7 @@ include::platforms.inc[]
 1.2.3 TCK Compatibility Test Suite
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The test suite is the collection of tests used by the JavaTest harness
-to test a particular technology implementation. In this case, it is the
+The test suite is the collection of JUnit tests used with the Maven Surefire plugin to test a particular technology implementation. In this case, it is the
 collection of tests used by the {TechnologyShortName} TCK
 {TechnologyVersion} to test a {TechnologyShortName} {TechnologyVersion}
 implementation. The tests are designed to verify that a vendor's
@@ -194,7 +193,7 @@ specification. The individual tests correspond to assertions of the
 specification.
 
 The tests that make up the TCK compatibility test suite are precompiled
-and indexed within the TCK test directory structure. 
+and indexed within the TCK test directory structure.
 
 
 [[GBFRR]][[tck-configuration]]
@@ -212,7 +211,7 @@ include::intro.inc[]
 
 [NOTE]
 ====
-The Jakarta EE Specification Process support multiple compatible implementations. 
+The Jakarta EE Specification Process support multiple compatible implementations.
 These instructions explain how to get started with the {TechnologyRI} CI.
 If you are using another compatible implementation, refer to material provided
 by that implementation for specific instructions and procedures.
@@ -228,10 +227,9 @@ steps are explained in more detail in subsequent chapters of this
 guide.
 
 1.  Make sure that the following software has been correctly installed
-on the system hosting the JavaTest harness:
+on the system hosting the Maven Surefire plugin run:
 include::req-software.inc[]
 * Java SE {SEversion}
-* Apache Ant {AntVersion}
 * A CI for {TechnologyShortName} {TechnologyVersion}. One example is {TechnologyRI}.
 * {TechnologyShortName} TCK version {TechnologyVersion}, which includes:
 include::tck-packages.inc[]

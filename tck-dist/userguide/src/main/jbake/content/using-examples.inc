@@ -3,8 +3,14 @@ NOTE TO WRITERS:
 These CLI examples can be customized as necessary.
 ///////////////////////////////////////////////////////////////////////
 
-Start the tests using the following command: +
+To run all tests against GlassFish, use following command: +
 [source,oac_no_warn]
 ----
-mvn clean install
+mvn -Pglassfish-ci-managed clean test surefire-report:report
+----
+This will produce a target/site/surefire-report.html summary.
+
+When doing testing with staged dependencies, you may need to add the -Pstaging profile:
+----
+mvn -Pstaging -Pglassfish-ci-managed clean test surefire-report:report
 ----

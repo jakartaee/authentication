@@ -15,10 +15,7 @@ Executing Tests
 5 Executing Tests
 -----------------
 
-The {TechnologyShortName} TCK uses the JavaTest harness to execute the
-tests in the test suite. For detailed instructions that explain how to
-run and use JavaTest, see the JavaTest User's Guide and Reference in
-the documentation bundle.
+The {TechnologyShortName} TCK uses the JUnit and Maven Surefire harness to execute the tests in the test suite.
 
 This chapter includes the following topics:
 
@@ -92,10 +89,10 @@ Use the following modes to run a subset of the tests:
 +
 [source]
 ----
-mvn clean install
+mvn clean verify
 ----
 +
-The tests in the directory and its subdirectories are run.
+The tests in the directory are run.
 
 
 [[GCLRR]][[running-the-tck-against-the-ri]]
