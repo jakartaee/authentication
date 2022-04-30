@@ -93,7 +93,7 @@
         -->
         <module>invoke-ejb-cdi</module>
         
-        <!-- Runs the old TCK, which is the Javatest based one. It's not entirely sure what this tests, but it includes Java SE like unit tests
+        <!-- Runs the old TCK, which is the Javatest based one. It's not entirely clear what this tests, but it includes Java SE like unit tests
              for setting up factories and checking whether things are on the classpath. 
              TODO: document here what these tests actually test for.
          -->
@@ -354,7 +354,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.19.1</version>
+                <version>3.0.0-M6</version>
                 <configuration>
                     <aggregate>true</aggregate>
                     <linkXRef>true</linkXRef>

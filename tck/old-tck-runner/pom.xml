@@ -25,7 +25,7 @@
     <artifactId>glassfish-tck-authentication</artifactId>
     <packaging>pom</packaging>
 
-    <name>TCK: authentication</name>
+    <name>Old Jakarta Authentication TCK - run</name>
 
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
@@ -34,6 +34,7 @@
         <tck.home>${project.build.directory}/authentication-tck</tck.home>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jaspic</tck.tests.home> 
         <tck.authentication.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-authentication-tck-3.0.0.zip</tck.authentication.url>
+        
         <!-- Use the below url of promoted bundle once the TCK is final -->
         <!--tck.authentication.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-authentication-tck-3.0.0.zip</tck.authentication.url-->
 
@@ -63,12 +64,6 @@
             <type>zip</type>
             <scope>test</scope>
         </dependency>
-        <!--dependency>
-            <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-authentication-tck</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency-->
     </dependencies>
 
 
@@ -190,16 +185,10 @@
                                 <!-- Change configuration -->
                                 <tck-setting key="jaspic.home" value="${glassfish.home}/glassfish"/>
                                 <tck-setting key="harness.log.traceflag" value="true"/>
-                                <!--tck-setting key="s1as.jvm.options" value="-Dj2eelogin.name=${user}:-Dj2eelogin.password=${password}"/-->
                                 
                                 <tck-setting key="webServerHost" value="localhost"/>
                                 <tck-setting key="webServerPort" value="${port.http}"/>
-                                <!--tck-setting key="securedWebServicePort" value="${port.https}"/>
-                                <tck-setting key="s1as.admin.port" value="${port.admin}"/>
-                                <tck-setting key="glassfish.admin.port" value="${port.admin}"/-->
                                 <tck-setting key="orb.port" value="${port.orb}"/>
-                                <!--tck-setting key="database.port" value="${port.derby}"/>
-                                <tck-setting key="harness.log.port" value="${port.harness.log}"/-->
                                 <tck-setting key="wsgen.ant.classname" value="com.sun.tools.ws.ant.WsGen"/>
                                 <tck-setting key="wsimport.ant.classname" value="com.sun.tools.ws.ant.WsImport"/>
 
@@ -224,11 +213,6 @@
                                 <tck-add key="persistence.second.level.caching.supported" value="true"/>
                           
                                 <limit maxwait="240">
-                                    <!--exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
-                                        <arg value="delete-domain"/>
-                                        <arg value="domain1" />
-                                    </exec-->
-
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="start-domain"/>
                                     </exec>
@@ -281,11 +265,6 @@
                             <target>
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
-                                <!--limit maxwait="120">
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
-                                        <arg value="start-domain"/>
-                                    </exec>
-                                </limit-->
                                 
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="config.vi"  />
