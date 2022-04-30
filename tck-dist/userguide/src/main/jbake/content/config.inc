@@ -36,62 +36,29 @@ slashes as a path separator instead.
 
 4.1 Setting up an Evironment for the Maven Surefire based TCK
 The current JUnit based set of tests runs under a Maven surefire runner and needs a profile configured for you compatible
-implementation to test. The
+implementation to test. The top level tck/pom.xml includes example profiles including one for GlassFish. To configuration a
+profile for your compatible implementation, start with the GlassFish glassfish-ci-managed profile, and modify the dependencies
+and configuration to support your implementation and Arqulillian container implementation. The Arqulillian container implementation
+starts up your container and deploys the test wars into it.
+
 
 =======================================================================
+
+4.2 Setting up an Environment for the Legacy Jakarta Authentication TCK
+
+4.2.1 Download the Legacy TCK Contents
+
+From the tck/old-tck-runner module, execute the following command:
+`mvn generate-resources`
+
+This will unpack the legacy TCK at tck/old-tck-runner/target/authentication-tck.
 
 [[GBFWN]][[TCAUT00012]][[to-configure-your-environment-for-the-jaspic-tck]]
 
-4.2
+4.2.2 Configure Your Environment for the Legacy Jakarta Authentication TCK
 
-4.2.1 To Configure Your Environment for the Jakarta Authentication TCK
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Read the "Setup and Configuration" section of the
+old-tck-runner/target/authentication-tck/docs/pdf-usersguide/Jakarta-Authentication-TCK-Users-Guide.pdf
+Where that guide refers to the {TechnologyShortName} TCK, use the old-tck-runner/target/authentication-tck
+contents.
 
-This section describes how to configure your environment to run the
-{TechnologyShortName} TCK tests.
-
-Deploy the {TechnologyShortName} TCK tests in the manner that your implementation
-requires, based on the type of profile.
-
-If your implementation is Jakart EE based, set the `platform.mode`
-property in the `ts.jte` file to `jakartaEE`.
-
-If your implementation is not Jakarta EE based, set the `platform.mode`
-property in the `ts.jte` file to `standalone`.
-
-
-1.  Set the following environment variables in your shell environment:
-  a.  `JAVA_HOME` to the directory in which Java SE 8 is installed
-  b.  `TS_HOME` to the directory in which the {TechnologyShortName} TCK
-  {TechnologyVersion} software is installed
-  c.  `PATH` to include the following directories: `JAVA_HOME/bin`,
-  +{TechnologyHomeEnv}/bin+, and `M2_HOME/bin`
-
-
-[[GCLHU]][[configuring-your-environment-to-repackage-and-run-the-tck-against-the-vendor-implementation]]
-
-4.2 Configuring Your Environment to Repackage and Run the TCK Against the Vendor Implementation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-After configuring your environment as described in this section,
-continue with the instructions to run the TCK.
-
-
-[NOTE]
-=======================================================================
-
-In these instructions, variables in angle brackets need to be expanded
-for each platform. For example, `<JAVA_HOME>` becomes `$JAVA_HOME` on
-Solaris/Linux and `%JAVA_HOME%` on Windows. In addition, the forward
-slashes (`/`) used in all of the examples need to be replaced with
-backslashes (`\`) for Windows. Finally, be sure to use the appropriate
-separator for your operating system when specifying multiple path
-entries (`;` on Windows, `:` on UNIX/Linux).
-
-On Windows, you must escape any backslashes with an extra backslash in
-path separators used in any of the following properties, or use forward
-slashes as a path separator instead.
-
-=======================================================================
-
-The
