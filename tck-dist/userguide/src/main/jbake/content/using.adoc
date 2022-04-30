@@ -15,10 +15,7 @@ Executing Tests
 5 Executing Tests
 -----------------
 
-The {TechnologyShortName} TCK uses the JavaTest harness to execute the
-tests in the test suite. For detailed instructions that explain how to
-run and use JavaTest, see the JavaTest User's Guide and Reference in
-the documentation bundle.
+The {TechnologyShortName} TCK uses the JUnit and Maven Surefire harness to execute the tests in the test suite.
 
 This chapter includes the following topics:
 
@@ -92,49 +89,23 @@ Use the following modes to run a subset of the tests:
 +
 [source]
 ----
-mvn clean install
+mvn clean verify
 ----
 +
-The tests in the directory and its subdirectories are run.
+The tests in the directory are run.
 
 
 [[GCLRR]][[running-the-tck-against-the-ri]]
 
-5.3 Running the TCK Against another CI
+5.3 Running the Legacy TCK Against GlassFish
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Some test scenarios are designed to ensure that the configuration and deployment of
-all the prebuilt {TechnologyShortName} TCK tests against one Compatible
-Implementation are successful operating with other compatible implementations, and that the TCK is ready for
-compatibility testing against the Vendor and Compatible Implementations.
+The legacy TCK JavaTest based tests can be run against GlassFish by
+invoking the following from the tck/old-tck-runner directory:
+`mvn verify`
 
-1.  Verify that you have followed the configuration instructions in
-link:config.html#GBFVU[Section 4.1, "Configuring Your Environment to Run
-the TCK Against the Compatible Implementation."]
-2.  If required, verify that you have completed the steps in
-link:config.html#GCLIW[Section 4.3.2, "Deploying the Prebuilt Archives."]
-3.  Run the tests, as described in link:#GBFUZ[Section 5.1, "Starting
-the tests,"] and, if desired, link:#GBFWM[Section 5.2, "Running a Subset
-of the Tests."]
+5.3 Running the Legacy TCK Against Another Compatible Implementation
 
-[[GCLRZ]][[running-the-tck-against-a-vendors-implementation]]
-
-5.4 Running the TCK Against a Vendor's Implementation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This test scenario is one of the compatibility test phases that all
-Vendors must pass.
-
-1.  Verify that you have followed the configuration instructions in
-link:config.html#GCLHU[Section 4.2, "Configuring Your Environment to
-Repackage and Run the TCK Against the Vendor Implementation."]
-2.  If required, verify that you have completed the steps in
-link:config.html#GCLIL[Section 4.3.3, "Deploying the
-Test Applications Against the Vendor Implementation."]
-3.  Run the tests, as described in link:#GBFUZ[Section 5.1, "Starting
-the tests,"] and, if desired, link:#GBFWM[Section 5.2, "Running a Subset
-of the Tests."]
-
+Read section 5 "Executing Tests" from old-tck-runner/target/authentication-tck/docs/pdf-usersguide/Jakarta-Authentication-TCK-Users-Guide.pdf after following the "Configure Your Environment for the Legacy Jakarta Authentication TCK" section of this guide.
 
 include::using.inc[]
-

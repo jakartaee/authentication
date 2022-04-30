@@ -70,8 +70,6 @@ link:using.html#GBFWO[5 Executing Tests]
 *** link:using.html#GBFVW[5.1.1 To Start the tests in Command-Line Mode]
 ** link:using.html#GBFWM[5.2 Running a Subset of the Tests]
 *** link:using.html#GBFWK[5.2.1 To Run a Subset of Tests in Command-Line Mode]
-** link:using.html#GCLRR[5.3 Running the TCK Against another CI]
-** link:using.html#GCLRZ[5.4 Running the TCK Against a Vendor's Implementation]
 
 [[debugging-test-problems]]
 link:debug.html#GBFUV[6 Debugging Test Problems]
