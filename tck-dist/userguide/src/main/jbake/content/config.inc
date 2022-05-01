@@ -53,6 +53,14 @@ From the tck/old-tck-runner module, execute the following command:
 
 This will unpack the legacy TCK at tck/old-tck-runner/target/authentication-tck.
 
+By default the legacy TCK is retrieved from 
+
+```
+https://download.eclipse.org/jakartaee/authentication/3.0/jakarta-authentication-tck-3.0.0.zip
+```
+
+An alternative location can be specified using the `tck.authentication.url` maven property.
+
 [[GBFWN]][[TCAUT00012]][[to-configure-your-environment-for-the-jaspic-tck]]
 
 4.2.2 Configure Your Environment for the Legacy Jakarta Authentication TCK

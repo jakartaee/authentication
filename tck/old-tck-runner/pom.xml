@@ -32,11 +32,17 @@
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
         <ant.version>1.10.11</ant.version>
         <tck.home>${project.build.directory}/authentication-tck</tck.home>
-        <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jaspic</tck.tests.home> 
-        <tck.authentication.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-authentication-tck-3.0.0.zip</tck.authentication.url>
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jaspic</tck.tests.home>
         
-        <!-- Use the below url of promoted bundle once the TCK is final -->
-        <!--tck.authentication.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-authentication-tck-3.0.0.zip</tck.authentication.url-->
+        <!-- 
+        
+            Final location, set to staged or promoted for testing. E.g. 
+            
+            https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-authentication-tck-3.0.0.zip
+            https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/promoted/eftl/jakarta-authentication-tck-3.0.0.zip
+        
+        -->
+        <tck.authentication.url>https://download.eclipse.org/jakartaee/authentication/3.0/jakarta-authentication-tck-3.0.0.zip</tck.authentication.url>
 
         <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
         <glassfish.version>7.0.0-M4</glassfish.version>
