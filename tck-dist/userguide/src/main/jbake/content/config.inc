@@ -12,13 +12,6 @@ as toc.adoc.
 
 [[GBFVU]][[configuring-your-environment-to-run-the-tck-against-the-reference-implementation]]
 
-4.1 Configuring Your Environment to Run the TCK Against a Compatible Implementation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-After configuring your environment as described in this section,
-continue with the instructions in link:#GBFUY[Section 5, "Executing Tests."]
-
-
 [NOTE]
 =======================================================================
 
@@ -34,19 +27,24 @@ On Windows, you must escape any backslashes with an extra backslash in
 path separators used in any of the following properties, or use forward
 slashes as a path separator instead.
 
-4.1 Setting up an Evironment for the Maven Surefire based TCK
-The current JUnit based set of tests runs under a Maven surefire runner and needs a profile configured for you compatible
+
+=======================================================================
+
+
+4.1 Setting up an Evironment for the Maven Surefire based TCK Against a Compatible Implementation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The current JUnit based set of tests runs under a Maven surefire runner and needs a profile configured for your compatible
 implementation to test. The top level tck/pom.xml includes example profiles including one for GlassFish. To configuration a
 profile for your compatible implementation, start with the GlassFish glassfish-ci-managed profile, and modify the dependencies
 and configuration to support your implementation and Arqulillian container implementation. The Arqulillian container implementation
 starts up your container and deploys the test wars into it.
 
 
-=======================================================================
+4.2 Setting up an Environment for the Legacy Jakarta Authentication TCK Against a Compatible Implementation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-4.2 Setting up an Environment for the Legacy Jakarta Authentication TCK
-
-4.2.1 Download the Legacy TCK Contents
+==== 4.2.1 Download the Legacy TCK Contents
 
 From the tck/old-tck-runner module, execute the following command:
 `mvn generate-resources`
@@ -63,7 +61,7 @@ An alternative location can be specified using the `tck.authentication.url` mave
 
 [[GBFWN]][[TCAUT00012]][[to-configure-your-environment-for-the-jaspic-tck]]
 
-4.2.2 Configure Your Environment for the Legacy Jakarta Authentication TCK
+==== 4.2.2 Configure Your Environment for the Legacy Jakarta Authentication TCK
 
 Read the "Setup and Configuration" section of the
 old-tck-runner/target/authentication-tck/docs/pdf-usersguide/Jakarta-Authentication-TCK-Users-Guide.pdf
