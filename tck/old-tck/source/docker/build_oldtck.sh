@@ -54,7 +54,7 @@ mvn -f $BASEDIR/docker/pom.getlibs.xml clean -Pstaging dependency:copy-dependenc
 
 RMI_CLASSES="-Drmi.classes=$JAKARTA_JARS/glassfish-corba-omgapi.jar"
 
-TCK_SPECIFIC_PROPS="-Djaspic.classes=$JAKARTA_JARS/"
+TCK_SPECIFIC_PROPS="-Djaspic.classes=$JAKARTA_JARS/jakarta.authentication-api.jar:$JAKARTA_JARS/jakarta.servlet-api.jar:$JAKARTA_JARS/jakarta.xml.soap-api.jar:$JAKARTA_JARS/jakarta.jws-api.jar:$JAKARTA_JARS/jakarta.annotation-api.jar:$JAKARTA_JARS/jakarta.xml.ws-api.jar:$JAKARTA_JARS/webservices-tools.jar:$JAKARTA_JARS/webservices-api.jar"
 
 echo "########## $TCK_NAME BUILD Started##########"
 ant -f $BASEDIR/install/$TCK_NAME/bin/build.xml -Ddeliverabledir=$TCK_NAME -Dbasedir=$BASEDIR/install/$TCK_NAME/bin $RMI_CLASSES $TCK_SPECIFIC_PROPS  clean.all build.all.jars 

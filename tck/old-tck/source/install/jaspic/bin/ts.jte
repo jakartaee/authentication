@@ -289,7 +289,7 @@ jaspic.classes=${jaspic.home}/modules/war-util.jar:\
 
 ts.run.classpath=${jaspic.classes}:${ts.home}/lib/tsharness.jar:${ts.home}/lib/jaspic.jar:${ts.home}/lib/tssv.jar
 
-ts.harness.classpath=${ts.home}/lib/jaxb-api.jar:${ts.home}/lib/jaxb-impl.jar:${ts.home}/lib/jaxb-xjc.jar:${ts.home}/lib/tsharness.jar:${ts.home}/lib/jaspic.jar:${ts.home}/lib/sigtest.jar:${ts.run.classpath}:${ts.home}/lib/javatest.jar:${ts.home}/lib/jdom-1.1.3.jar:${ant.home}/lib/ant.jar
+ts.harness.classpath=${ts.home}/lib/jaxb-api.jar:${ts.home}/lib/jaxb-impl.jar:${ts.home}/lib/jaxb-xjc.jar:${ts.home}/lib/tsharness.jar:${ts.home}/lib/jaspic.jar:${ts.home}/lib/sigtest.jar:${ts.run.classpath}:${ts.home}/lib/javatest.jar:${ts.home}/lib/jdom-1.1.3.jar:${ant.home}/lib/ant.jar:${ts.home}/lib/jakarta.activation-api.jar
 
 #classpath used for building CTS tests only (DO NOT MODIFY)
 ts.classpath=${ts.home}/classes:${tools.jar}:${ts.home}/lib/tsharness.jar:${ts.home}/lib/jaspic.jar:${ts.home}/lib/sigtest.jar:${ts.run.classpath}:${ts.home}/lib/javatest.jar:${ts.home}/lib/jdom-1.1.3.jar:${ant.home}/lib/ant.jar

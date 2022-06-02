@@ -37,7 +37,18 @@
         <jakarta.annotation-api.version>2.1.0</jakarta.annotation-api.version>
         <jakarta.jms-api.version>3.1.0</jakarta.jms-api.version>
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
-        <glassfish-corba-orb.version>4.2.4</glassfish-corba-orb.version>       
+        <glassfish-corba-orb.version>4.2.4</glassfish-corba-orb.version>     
+        <jakarta.activation-api.version>2.1.0</jakarta.activation-api.version>  
+        <jakarta.security.auth.message-api.version>2.0.0-RC1</jakarta.security.auth.message-api.version>
+        <jakarta.xml.soap-api.version>3.0.0</jakarta.xml.soap-api.version>
+        <jakarta.jws-api.version>3.0.0</jakarta.jws-api.version>
+        <jakarta.xml.ws-api.version>4.0.0</jakarta.xml.ws-api.version>
+        <webservices-api-osgi.version>4.0.0-M4</webservices-api-osgi.version>
+        <webservices-osgi.version>4.0.0-M4</webservices-osgi.version>
+        <webservices-tools.version>4.0.0-M4</webservices-tools.version> 
+
+        
+        
 
         
 </properties>
@@ -80,6 +91,49 @@
         <artifactId>glassfish-corba-orb</artifactId>
         <version>${glassfish-corba-orb.version}</version>
     </dependency>
+    <dependency>
+        <groupId>jakarta.activation</groupId>
+        <artifactId>jakarta.activation-api</artifactId>
+        <version>${jakarta.activation-api.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>jakarta.security.auth.message</groupId>
+        <artifactId>jakarta.security.auth.message-api</artifactId>
+        <version>${jakarta.security.auth.message-api.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>jakarta.xml.soap</groupId>
+        <artifactId>jakarta.xml.soap-api</artifactId>
+        <version>${jakarta.xml.soap-api.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>jakarta.jws</groupId>
+        <artifactId>jakarta.jws-api</artifactId>
+        <version>${jakarta.jws-api.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>jakarta.xml.ws</groupId>
+        <artifactId>jakarta.xml.ws-api</artifactId>
+        <version>${jakarta.xml.ws-api.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.glassfish.metro</groupId>
+        <artifactId>webservices-api-osgi</artifactId>
+        <version>${webservices-api-osgi.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.glassfish.metro</groupId>
+        <artifactId>webservices-osgi</artifactId>
+        <version>${webservices-osgi.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.glassfish.metro</groupId>
+        <artifactId>webservices-tools</artifactId>
+        <version>${webservices-tools.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>
