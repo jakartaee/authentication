@@ -186,7 +186,7 @@
             <!-- Let's try and figure out the deliverable.dir based on what 
             src dir we're in
             -->
-            <if>
+                <if>
                     <contains string="${basedir}" 
                               substring="${file.separator}install${file.separator}"/>
                     <then>
@@ -196,7 +196,7 @@
                                        select="\1"
                                        casesensitive="false" />
                     </then>    
-                </elseif>
+                
                 <elseif>
                     <contains string="${basedir}" 
                               substring="com${file.separator}sun${file.separator}ts${file.separator}lib"/>
