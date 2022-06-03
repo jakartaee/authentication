@@ -26,7 +26,7 @@
         <relativePath />
     </parent>
 
-    <groupId>org.eclipse.ee4j.authentication.tck</groupId>
+    <groupId>org.eclipse.ee4j.tck.authentication</groupId>
     <artifactId>old-authentication-tck</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -34,7 +34,7 @@
     <name>Old Jakarta Authentication TCK - build</name>
 
     <properties>
-        <ant.version>1.10.2</ant.version>
+        <ant.version>1.10.11</ant.version>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
     </properties>

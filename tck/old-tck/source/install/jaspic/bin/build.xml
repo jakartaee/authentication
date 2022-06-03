@@ -27,8 +27,7 @@
                      com/sun/ts/tests/jaspic/spi,
                      com/sun/ts/tests/jaspic/spi/soap,
                      com/sun/ts/tests/jaspic/spi/servlet,
-                     com/sun/ts/tests/common/vehicle/jaspicservlet,
-                     com/sun/ts/tests/signaturetest/jaspic"/>
+                     com/sun/ts/tests/common/vehicle/jaspicservlet"/>
     <property name="javaee.home" value = "${jaspic.home}"/>
     <property name="javaee.home.ri" value = "${jaspic.home}"/>
     <property name="orb.host.ri" value = "${orb.host}"/>

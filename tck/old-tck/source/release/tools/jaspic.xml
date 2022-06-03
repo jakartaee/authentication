@@ -174,10 +174,7 @@
                          com/sun/ts/lib/porting/**/*,
                          com/sun/ts/lib/deliverable/jaspic/*, 
                          com/sun/ts/lib/implementation/javaee/**/*, 
-                         com/sun/ts/tests/build.xml"
-                     excludes="**/.svn/*,
-                         com/sun/ts/tests/signaturetest/*Record*,
-                         com/sun/ts/tests/signaturetest/*record*"/>
+                         com/sun/ts/tests/build.xml"/>
         </copy>
         
         <!-- the com/sun/ts/lib file -->

@@ -187,18 +187,6 @@
             src dir we're in
             -->
             <if>
-                <contains string="${basedir}" 
-                          substring="signaturetest"/>
-                <then>
-                    <echo message="basedir = ${basedir}"/>
-                    
-                    <propertyregex property="deliverable.dir"
-                                   input="${basedir}${file.separator}"
-                                   regexp=".*[\/|\\]sun[\/|\\]ts[\/|\\]tests[\/|\\]signaturetest[\/|\\](.*?)[\/|\\]"
-                                   select="\1"
-                                   casesensitive="false" />
-                </then>
-                <elseif>
                     <contains string="${basedir}" 
                               substring="${file.separator}install${file.separator}"/>
                     <then>
@@ -345,7 +333,6 @@
     <!-- Package directories -->
     <property name="lib.pkg.dir"     value="com/sun/ts/lib"/>
     <property name="tests.pkg.dir"   value="com/sun/ts/tests"/>
-    <property name="sig.pkg.dir"     value="${tests.pkg.dir}/signaturetest"/>
     <property name="harness.pkg.dir" value="${lib.pkg.dir}/harness"/>
     <property name="impl.pkg.dir"    value="${lib.pkg.dir}/implementation"/>
     <property name="util.pkg.dir"    value="${lib.pkg.dir}/util"/>

@@ -589,7 +589,7 @@
 
     <target name="jakartaee-jaspic" depends="has.override, no.override">
         <var name="deliverable.name" value="JAKARTAEE-JASPIC"/>
-        <property name="test.areas" value="jaspic, signaturetest, jaxws/common"/>
+        <property name="test.areas" value="jaspic, jaxws/common"/>
         <antcall target="${the.target}"/>
     </target>
 

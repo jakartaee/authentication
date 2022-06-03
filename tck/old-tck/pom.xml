@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.eclipse.ee4j.authentication.tck</groupId>
+        <groupId>org.eclipse.ee4j.tck.authentication</groupId>
         <artifactId>jakarta-authentication-tck</artifactId>
         <version>3.0.0-SNAPSHOT</version>
     </parent>
