@@ -69,7 +69,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.ee4j.authentication.tck</groupId>
+            <groupId>org.eclipse.ee4j.tck.authentication</groupId>
             <artifactId>old-authentication-tck</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
