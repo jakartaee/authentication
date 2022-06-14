@@ -97,7 +97,9 @@
              for setting up factories and checking whether things are on the classpath. 
              TODO: document here what these tests actually test for.
          -->
-        <module>old-tck-runner</module>
+        <!--module>old-tck-runner</module-->
+
+        <module>old-tck</module>
         
     </modules>
 
@@ -381,7 +383,7 @@
             </activation>
 
             <properties>
-                <glassfish.version>7.0.0-M4</glassfish.version>
+                <glassfish.version>7.0.0-M5</glassfish.version>
                 <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
             </properties>
 

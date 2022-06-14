@@ -1,0 +1,4 @@
+/dist/
+/classes/
+**/JASPIC_BUILD/**
+/lib/*.jar
