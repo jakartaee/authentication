@@ -198,7 +198,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>5.1.4</version>
+                <version>5.1.6</version>
                 <configuration>
                     <supportedProjectTypes>
                         <supportedProjectType>jar</supportedProjectType>
@@ -216,6 +216,8 @@
                         <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
                         <Implementation-Vendor-Id>org.glassfish</Implementation-Vendor-Id>
                         <_include>-${basedir}/osgi.bundle</_include>
+                        <_noimportjava>true</_noimportjava>
+                        <_runee>JavaSE-11</_runee>
                     </instructions>
                 </configuration>
                 <executions>
@@ -250,7 +252,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <id>attach-api-javadocs</id>
