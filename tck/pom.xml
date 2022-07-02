@@ -93,14 +93,6 @@
         -->
         <module>invoke-ejb-cdi</module>
         
-        <!-- Runs the old TCK, which is the Javatest based one. It's not entirely clear what this tests, but it includes Java SE like unit tests
-             for setting up factories and checking whether things are on the classpath. 
-             TODO: document here what these tests actually test for.
-         -->
-        <!--module>old-tck-runner</module-->
-
-        <module>old-tck</module>
-        
     </modules>
 
     <properties>
@@ -714,5 +706,20 @@
             </properties>
         </profile>
 
+        <profile>
+            <id>old-tck</id>
+
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+
+            <!-- Runs the old TCK, which is the Javatest based one. It's not entirely clear what this tests, but it includes Java SE like unit tests
+                 for setting up factories and checking whether things are on the classpath 
+                 TODO: document here what these tests actually test for.
+             -->
+            <modules>
+                <module>old-tck</module>
+            </modules>
+        </profile>
     </profiles>
 </project>
