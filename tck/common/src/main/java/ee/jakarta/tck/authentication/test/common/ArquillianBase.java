@@ -36,7 +36,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.experimental.categories.Category;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
@@ -48,7 +47,6 @@ import com.gargoylesoftware.htmlunit.WebClient;
  * @author Arjan Tijms
  *
  */
-@Category(Map.class)
 public class ArquillianBase {
 
     private static final String WEBAPP_SRC = "src/main/webapp";
