@@ -105,6 +105,7 @@
         <skipJSF>false</skipJSF>
         <skipJACC>false</skipJACC>
 
+        <resultlistener.home>${maven.multiModuleProjectDirectory}/target</resultlistener.home>
         <maven.test.skip>false</maven.test.skip>
         <skipTests>false</skipTests>
     </properties>
@@ -230,6 +231,11 @@
             <version>2.61.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>junit-result-listener</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <repositories>
@@ -300,14 +306,6 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <configuration>
-                    <trimStackTrace>false</trimStackTrace>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <attachClasses>true</attachClasses>
@@ -325,20 +323,50 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
                 <configuration>
+                    <trimStackTrace>false</trimStackTrace>
+                    <properties>
+                        <!-- 
+                            From org.omnifaces:junit-result-listener. Keeps track of junit results in
+                            multi-maven project. Default is to only print results per module.
+                         -->
+                        <property>
+                            <name>listener</name>
+                            <value>org.omnifaces.junit.ResultListener</value>
+                        </property>
+                    </properties>
                     <systemPropertyVariables>
-                        <finalName>${project.build.finalName}</finalName>
+                        <resultlistener.home>${resultlistener.home}</resultlistener.home>
+                        <!-- 
+                            Don't print results in the listener, since it will show up too early in the log.
+                            We use the groovy-maven-plugin defined below to print in the verify phase.
+                         -->
+                        <resultlistener.print>false</resultlistener.print>
                     </systemPropertyVariables>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <version>2.1.1</version>
+                <executions>
+                    <execution>
+                        <id>print-test-result</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <classpathScope>runtime</classpathScope>
+                            <source>
+                                System.setProperty("resultlistener.home", "${resultlistener.home}")
+                                org.omnifaces.junit.ResultPrinter.printResult();
+                              </source>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -494,7 +522,7 @@
             </build>
         </profile>
 
-	<!-- 
+	   <!-- 
             The profiles for Tomcat and Piranha are currently out of date and don't' work.
             They are here as starter for future working profiles.
         -->
