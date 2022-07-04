@@ -74,18 +74,6 @@ public class ArquillianBase {
                 "\n\n"  + formatHTML(response) + "\n\n");
 
         }
-
-        @Override
-        protected void finished(Description description) {
-            logger.info(
-                    description.isSuite() + " testSuiteFinished **********************************************************************\n" +
-                            description.getAnnotations() + " " +
-                            description.getChildren() + " " +
-                            description.testCount()
-
-
-                        );
-        }
     };
 
     public static String formatHTML(String html) {
