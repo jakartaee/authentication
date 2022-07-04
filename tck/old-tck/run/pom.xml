@@ -328,8 +328,7 @@
     </build>
 
 
-        <profiles>
-        
+    <profiles>
         <!-- ### JakartaEE Platform Mode (by default tck.mode=standalone, KEYWORDS=all)### -->
         <profile>
             <id>platform</id>
@@ -353,7 +352,6 @@
                 <glassfish.artifact>web</glassfish.artifact>
                 <KEYWORDS>jaspic_web_profile</KEYWORDS>
             </properties>
-        </profile> 
-
-        </profiles>
+        </profile>
+    </profiles>
 </project>

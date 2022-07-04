@@ -25,38 +25,36 @@ import jakarta.security.auth.message.MessageInfo;
  * @author Raja Perumal
  */
 public class TSSOAPMessageInfo implements MessageInfo {
-  private Map map = null;
+    private Map map = null;
+    private Object request = null;
+    private Object response = null;
 
-  private Object request = null;
+    /** Creates a new instance of TSMessageInfo */
+    public TSSOAPMessageInfo() {
 
-  private Object response = null;
+    }
 
-  /** Creates a new instance of TSMessageInfo */
-  public TSSOAPMessageInfo() {
+    public TSSOAPMessageInfo(Map localMap) {
+        map = localMap;
+    }
 
-  }
+    public Map getMap() {
+        return map;
+    }
 
-  public TSSOAPMessageInfo(Map localMap) {
-    map = localMap;
-  }
+    public void setResponseMessage(Object res) {
+        response = res;
+    }
 
-  public Map getMap() {
-    return map;
-  }
+    public void setRequestMessage(Object req) {
+        request = req;
+    }
 
-  public void setResponseMessage(Object res) {
-    response = res;
-  }
+    public Object getRequestMessage() {
+        return request;
+    }
 
-  public void setRequestMessage(Object req) {
-    request = req;
-  }
-
-  public Object getRequestMessage() {
-    return request;
-  }
-
-  public Object getResponseMessage() {
-    return response;
-  }
+    public Object getResponseMessage() {
+        return response;
+    }
 }

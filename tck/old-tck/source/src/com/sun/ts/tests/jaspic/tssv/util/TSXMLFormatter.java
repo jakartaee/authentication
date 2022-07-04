@@ -26,63 +26,59 @@ import java.util.logging.XMLFormatter;
  */
 public class TSXMLFormatter extends XMLFormatter {
 
-  /** Creates a new instance of TSXMLFormatter */
-  public TSXMLFormatter() {
-    super();
-  }
-
-  /**
-   * Override getHead method of XMLFormatter. This is done to avoid specifying
-   * external entity such as "logger.dtd" in the generated log file.
-   *
-   * Occurance of "<!DOCTYPE log SYSTEM "logger.dtd" > causes runtime
-   * performance hit due to dtd validation at runtime.
-   *
-   * @param h
-   *          The target handler.
-   * @return header string
-   */
-  public String getHead(Handler h) {
-    String logFileLocation = System.getProperty("log.file.location");
-
-    // Check if the log file already exists
-    File file = new File(logFileLocation + "/" + JASPICData.DEFAULT_LOG_FILE);
-    if (file.exists()) {
-      // if the log file exists and the file length is more than 1 byte
-      // then don't return any header otherwise return header info.
-      if (file.length() > 1) {
-        // Don't write any header info
-        return "";
-      }
+    /** Creates a new instance of TSXMLFormatter */
+    public TSXMLFormatter() {
+        super();
     }
 
-    StringBuffer sb = new StringBuffer();
-    sb.append("<?xml version=\"1.0\"");
-    String encoding = "UTF-8";
+    /**
+     * Override getHead method of XMLFormatter. This is done to avoid specifying external entity such as "logger.dtd" in the
+     * generated log file.
+     *
+     * Occurance of "<!DOCTYPE log SYSTEM "logger.dtd" > causes runtime performance hit due to dtd validation at runtime.
+     *
+     * @param h The target handler.
+     * @return header string
+     */
+    public String getHead(Handler h) {
+        String logFileLocation = System.getProperty("log.file.location");
 
-    sb.append(" encoding=\"");
-    sb.append(encoding);
-    sb.append("\"");
-    sb.append(" standalone=\"no\"?>\n");
-    // sb.append("<!DOCTYPE log SYSTEM \"logger.dtd\">\n");
-    sb.append("<log>\n");
-    return sb.toString();
-  }
+        // Check if the log file already exists
+        File file = new File(logFileLocation + "/" + JASPICData.DEFAULT_LOG_FILE);
+        if (file.exists()) {
+            // if the log file exists and the file length is more than 1 byte
+            // then don't return any header otherwise return header info.
+            if (file.length() > 1) {
+                // Don't write any header info
+                return "";
+            }
+        }
 
-  /**
-   * Return the tail string for a set of XML formatted records.
-   *
-   * This method will be called only during the end of logger lifecycle.
-   * LogProcessor already has the built in logic to handle non well-formed XML
-   * (i.e missing </log> element)
-   *
-   * @param h
-   *          The target handler (can be null)
-   * @return a valid XML string
-   */
-  public String getTail(Handler h) {
-    // return "</log>\n";
-    return "";
-  }
+        StringBuffer sb = new StringBuffer();
+        sb.append("<?xml version=\"1.0\"");
+        String encoding = "UTF-8";
+
+        sb.append(" encoding=\"");
+        sb.append(encoding);
+        sb.append("\"");
+        sb.append(" standalone=\"no\"?>\n");
+        // sb.append("<!DOCTYPE log SYSTEM \"logger.dtd\">\n");
+        sb.append("<log>\n");
+        return sb.toString();
+    }
+
+    /**
+     * Return the tail string for a set of XML formatted records.
+     *
+     * This method will be called only during the end of logger lifecycle. LogProcessor already has the built in logic to
+     * handle non well-formed XML (i.e missing </log> element)
+     *
+     * @param h The target handler (can be null)
+     * @return a valid XML string
+     */
+    public String getTail(Handler h) {
+        // return "</log>\n";
+        return "";
+    }
 
 }

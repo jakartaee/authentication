@@ -30,59 +30,48 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @DeclareRoles({ "Administrator", "Manager", "Employee" })
-@ServletSecurity(value = @HttpConstraint(rolesAllowed = {
-    "Manager" }), httpMethodConstraints = {
-        @HttpMethodConstraint(value = "GET", rolesAllowed = "Manager"),
-        @HttpMethodConstraint(value = "POST", rolesAllowed = "Manager") })
-@WebServlet(name = "AnotherMandatoryAuthen", urlPatterns = {
-    "/AnotherMandatoryAuthen" })
+@ServletSecurity(value = @HttpConstraint(rolesAllowed = { "Manager" }), httpMethodConstraints = {
+        @HttpMethodConstraint(value = "GET", rolesAllowed = "Manager"), @HttpMethodConstraint(value = "POST", rolesAllowed = "Manager") })
+@WebServlet(name = "AnotherMandatoryAuthen", urlPatterns = { "/AnotherMandatoryAuthen" })
 public class AnotherMandatoryAuthen extends HttpServlet {
 
-  /**
-  * 
-  */
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    doPost(request, response);
-    printOut("Enterred AnotherMandatoryAuthen->doGet()", response);
-  }
-
-  @SuppressWarnings("unused")
-  public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-
-    System.out.println("In AnotherMandatoryAuthen->doPost()");
-
-    printOut("Enterred AnotherMandatoryAuthen->doPost()", response);
-    printOut("request.getServletPath() = " + request.getServletPath(),
-        response);
-    printOut("request.getPathInfo() = " + request.getPathInfo(), response);
-    printOut("request.getMethod() = " + request.getMethod(), response);
-
-  }
-
-  @SuppressWarnings("unused")
-  public void service(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    System.out.println("In AnotherMandatoryAuthen->service()");
-    printOut("Enterred AnotherMandatoryAuthen->service()", response);
-  }
-
-  private void printOut(String str, HttpServletResponse response) {
-    PrintWriter out = null;
-    try {
-      out = response.getWriter();
-    } catch (Exception ex) {
-      ex.printStackTrace();
-      out = null;
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doPost(request, response);
+        printOut("Enterred AnotherMandatoryAuthen->doGet()", response);
     }
-    if (out != null) {
-      out.println(str);
-    } else {
-      System.out.println(str);
+
+    @SuppressWarnings("unused")
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("In AnotherMandatoryAuthen->doPost()");
+
+        printOut("Enterred AnotherMandatoryAuthen->doPost()", response);
+        printOut("request.getServletPath() = " + request.getServletPath(), response);
+        printOut("request.getPathInfo() = " + request.getPathInfo(), response);
+        printOut("request.getMethod() = " + request.getMethod(), response);
     }
-  }
+
+    @SuppressWarnings("unused")
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("In AnotherMandatoryAuthen->service()");
+        printOut("Enterred AnotherMandatoryAuthen->service()", response);
+    }
+
+    private void printOut(String str, HttpServletResponse response) {
+        PrintWriter out = null;
+        try {
+            out = response.getWriter();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            out = null;
+        }
+        
+        if (out != null) {
+            out.println(str);
+        } else {
+            System.out.println(str);
+        }
+    }
 
 }

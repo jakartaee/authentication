@@ -37,168 +37,159 @@ import jakarta.xml.ws.WebServiceRef;
  * @author Raja Perumal
  */
 public class Client extends EETest {
-  @WebServiceRef(name = "service/SendFailureHelloService")
-  static SendFailureHelloService service;
+    @WebServiceRef(name = "service/SendFailureHelloService")
+    static SendFailureHelloService service;
 
-  private SendFailureHello port;
+    private SendFailureHello port;
 
-  private Properties props = null;
+    private Properties props = null;
 
-  private static final String UserNameProp = "user";
+    private static final String UserNameProp = "user";
 
-  private static final String UserPasswordProp = "password";
+    private static final String UserPasswordProp = "password";
 
-  private String username = "";
+    private String username = "";
 
-  private String password = "";
+    private String password = "";
 
-  private TSURL ctsurl = new TSURL();
+    private TSURL ctsurl = new TSURL();
 
-  private String hostname = "localhost";
+    private String hostname = "localhost";
 
-  private String logicalHostName = "server";
+    private String logicalHostName = "server";
 
-  private String PROTOCOL = "http";
+    private String PROTOCOL = "http";
 
-  private String urlString = null;
+    private String urlString = null;
 
-  private int portnum = 8000;
+    private int portnum = 8000;
 
-  private String platformMode = null;
+    private String platformMode = null;
 
-  private LogFileProcessor logProcessor = null;
+    private LogFileProcessor logProcessor = null;
 
-  // ServiceName and PortName mapping configuration going java-to-wsdl
-  private static final String SERVICE_NAME = "SendFailureHelloService";
+    // ServiceName and PortName mapping configuration going java-to-wsdl
+    private static final String SERVICE_NAME = "SendFailureHelloService";
 
-  private static final String PORT_NAME = "SendFailureHelloPort";
+    private static final String PORT_NAME = "SendFailureHelloPort";
 
-  private static final String NAMESPACEURI = "http://sendfailure.authstatus.spi.jaspic.tests.ts.sun.com/";
+    private static final String NAMESPACEURI = "http://sendfailure.authstatus.spi.jaspic.tests.ts.sun.com/";
 
-  private QName SERVICE_QNAME = new QName(NAMESPACEURI, SERVICE_NAME);
+    private QName SERVICE_QNAME = new QName(NAMESPACEURI, SERVICE_NAME);
 
-  private QName PORT_QNAME = new QName(NAMESPACEURI, PORT_NAME);
+    private QName PORT_QNAME = new QName(NAMESPACEURI, PORT_NAME);
 
-  public static void main(String[] args) {
-    Client theTests = new Client();
-    Status s = theTests.run(args, System.out, System.err);
-    s.exit();
-  }
-
-  /*
-   * @class.setup_props: log.file.location; webServerHost; webServerPort; user;
-   * password; logical.hostname.soap; platform.mode;
-   */
-  public void setup(String[] args, Properties p) throws Fault {
-    props = p;
-    try {
-      username = props.getProperty(UserNameProp);
-      password = props.getProperty(UserPasswordProp);
-      hostname = props.getProperty("webServerHost");
-      platformMode = props.getProperty("platform.mode");
-      logicalHostName = props.getProperty("logical.hostname.soap");
-      portnum = Integer.parseInt(props.getProperty("webServerPort"));
-      urlString = ctsurl.getURLString(PROTOCOL, hostname, portnum,
-          "/SendFailureHello_web/SendFailureHello");
-
-      // create LogProcessor
-      logProcessor = new LogFileProcessor(props);
-
-      // retrieve logs based on application Name
-      logProcessor.fetchLogs("pullAllLogRecords|fullLog");
-
-    } catch (Exception e) {
-      throw new Fault("Setup failed:", e);
+    public static void main(String[] args) {
+        Client theTests = new Client();
+        Status s = theTests.run(args, System.out, System.err);
+        s.exit();
     }
 
-    TestUtil.logMsg("setup ok");
-  }
+    /*
+     * @class.setup_props: log.file.location; webServerHost; webServerPort; user; password; logical.hostname.soap;
+     * platform.mode;
+     */
+    public void setup(String[] args, Properties p) throws Fault {
+        props = p;
+        try {
+            username = props.getProperty(UserNameProp);
+            password = props.getProperty(UserPasswordProp);
+            hostname = props.getProperty("webServerHost");
+            platformMode = props.getProperty("platform.mode");
+            logicalHostName = props.getProperty("logical.hostname.soap");
+            portnum = Integer.parseInt(props.getProperty("webServerPort"));
+            urlString = ctsurl.getURLString(PROTOCOL, hostname, portnum, "/SendFailureHello_web/SendFailureHello");
 
-  /*
-   * sayHelloProtected
-   *
-   * This method is invoked first by all tests, as a result of this client and
-   * server soap runtime generates corresponding messages in the log and the
-   * other tests verify those messages.
-   */
-  private void sayHelloProtected() throws Fault {
+            // create LogProcessor
+            logProcessor = new LogFileProcessor(props);
 
-    try {
-      SendFailureHello port = null;
+            // retrieve logs based on application Name
+            logProcessor.fetchLogs("pullAllLogRecords|fullLog");
 
-      if (platformMode.equals("jakartaEE")) {
-        port = (SendFailureHello) getJavaEEPort();
-      } else {
-        port = (SendFailureHello) getStandAlonePort();
-      }
+        } catch (Exception e) {
+            throw new Fault("Setup failed:", e);
+        }
 
-      BindingProvider bindingProvider = (BindingProvider) port;
-      Map<String, Object> map = bindingProvider.getRequestContext();
-
-      TestUtil.logMsg(
-          "Setting the target endpoint address on WS port: " + urlString);
-      map.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, urlString);
-
-      TestUtil.logMsg("Invoking sayHelloProtected on Hello port");
-      String text = port.sayHelloProtected("Raja");
-      TestUtil.logMsg("Got Output : " + text);
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new Fault("Test sayHelloProtected failed");
-    }
-  }
-
-  /**
-   * @keywords: jaspic_soap
-   *
-   * @testName: AuthStatusSendFailure
-   *
-   * @assertion_ids: JASPIC:SPEC:172; JASPIC:SPEC:165; JASPIC:SPEC:166;
-   *                 JASPIC:SPEC:57; JASPIC:SPEC:315
-   *
-   *
-   * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
-   *                 Registering TSSV with your AppServer ).
-   *
-   *
-   *                 Description: AuthStatus.SEND_FAILURE If the request
-   *                 validation failed, and whenthe module has established a
-   *                 SOAP message containing a fault element (available to the
-   *                 runtime by calling messageInfo.getResponseMessage) that may
-   *                 be sent by the runtime to inform the client that the
-   *                 request failed.
-   *
-   */
-  public void AuthStatusSendFailure() throws Fault {
-    boolean verified = false;
-
-    try {
-      sayHelloProtected();
-    } catch (Exception e) {
-      TestUtil.logMsg("Got expected exception :" + e.getMessage());
-      TestUtil.printStackTrace(e);
-      return;
+        TestUtil.logMsg("setup ok");
     }
 
-    // Control shouldn't come here.
-    throw new Fault("AuthStatusSendFailure failed");
-  }
+    /*
+     * sayHelloProtected
+     *
+     * This method is invoked first by all tests, as a result of this client and server soap runtime generates corresponding
+     * messages in the log and the other tests verify those messages.
+     */
+    private void sayHelloProtected() throws Fault {
 
-  public Object getJavaEEPort() throws Exception {
-    TestUtil.logMsg("Get SendFailureHello Port from SendFailureHelloService");
-    Object port = service.getPort(SendFailureHello.class);
-    return port;
-  }
+        try {
+            SendFailureHello port = null;
 
-  public Object getStandAlonePort() throws Exception {
-    URL wsdlurl = new URL(urlString + "?WSDL");
-    return WebServiceUtils.getPort(wsdlurl, SERVICE_QNAME,
-        SendFailureHelloService.class, PORT_QNAME, SendFailureHello.class);
-  }
+            if (platformMode.equals("jakartaEE")) {
+                port = (SendFailureHello) getJavaEEPort();
+            } else {
+                port = (SendFailureHello) getStandAlonePort();
+            }
 
-  public void cleanup() throws Fault {
-    logMsg("cleanup ok");
-  }
+            BindingProvider bindingProvider = (BindingProvider) port;
+            Map<String, Object> map = bindingProvider.getRequestContext();
+
+            TestUtil.logMsg("Setting the target endpoint address on WS port: " + urlString);
+            map.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, urlString);
+
+            TestUtil.logMsg("Invoking sayHelloProtected on Hello port");
+            String text = port.sayHelloProtected("Raja");
+            TestUtil.logMsg("Got Output : " + text);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Fault("Test sayHelloProtected failed");
+        }
+    }
+
+    /**
+     * @keywords: jaspic_soap
+     *
+     * @testName: AuthStatusSendFailure
+     *
+     * @assertion_ids: JASPIC:SPEC:172; JASPIC:SPEC:165; JASPIC:SPEC:166; JASPIC:SPEC:57; JASPIC:SPEC:315
+     *
+     *
+     * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
+     *
+     *
+     * Description: AuthStatus.SEND_FAILURE If the request validation failed, and whenthe module has established a SOAP
+     * message containing a fault element (available to the runtime by calling messageInfo.getResponseMessage) that may be
+     * sent by the runtime to inform the client that the request failed.
+     *
+     */
+    public void AuthStatusSendFailure() throws Fault {
+        boolean verified = false;
+
+        try {
+            sayHelloProtected();
+        } catch (Exception e) {
+            TestUtil.logMsg("Got expected exception :" + e.getMessage());
+            TestUtil.printStackTrace(e);
+            return;
+        }
+
+        // Control shouldn't come here.
+        throw new Fault("AuthStatusSendFailure failed");
+    }
+
+    public Object getJavaEEPort() throws Exception {
+        TestUtil.logMsg("Get SendFailureHello Port from SendFailureHelloService");
+        Object port = service.getPort(SendFailureHello.class);
+        return port;
+    }
+
+    public Object getStandAlonePort() throws Exception {
+        URL wsdlurl = new URL(urlString + "?WSDL");
+        return WebServiceUtils.getPort(wsdlurl, SERVICE_QNAME, SendFailureHelloService.class, PORT_QNAME, SendFailureHello.class);
+    }
+
+    public void cleanup() throws Fault {
+        logMsg("cleanup ok");
+    }
 
 }

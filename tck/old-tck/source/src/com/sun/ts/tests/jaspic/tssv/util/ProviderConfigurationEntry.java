@@ -31,129 +31,123 @@ import org.w3c.dom.NodeList;
  */
 public class ProviderConfigurationEntry implements Serializable {
 
-  private String providerClassName = null;
+    private String providerClassName = null;
+    private Map<String, String> properties = null;
+    private String messageLayer = null;
+    private String applicationContextId = null;
+    private String registrationDescription = null;
 
-  private Map<String,String> properties = null;
+    /** Creates a new instance of ProviderConfigurationEntry */
+    public ProviderConfigurationEntry(Node providerConfigEntryNode) throws Exception {
+        Node childNode;
+        String nodeName;
 
-  private String messageLayer = null;
+        // make sure the nodename is provider-config-entry
+        if (!providerConfigEntryNode.getNodeName().equals("provider-config-entry")) {
+            throw new Exception("Unexpected tag :" + providerConfigEntryNode.getNodeName());
+        }
+        NodeList nodes = providerConfigEntryNode.getChildNodes();
 
-  private String applicationContextId = null;
+        for (int i = 0; i < nodes.getLength(); i++) {
 
-  private String registrationDescription = null;
+            childNode = nodes.item(i);
+            nodeName = childNode.getNodeName();
 
-  /** Creates a new instance of ProviderConfigurationEntry */
-  public ProviderConfigurationEntry(Node providerConfigEntryNode)
-      throws Exception {
-    Node childNode;
-    String nodeName;
+            // Skip empty text node processing
+            if (nodeName.equals("#text"))
+                continue;
 
-    // make sure the nodename is provider-config-entry
-    if (!providerConfigEntryNode.getNodeName()
-        .equals("provider-config-entry")) {
-      throw new Exception(
-          "Unexpected tag :" + providerConfigEntryNode.getNodeName());
-    }
-    NodeList nodes = providerConfigEntryNode.getChildNodes();
+            if (nodeName.equals("provider-class")) {
+                providerClassName = getText(childNode);
 
-    for (int i = 0; i < nodes.getLength(); i++) {
+            } else if (nodeName.equals("properties")) {
+                properties = loadProperties(childNode);
 
-      childNode = nodes.item(i);
-      nodeName = childNode.getNodeName();
+            } else if (nodeName.equals("message-layer")) {
+                messageLayer = getText(childNode);
 
-      // Skip empty text node processing
-      if (nodeName.equals("#text"))
-        continue;
+            } else if (nodeName.equals("app-context-id")) {
+                applicationContextId = getText(childNode);
 
-      if (nodeName.equals("provider-class")) {
-        providerClassName = getText(childNode);
+            } else if (nodeName.equals("reg-description")) {
+                registrationDescription = getText(childNode);
+            }
+        }
 
-      } else if (nodeName.equals("properties")) {
-        properties = loadProperties(childNode);
-
-      } else if (nodeName.equals("message-layer")) {
-        messageLayer = getText(childNode);
-
-      } else if (nodeName.equals("app-context-id")) {
-        applicationContextId = getText(childNode);
-
-      } else if (nodeName.equals("reg-description")) {
-        registrationDescription = getText(childNode);
-      }
     }
 
-  }
+    // This method loads a given Properties node such as the one shown below
+    // and stores the values into a properties object called "properties"
+    // <properties>
+    // <entry key="AuthStatus_SEND_SUCCESS">true</entry>
+    // <entry key="requestPolicy">USER_NAME_PASSWORD</entry>
+    // </properties>
+    private static Map<String, String> loadProperties(Node node) {
+        Node topLevelChildNode = null;
+        String topLevelNodeName;
+        String key = null;
+        String value = null;
+        NamedNodeMap namedNodeMap = null;
+        Properties nodeProperties = new Properties();
 
-  // This method loads a given Properties node such as the one shown below
-  // and stores the values into a properties object called "properties"
-  // <properties>
-  // <entry key="AuthStatus_SEND_SUCCESS">true</entry>
-  // <entry key="requestPolicy">USER_NAME_PASSWORD</entry>
-  // </properties>
-  private static Map<String,String> loadProperties(Node node) {
-    Node topLevelChildNode = null;
-    String topLevelNodeName;
-    String key = null;
-    String value = null;
-    NamedNodeMap namedNodeMap = null;
-    Properties nodeProperties = new Properties();
+        NodeList nodes = node.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
 
-    NodeList nodes = node.getChildNodes();
-    for (int i = 0; i < nodes.getLength(); i++) {
+            topLevelChildNode = nodes.item(i);
+            topLevelNodeName = topLevelChildNode.getNodeName();
 
-      topLevelChildNode = nodes.item(i);
-      topLevelNodeName = topLevelChildNode.getNodeName();
+            // Skip empty text node processing
+            if (topLevelNodeName.equals("#text"))
+                continue;
 
-      // Skip empty text node processing
-      if (topLevelNodeName.equals("#text"))
-        continue;
+            if (topLevelNodeName.equals("entry")) {
+                namedNodeMap = topLevelChildNode.getAttributes();
+                Node tempKeyNode = namedNodeMap.getNamedItem("key");
+                key = tempKeyNode.getNodeValue();
+                value = topLevelChildNode.getFirstChild().getNodeValue();
+                nodeProperties.put(key, value);
+            }
+        }
 
-      if (topLevelNodeName.equals("entry")) {
-        namedNodeMap = topLevelChildNode.getAttributes();
-        Node tempKeyNode = namedNodeMap.getNamedItem("key");
-        key = tempKeyNode.getNodeValue();
-        value = topLevelChildNode.getFirstChild().getNodeValue();
-        nodeProperties.put(key, value);
-      }
+        HashMap<String, String> map = new HashMap<>();
+        nodeProperties.stringPropertyNames().forEach((tmpkey) -> map.put(tmpkey, nodeProperties.getProperty(tmpkey)));
+        return map;
     }
 
-    HashMap<String,String> map = new HashMap<>();
-    nodeProperties.stringPropertyNames().forEach((tmpkey) -> map.put(tmpkey, nodeProperties.getProperty(tmpkey)));
-    return map;
-  }
-
-  public String getProviderClassName() {
-    return providerClassName;
-  }
-
-  public String getMessageLayer() {
-    return messageLayer;
-  }
-
-  public String getApplicationContextId() {
-    return applicationContextId;
-  }
-
-  public String getRegistrationDescription() {
-    return registrationDescription;
-  }
-
-  public Map<String, String> getProperties() {
-    return properties;
-  }
-
-  public String getText(Node textNode) {
-    String result = "";
-    NodeList nodes = textNode.getChildNodes();
-    for (int i = 0; i < nodes.getLength(); i++) {
-      Node node = nodes.item(i);
-      if (node.getNodeType() == Node.TEXT_NODE) {
-        result = node.getNodeValue();
-        break;
-      }
+    public String getProviderClassName() {
+        return providerClassName;
     }
-    if (result != null)
-      result = result.trim();
 
-    return result;
-  }
+    public String getMessageLayer() {
+        return messageLayer;
+    }
+
+    public String getApplicationContextId() {
+        return applicationContextId;
+    }
+
+    public String getRegistrationDescription() {
+        return registrationDescription;
+    }
+
+    public Map<String, String> getProperties() {
+        return properties;
+    }
+
+    public String getText(Node textNode) {
+        String result = "";
+        NodeList nodes = textNode.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.TEXT_NODE) {
+                result = node.getNodeValue();
+                break;
+            }
+        }
+        
+        if (result != null)
+            result = result.trim();
+
+        return result;
+    }
 }

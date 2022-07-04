@@ -29,37 +29,31 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @DeclareRoles({ "Administrator", "Manager", "Employee" })
-@ServletSecurity(httpMethodConstraints = { @HttpMethodConstraint(value = "GET"),
-    @HttpMethodConstraint(value = "POST") })
-@WebServlet(urlPatterns = { "/OptionalAuthen",
-    "/ModuleAuthStatusThrowExNoDispatch" })
+@ServletSecurity(httpMethodConstraints = { @HttpMethodConstraint(value = "GET"), @HttpMethodConstraint(value = "POST") })
+@WebServlet(urlPatterns = { "/OptionalAuthen", "/ModuleAuthStatusThrowExNoDispatch" })
 public class OptionalAuthen extends HttpServlet {
 
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    PrintWriter out = response.getWriter();
-    doPost(request, response);
-    out.println("Enterred OptionalAuthen->doGet()");
-  }
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
+        doPost(request, response);
+        out.println("Enterred OptionalAuthen->doGet()");
+    }
 
-  public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("In OptionalAuthen->doPost()");
 
-    System.out.println("In OptionalAuthen->doPost()");
+        PrintWriter out = response.getWriter();
+        out.println("Enterred OptionalAuthen->doPost()");
 
-    PrintWriter out = response.getWriter();
-    out.println("Enterred OptionalAuthen->doPost()");
+        out.println("request.getServletPath() = " + request.getServletPath());
+        out.println("request.getPathInfo() = " + request.getPathInfo());
+        out.println("request.getMethod() = " + request.getMethod());
+    }
 
-    out.println("request.getServletPath() = " + request.getServletPath());
-    out.println("request.getPathInfo() = " + request.getPathInfo());
-    out.println("request.getMethod() = " + request.getMethod());
-  }
-
-  public void service(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    System.out.println("In OptionalAuthen->service()");
-    PrintWriter out = response.getWriter();
-    out.println("Enterred OptionalAuthen->service()");
-  }
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("In OptionalAuthen->service()");
+        PrintWriter out = response.getWriter();
+        out.println("Enterred OptionalAuthen->service()");
+    }
 
 }

@@ -23,43 +23,42 @@ import java.security.Principal;
  * @author Raja Perumal
  */
 public class SimplePrincipal implements Principal, java.io.Serializable {
-  private String name; // username
+    
+    private String name; // username
+    private String password; // password
 
-  private String password; // password
-
-  public SimplePrincipal(String val, String pwd) {
-    name = val;
-    password = pwd;
-  }
-
-  // required to satisfy Principal interface
-  public boolean equals(Object another) {
-    if ((another != null) && (another instanceof SimplePrincipal)
-        && (((SimplePrincipal) another).getName().equals(name))) {
-      return true;
-    } else {
-      return false;
+    public SimplePrincipal(String val, String pwd) {
+        name = val;
+        password = pwd;
     }
-  }
 
-  // required to satisfy Principal interface
-  public String getName() {
-    return name;
-  }
+    // required to satisfy Principal interface
+    public boolean equals(Object another) {
+        if ((another != null) && (another instanceof SimplePrincipal) && (((SimplePrincipal) another).getName().equals(name))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-  // required to satisfy Principal interface
-  public String toString() {
-    return name;
-  }
+    // required to satisfy Principal interface
+    public String getName() {
+        return name;
+    }
 
-  // required to satisfy Principal interface
-  public int hashCode() {
-    return name.hashCode();
-  }
+    // required to satisfy Principal interface
+    public String toString() {
+        return name;
+    }
 
-  // XXXX: may want to change this later if tests call for it
-  // this is normally bad but for now we dont care
-  public String getPassword() {
-    return password;
-  }
+    // required to satisfy Principal interface
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    // XXXX: may want to change this later if tests call for it
+    // this is normally bad but for now we dont care
+    public String getPassword() {
+        return password;
+    }
 } // end of class SimulateRuntime
