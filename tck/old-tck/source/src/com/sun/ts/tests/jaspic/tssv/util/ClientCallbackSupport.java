@@ -30,102 +30,92 @@ import javax.security.auth.callback.UnsupportedCallbackException;
  * @author Raja Perumal
  */
 public class ClientCallbackSupport {
-  private static TSLogger logger = null;
+    private static TSLogger logger = null;
 
-  private static CallbackHandler callbackHandler = null;
+    private static CallbackHandler callbackHandler = null;
 
-  private static String profile = null;
+    private static String profile = null;
 
-  private static final String runtimeType = "ClientRuntime";
+    private static final String runtimeType = "ClientRuntime";
 
-  /** Creates a new instance of ClientCallbackSupport */
-  public ClientCallbackSupport(TSLogger tsLogger, CallbackHandler cbkHandler,
-      String profile) {
-    logger = tsLogger;
-    callbackHandler = cbkHandler;
-    this.profile = profile;
-  }
-
-  public boolean verify() {
-    try {
-
-      NameCallbackSupport();
-      PasswordCallbackSupport();
-      return true;
-
-    } catch (Exception e) {
-      return false;
+    /** Creates a new instance of ClientCallbackSupport */
+    public ClientCallbackSupport(TSLogger tsLogger, CallbackHandler cbkHandler, String profile) {
+        logger = tsLogger;
+        callbackHandler = cbkHandler;
+        this.profile = profile;
     }
-  }
 
-  private void NameCallbackSupport() {
-    if (callbackHandler != null) {
-      try {
-        NameCallback nameCallback = new NameCallback("Please enter your name :",
-            "j2ee");
-        nameCallback.setName("j2ee");
+    public boolean verify() {
+        try {
+            NameCallbackSupport();
+            PasswordCallbackSupport();
+            return true;
 
-        Callback[] callbacks = new Callback[] { nameCallback };
-
-        callbackHandler.handle(callbacks);
-        String returnedName = nameCallback.getName();
-
-        if (returnedName != null) {
-          logMsg("Name returned from Name Callback =" + returnedName);
+        } catch (Exception e) {
+            return false;
         }
-        logMsg("CallbackHandler supports NameCallback");
-      } catch (UnsupportedCallbackException usce) {
-        logMsg("CallbackHandler failed to support NameCallback :"
-            + usce.getMessage());
-        usce.printStackTrace();
-      } catch (IOException ioe) {
-        logMsg("CallbackHandler failed to support NameCallback :"
-            + ioe.getMessage());
-        ioe.printStackTrace();
-      }
-
     }
 
-  }
+    private void NameCallbackSupport() {
+        if (callbackHandler != null) {
+            try {
+                NameCallback nameCallback = new NameCallback("Please enter your name :", "j2ee");
+                nameCallback.setName("j2ee");
 
-  private void PasswordCallbackSupport() {
-    if (callbackHandler != null) {
-      try {
-        PasswordCallback passwordCallback = new PasswordCallback(
-            "Please enter your password :", false);
-        passwordCallback.setPassword(new char[] { 'j', '2', 'e', 'e' });
+                Callback[] callbacks = new Callback[] { nameCallback };
 
-        Callback[] callbacks = new Callback[] { passwordCallback };
+                callbackHandler.handle(callbacks);
+                String returnedName = nameCallback.getName();
 
-        callbackHandler.handle(callbacks);
-        char returnedPassword[] = passwordCallback.getPassword();
-
-        if (returnedPassword != null) {
-          logMsg("Password returned from Password Callback ="
-              + new String(returnedPassword));
+                if (returnedName != null) {
+                    logMsg("Name returned from Name Callback =" + returnedName);
+                }
+                logMsg("CallbackHandler supports NameCallback");
+            } catch (UnsupportedCallbackException usce) {
+                logMsg("CallbackHandler failed to support NameCallback :" + usce.getMessage());
+                usce.printStackTrace();
+            } catch (IOException ioe) {
+                logMsg("CallbackHandler failed to support NameCallback :" + ioe.getMessage());
+                ioe.printStackTrace();
+            }
         }
-        logMsg("CallbackHandler supports PasswordCallback");
-      } catch (UnsupportedCallbackException usce) {
-        logMsg("CallbackHandler failed to support PasswordCallback :"
-            + usce.getMessage());
-        usce.printStackTrace();
-      } catch (IOException ioe) {
-        logMsg("CallbackHandler failed to support PasswordCallback :"
-            + ioe.getMessage());
-        ioe.printStackTrace();
-      }
 
     }
 
-  }
+    private void PasswordCallbackSupport() {
+        if (callbackHandler != null) {
+            try {
+                PasswordCallback passwordCallback = new PasswordCallback("Please enter your password :", false);
+                passwordCallback.setPassword(new char[] { 'j', '2', 'e', 'e' });
 
-  public void logMsg(String str) {
-    if (logger != null) {
-      logger.log(Level.INFO, "In " + profile + " : " + runtimeType + " " + str);
-    } else {
-      System.out.println("*** TSLogger Not Initialized properly ***");
-      System.out.println("*** TSSVLogMessage : ***" + str);
+                Callback[] callbacks = new Callback[] { passwordCallback };
+
+                callbackHandler.handle(callbacks);
+                char returnedPassword[] = passwordCallback.getPassword();
+
+                if (returnedPassword != null) {
+                    logMsg("Password returned from Password Callback =" + new String(returnedPassword));
+                }
+                logMsg("CallbackHandler supports PasswordCallback");
+            } catch (UnsupportedCallbackException usce) {
+                logMsg("CallbackHandler failed to support PasswordCallback :" + usce.getMessage());
+                usce.printStackTrace();
+            } catch (IOException ioe) {
+                logMsg("CallbackHandler failed to support PasswordCallback :" + ioe.getMessage());
+                ioe.printStackTrace();
+            }
+
+        }
+
     }
-  }
+
+    public void logMsg(String str) {
+        if (logger != null) {
+            logger.log(Level.INFO, "In " + profile + " : " + runtimeType + " " + str);
+        } else {
+            System.out.println("*** TSLogger Not Initialized properly ***");
+            System.out.println("*** TSSVLogMessage : ***" + str);
+        }
+    }
 
 }

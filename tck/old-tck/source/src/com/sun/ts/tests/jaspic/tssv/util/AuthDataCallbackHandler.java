@@ -27,37 +27,35 @@ import javax.security.auth.callback.PasswordCallback;
  */
 public class AuthDataCallbackHandler implements CallbackHandler {
 
-  private String user;
+    private String user;
+    private String password;
 
-  private String password;
-
-  // Default constructor gets the user and password from the environment
-  // using system property j2eelogin.name and j2eelogin.password
-  public AuthDataCallbackHandler() {
-    user = System.getProperty("j2eelogin.name");
-    password = System.getProperty("j2eelogin.password");
-  }
-
-  public AuthDataCallbackHandler(String usr, String pwd) {
-    user = usr;
-    password = pwd;
-
-  }
-
-  public void handle(Callback[] callbacks) {
-    for (Callback cb : callbacks) {
-      if (cb instanceof NameCallback) {
-        NameCallback nc = (NameCallback) cb;
-        nc.setName(user);
-      } else if (cb instanceof PasswordCallback) {
-        PasswordCallback pc = (PasswordCallback) cb;
-        if (password != null) {
-          pc.setPassword(password.toCharArray());
-        } else {
-          pc.setPassword(null);
-        }
-      }
+    // Default constructor gets the user and password from the environment
+    // using system property j2eelogin.name and j2eelogin.password
+    public AuthDataCallbackHandler() {
+        user = System.getProperty("j2eelogin.name");
+        password = System.getProperty("j2eelogin.password");
     }
-  }
+
+    public AuthDataCallbackHandler(String usr, String pwd) {
+        user = usr;
+        password = pwd;
+    }
+
+    public void handle(Callback[] callbacks) {
+        for (Callback cb : callbacks) {
+            if (cb instanceof NameCallback) {
+                NameCallback nc = (NameCallback) cb;
+                nc.setName(user);
+            } else if (cb instanceof PasswordCallback) {
+                PasswordCallback pc = (PasswordCallback) cb;
+                if (password != null) {
+                    pc.setPassword(password.toCharArray());
+                } else {
+                    pc.setPassword(null);
+                }
+            }
+        }
+    }
 
 }

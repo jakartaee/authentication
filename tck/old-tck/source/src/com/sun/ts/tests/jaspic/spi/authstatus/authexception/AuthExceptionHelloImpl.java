@@ -22,9 +22,8 @@ import jakarta.jws.WebService;
 @WebService(name = "AuthExceptionHello", serviceName = "AuthExceptionHelloService")
 public class AuthExceptionHelloImpl {
 
-  @WebMethod
-  public String sayHelloProtected(String param) {
-
-    return "Hello " + param;
-  }
+    @WebMethod
+    public String sayHelloProtected(String param) {
+        return "Hello " + param;
+    }
 }

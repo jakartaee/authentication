@@ -22,9 +22,8 @@ import jakarta.jws.WebService;
 @WebService(name = "SendFailureHello", serviceName = "SendFailureHelloService")
 public class SendFailureHelloImpl {
 
-  @WebMethod
-  public String sayHelloProtected(String param) {
-
-    return "Hello " + param;
-  }
+    @WebMethod
+    public String sayHelloProtected(String param) {
+        return "Hello " + param;
+    }
 }

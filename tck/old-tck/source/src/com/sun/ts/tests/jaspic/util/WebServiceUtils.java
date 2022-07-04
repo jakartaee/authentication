@@ -29,38 +29,34 @@ import com.sun.ts.lib.util.TestUtil;
  */
 public class WebServiceUtils {
 
-  public static Object getPort(URL wsdlurl, QName siName, Class siClass,
-      QName portName, Class seiClass) throws Exception {
-    TestUtil.logMsg("getPort(URL, QName, Class, QName, Class)");
+    public static Object getPort(URL wsdlurl, QName siName, Class siClass, QName portName, Class seiClass) throws Exception {
+        TestUtil.logMsg("getPort(URL, QName, Class, QName, Class)");
 
-    jakarta.xml.ws.Service svc = (jakarta.xml.ws.Service) getService(wsdlurl,
-        siName, siClass);
-    TestUtil.logMsg("Get stub/proxy for seiClass -> " + seiClass.getName()
-        + ", port ->" + portName);
-    Object stub = null;
-    stub = svc.getPort(portName, seiClass);
-    if (stub == null) {
-      TestUtil.logErr(
-          "FATAL: getPort(URL, QName, Class, QName, Class) returned stub/proxy=null");
-    } else
-      TestUtil.logMsg("Obtained stub/proxy=" + stub);
-    return stub;
-  }
+        jakarta.xml.ws.Service svc = (jakarta.xml.ws.Service) getService(wsdlurl, siName, siClass);
+        TestUtil.logMsg("Get stub/proxy for seiClass -> " + seiClass.getName() + ", port ->" + portName);
+        Object stub = null;
+        stub = svc.getPort(portName, seiClass);
+        if (stub == null) {
+            TestUtil.logErr("FATAL: getPort(URL, QName, Class, QName, Class) returned stub/proxy=null");
+        } else
+            TestUtil.logMsg("Obtained stub/proxy=" + stub);
+        return stub;
+    }
 
-  public static jakarta.xml.ws.Service getService(URL wsdlurl, QName siName,
-      Class siClass) throws Exception {
-    TestUtil.logMsg("getService(URL, QName, Class)");
-    jakarta.xml.ws.Service service = null;
-    if (wsdlurl != null)
-      TestUtil.logMsg("URL=" + wsdlurl.toString());
-    TestUtil.logMsg("siName=" + siName);
-    TestUtil.logMsg("siClass=" + siClass.getName());
-    Constructor ctr = siClass.getConstructor(URL.class, QName.class);
-    service = (jakarta.xml.ws.Service) ctr.newInstance(wsdlurl, siName);
-    if (service == null)
-      TestUtil
-          .logErr("FATAL: getService(URL, QName, Class) returned service=null");
-    return service;
-  }
+    public static jakarta.xml.ws.Service getService(URL wsdlurl, QName siName, Class siClass) throws Exception {
+        TestUtil.logMsg("getService(URL, QName, Class)");
+        jakarta.xml.ws.Service service = null;
+        if (wsdlurl != null)
+            TestUtil.logMsg("URL=" + wsdlurl.toString());
+        TestUtil.logMsg("siName=" + siName);
+        TestUtil.logMsg("siClass=" + siClass.getName());
+        Constructor ctr = siClass.getConstructor(URL.class, QName.class);
+        
+        service = (jakarta.xml.ws.Service) ctr.newInstance(wsdlurl, siName);
+        if (service == null)
+            TestUtil.logErr("FATAL: getService(URL, QName, Class) returned service=null");
+        
+        return service;
+    }
 
 }

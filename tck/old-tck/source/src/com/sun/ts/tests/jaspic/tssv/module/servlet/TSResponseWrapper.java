@@ -25,31 +25,31 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletResponseWrapper;
 
 public class TSResponseWrapper extends HttpServletResponseWrapper {
-  private TSLogger logger = null;
+    private TSLogger logger = null;
 
-  public TSResponseWrapper(HttpServletResponse response) {
-    super(response);
-    logger = TSLogger.getTSLogger(JASPICData.LOGGER_NAME);
-    logMsg("TSResponseWrapper constructor called");
-  }
-
-  @Override
-  public String getHeader(String name) {
-
-    if ("isResponseWrapped".equals(name)) {
-      return "true";
+    public TSResponseWrapper(HttpServletResponse response) {
+        super(response);
+        logger = TSLogger.getTSLogger(JASPICData.LOGGER_NAME);
+        logMsg("TSResponseWrapper constructor called");
     }
 
-    return super.getHeader(name);
-  }
+    @Override
+    public String getHeader(String name) {
 
-  public void logMsg(String str) {
-    if (logger != null) {
-      logger.log(Level.INFO, str);
-    } else {
-      System.out.println("*** TSLogger Not Initialized properly ***");
-      System.out.println("*** TSSVLogMessage : ***" + str);
+        if ("isResponseWrapped".equals(name)) {
+            return "true";
+        }
+
+        return super.getHeader(name);
     }
-  }
+
+    public void logMsg(String str) {
+        if (logger != null) {
+            logger.log(Level.INFO, str);
+        } else {
+            System.out.println("*** TSLogger Not Initialized properly ***");
+            System.out.println("*** TSSVLogMessage : ***" + str);
+        }
+    }
 
 }

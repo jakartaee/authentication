@@ -22,56 +22,56 @@ package com.sun.ts.tests.jaspic.tssv.util;
  */
 public class JASPICData {
 
-  // these are the jsr-196 supported profile message-layers
-  public final static String LAYER_SERVLET = "HttpServlet";
+    // these are the jsr-196 supported profile message-layers
+    public final static String LAYER_SERVLET = "HttpServlet";
 
-  public final static String LAYER_SOAP = "SOAP";
+    public final static String LAYER_SOAP = "SOAP";
 
-  // this is a name that we will use to internally reference our logger
-  public final static String LOGGER_NAME = "jsr196";
+    // this is a name that we will use to internally reference our logger
+    public final static String LOGGER_NAME = "jsr196";
 
-  // this log file is used on the appserver side by our cts tests
-  // to verify success/failures of our tests that involve a need to
-  // know that status of an exchange between a client and server.
-  public final static String DEFAULT_LOG_FILE = "TSSVLog.txt";
+    // this log file is used on the appserver side by our cts tests
+    // to verify success/failures of our tests that involve a need to
+    // know that status of an exchange between a client and server.
+    public final static String DEFAULT_LOG_FILE = "TSSVLog.txt";
 
-  public final static String MOD_CLASS_NAME = "moduleClassKey";
+    public final static String MOD_CLASS_NAME = "moduleClassKey";
 
-  public final static String SVC_SUBJECT_KEY = "com.sun.ts.tests.jaspic.serviceSubjectKey";
+    public final static String SVC_SUBJECT_KEY = "com.sun.ts.tests.jaspic.serviceSubjectKey";
 
-  // define some statics for the cts AuthConfigFactory implementation and
-  // the RI's implementation of the AuthConfigFactory
-  public final static String TSSV_ACF = "com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigFactory";
+    // define some statics for the cts AuthConfigFactory implementation and
+    // the RI's implementation of the AuthConfigFactory
+    public final static String TSSV_ACF = "com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigFactory";
 
-  // definitions for Servlet Container Profile (SCP)
-  public final static String SCP_CONTEXT_PATH = "spitests_servlet_web";
+    // definitions for Servlet Container Profile (SCP)
+    public final static String SCP_CONTEXT_PATH = "spitests_servlet_web";
 
-  public final static String AUTHSTAT_FAILURE_ND = "ModuleAuthStatusFailureNoDispatch";
+    public final static String AUTHSTAT_FAILURE_ND = "ModuleAuthStatusFailureNoDispatch";
 
-  public final static String AUTHSTAT_SENDFAILURE_ND = "ModuleAuthStatusSendFailureNoDispatch";
+    public final static String AUTHSTAT_SENDFAILURE_ND = "ModuleAuthStatusSendFailureNoDispatch";
 
-  public final static String AUTHSTAT_SENDCONT_ND = "ModuleAuthStatusSendContinueNoDispatch";
+    public final static String AUTHSTAT_SENDCONT_ND = "ModuleAuthStatusSendContinueNoDispatch";
 
-  public final static String AUTHSTAT_SENDSUCCESS_ND = "ModuleAuthStatusSendSuccessNoDispatch";
+    public final static String AUTHSTAT_SENDSUCCESS_ND = "ModuleAuthStatusSendSuccessNoDispatch";
 
-  public final static String AUTHSTAT_SUCCESS_ND = "ModuleAuthStatusSuccessNoDispatch";
+    public final static String AUTHSTAT_SUCCESS_ND = "ModuleAuthStatusSuccessNoDispatch";
 
-  public final static String AUTHSTAT_THROW_EX_ND = "ModuleAuthStatusThrowExNoDispatch";
+    public final static String AUTHSTAT_THROW_EX_ND = "ModuleAuthStatusThrowExNoDispatch";
 
-  public final static String AUTHSTAT_OPT_SUCCESS = "AuthStatusOptionalSuccess";
+    public final static String AUTHSTAT_OPT_SUCCESS = "AuthStatusOptionalSuccess";
 
-  public final static String AUTHSTAT_MAND_SUCCESS = "AuthStatusMandatorySuccess";
+    public final static String AUTHSTAT_MAND_SUCCESS = "AuthStatusMandatorySuccess";
 
-  public final static String AUTHSTAT_FAILURE_D = "ModuleAuthStatusFailureDispatch";
+    public final static String AUTHSTAT_FAILURE_D = "ModuleAuthStatusFailureDispatch";
 
-  public final static String AUTHSTAT_SENDFAILURE_D = "ModuleAuthStatusSendFailureDispatch";
+    public final static String AUTHSTAT_SENDFAILURE_D = "ModuleAuthStatusSendFailureDispatch";
 
-  public final static String AUTHSTAT_SENDCONT_D = "ModuleAuthStatusSendContinueDispatch";
+    public final static String AUTHSTAT_SENDCONT_D = "ModuleAuthStatusSendContinueDispatch";
 
-  public final static String AUTHSTAT_SENDSUCCESS_D = "ModuleAuthStatusSendSuccessDispatch";
+    public final static String AUTHSTAT_SENDSUCCESS_D = "ModuleAuthStatusSendSuccessDispatch";
 
-  public final static String AUTHSTAT_SUCCESS_D = "ModuleAuthStatusSuccessDispatch";
+    public final static String AUTHSTAT_SUCCESS_D = "ModuleAuthStatusSuccessDispatch";
 
-  public final static String AUTHSTAT_THROW_EX_D = "ModuleAuthStatusThrowExDispatch";
+    public final static String AUTHSTAT_THROW_EX_D = "ModuleAuthStatusThrowExDispatch";
 
 }
