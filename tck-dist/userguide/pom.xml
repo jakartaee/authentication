@@ -28,7 +28,7 @@
     <artifactId>tck_userguide</artifactId>
 
     <packaging>pom</packaging>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <name>Eclipse Foundation Technology Compatibility Kit User's Guide for Jakarta Authentication for Jakarta EE, Release 3.0</name>
 
     <properties>
