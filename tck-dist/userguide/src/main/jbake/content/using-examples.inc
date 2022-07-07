@@ -16,8 +16,15 @@ When doing testing with staged dependencies, you may need to add the -Pstaging p
 mvn -Pstaging -Pglassfish-ci-managed clean test surefire-report:report
 ----
 
-When doing testing with the legacy TCK in staging, you may need to specify that staging location:
-
+When running tests against Jakarta EE Compatible Implementation you need to specify the `-Pplatform` profile:
+This will set the `KEYWORDS` parameter accordingly for choosing the tests to be run for Platform mode (Full profile in default).
 ----
-mvn -Pglassfish-ci-managed clean test surefire-report:report -Dtck.authentication.url=https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/jakarta-authentication-tck-3.0.0.zip
+mvn -Pplatform clean test surefire-report:report 
+----
+
+When running tests against Jakarta EE Web Profile Compatible Implementation you need to specify the `-Pplatform,web` profiles:
+This will set the `KEYWORDS` parameter accordingly for choosing the tests to be run for Platform mode in web profile.
+Also the glassfish web profile bundle will be chosen to run the test against.
+----
+mvn -Pplatform,web clean test surefire-report:report 
 ----

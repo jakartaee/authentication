@@ -97,15 +97,32 @@ The tests in the directory are run.
 
 [[GCLRR]][[running-the-tck-against-the-ri]]
 
-5.3 Running the Legacy TCK Against GlassFish
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+5.3 Running the TCK Against GlassFish
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The legacy TCK JavaTest based tests can be run against GlassFish by
-invoking the following from the tck/old-tck-runner directory:
-`mvn verify`
+All the tests can be run against GlassFish by
+invoking the following from the tck/ directory:
+`mvn clean verify`. This will include the legacy 
+TCK JavaTest based tests in tck/old-tck.
 
-5.3 Running the Legacy TCK Against Another Compatible Implementation
 
-Read section 5 "Executing Tests" from old-tck-runner/target/authentication-tck/docs/pdf-usersguide/Jakarta-Authentication-TCK-Users-Guide.pdf after following the "Configure Your Environment for the Legacy Jakarta Authentication TCK" section of this guide.
+[[GDMSS]][[running-the-tck-against-the-glassfish]]
+
+5.4 Running the Legacy TCK tests Against GlassFish
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The legacy JavaTest based TCK tests are in tck/old-tck folder.
+They can be run by below:
+
+1.  Change to the directory tck/old-tck.
+2.  Start the test run by executing the following command: +
++
+[source]
+----
+mvn clean verify
+----
++
+The legacy JavaTest based TCK tests in the directory are run.
+
 
 include::using.inc[]
