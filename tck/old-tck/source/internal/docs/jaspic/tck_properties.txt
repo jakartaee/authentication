@@ -28,7 +28,7 @@ TCKFullName=Jakarta Authentication TCK
 TCKShortName=Jakarta Authentication TCK
 
 // 1c. Technology full name.
-TechnologyFullName=Jakarta Authentication 2.0
+TechnologyFullName=Jakarta Authentication 3.0
 
 // 1d. Technology short name.
 TechnologyShortName=???
@@ -43,7 +43,7 @@ ReleaseDate= <GF FCS which should be within next couple months>
 JavaTestVersion=3.2.1
 
 // 1h. Version of Java SE required to run the TCK.
-J2SEVersion=Java SE 8 or newer
+J2SEVersion=Java SE 11 or newer
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Section 2. Paths, package names, and URLs.
