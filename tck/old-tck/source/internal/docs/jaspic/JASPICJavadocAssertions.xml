@@ -24,7 +24,7 @@
     <technology>JASPIC</technology>
     <id>JASPIC</id>
     <name>Jakarta Authentication</name>
-    <version>2.0</version>
+    <version>3.0</version>
     <assertions>
         <assertion required="true" impl-spec="false" status="active" testable="true">
             <id>1</id>
