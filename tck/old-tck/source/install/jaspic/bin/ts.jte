@@ -520,6 +520,7 @@ impl.vi=glassfish
 impl.vi.deploy.dir=${s1as.domain}/autodeploy
 impl.deploy.timeout.multiplier=1200
 
+impl.ri=glassfish
 
 #########################################################################
 # @wsdlRepository1 Location to publish final wsdl files when using
