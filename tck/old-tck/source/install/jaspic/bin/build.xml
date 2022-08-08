@@ -51,7 +51,7 @@
     <target name="runclient" 
             depends="init, set.keywords, prepare.work.report.dirs, check.selected.test, 
                      no.selected.test, check.java.options, no.java.options, translatepath">
-        <ant antfile="config.vi.xml" dir="${bin.dir}/xml/impl/${impl.vi}" target="config.acc.template"/>
+        <ant antfile="config.vi.xml" dir="${bin.dir}/xml/impl/${impl.ri}" target="config.acc.template"/>
         <ts.javatest.batch/>
     </target>
 
@@ -258,14 +258,12 @@
         <record name="config_vi.log" action="start"/>
         <ant antfile="config.vi.xml" dir="${bin.dir}/xml/impl/${impl.vi}" target="config.vi"/>
         <ant antfile="config.vi.xml" dir="${bin.dir}/xml/impl/${impl.vi}" target="vi.perms"/>
-        <ant antfile="s1as.xml" dir="${common.bin.dir}/xml/impl/${impl.vi}" target="config.jaspic"/>
         <record name="config_vi.log" action="stop"/>
     </target>
 
 
     <target name="unconfig.vi">
         <record name="unconfig_vi.log" action="start"/>
-        <ant antfile="s1as.xml" dir="${common.bin.dir}/xml/impl/${impl.vi}" target="unconfig.jaspic"/>
         <record name="unconfig_vi.log" action="stop"/>
     </target>
 
@@ -275,35 +273,17 @@
     </target>
 
 
-    <!-- Enable the use of jaspic for the app server under test -->
-    <target name="enable.tssv">
-        <ant antfile="s1as.xml" dir="${common.bin.dir}/xml/impl/${impl.vi}" target="enable.tssv"/>
-
-        <!-- configure the sun-acc.xml template file so we can run jaspic tests in acc -->
-        <ant antfile="config.vi.xml" dir="${bin.dir}/xml/impl/${impl.vi}" target="config.acc.template"/>
-    </target>
-
-
     <!-- convenience target.  -->
     <!-- Enables the use of jaspic for the app server under test -->
     <target name="enable.jaspic">
-        <antcall target="enable.tssv"/>
+        <ant antfile="config.vi.xml" dir="${bin.dir}/xml/impl/${impl.vi}" target="enable.jaspic"/>
     </target>
-
-
-    <!-- Disable the use of jaspic for the app server under test -->
-    <target name="disable.tssv">
-        <ant antfile="s1as.xml" dir="${common.bin.dir}/xml/impl/${impl.vi}" target="disable.tssv"/>
-    </target>
-
 
     <!-- convenience target.  -->
     <!-- Disables the use of jaspic for the app server under test -->
     <target name="disable.jaspic">
-        <antcall target="disable.tssv"/>
+        <ant antfile="config.vi.xml" dir="${bin.dir}/xml/impl/${impl.vi}" target="disable.jaspic"/>
     </target>
-
-
 
     <!-- ts specific jar (in this case jaspic.jar) will be created in ts.home/lib. -->
 

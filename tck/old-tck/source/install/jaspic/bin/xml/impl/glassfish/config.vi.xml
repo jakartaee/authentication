@@ -115,6 +115,17 @@
        <ant antfile="s1as.xml" dir="${common.bin.dir}/xml/impl/glassfish" target="disable.tssv"/>
    </target>
 
+    <!-- JASPIC Configuration. -->
+    <target name="enable.jaspic">
+        <antcall target="config.jaspic"/> <!-- From s1as.xml -->
+        <antcall target="enable.tssv"/> <!-- From s1as.xml -->
+        <antcall target="config.acc.template"/>
+    </target>
+
+    <target name="disable.jaspic">
+        <antcall target="disable.tssv"/> <!-- From s1as.xml -->
+    	<antcall target="unconfig.jaspic"/> <!-- From s1as.xml -->
+    </target>
 
    <!--  Target to shutdown the Jakarta EE app server under test -->
    <target name="stop.vi" depends="checkCTSConfiguration">
