@@ -162,7 +162,7 @@ role. A runtime may operate in both the client and server roles.
 ==== Client-Side Application Context Identifier
 
 The application context identifier used by a
-client-runtime to acquire the `AuthConfigProvider`and ClientAuthConfig
+client-runtime to acquire the `AuthConfigProvider` and `ClientAuthConfig` 
 objects pertaining to the client side processing of a web service
 invocation shall begin with a client scope identifier that identifies
 the client. If the client-runtime may host multiple client applications,
@@ -230,7 +230,7 @@ If a non-null `AuthConfigProvider` is returned
 (by the call to `getConfigProvider`), the messaging runtime must call
 `getClientAuthConfig` on the provider to obtain the authentication context
 configuration object pertaining to the application context at the layer.
-The layer and appContext arguments of the call to getClientAuthConfig
+The layer and appContext arguments of the call to `getClientAuthConfig`
 must be the same as those used to acquire the provider, and the handler
 argument must be as defined in <<a549>> for a client runtime.
 
