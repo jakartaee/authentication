@@ -28,7 +28,7 @@ defined by the SPI.
 
 
 [#fig:001] 
-image::authn-1.svg[caption="Figure {doc-part}-{counter:figure} ", reftext="Figure {doc-part}-{figure}", title="Message Processing Model footnote:[The dashed lines between validateRequest and validateResponse convey additional message exchanges that may occur when message validation requires a multi-message dialog, such as would occur in challenge-response protocols.]", align="center"] 
+image::authn-1.svg[caption="Figure {doc-part}-{counter:figure} ", reftext="Figure {doc-part}-{figure}", title="Message Processing Model footnote:[The dashed lines between `validateRequest` and `validateResponse` convey additional message exchanges that may occur when message validation requires a multi-message dialog, such as would occur in challenge-response protocols.]", align="center"] 
 
 
 ==== Authentication Modules
@@ -71,7 +71,7 @@ processing runtime and the authentication modules.
 
 A client message processing runtime interacts with an implementation of the `ClientAuthContext` 
 interface to invoke the authentication modules of the context to perform message processing at
-points 1 and 4 (secureRequest and validateResponse) of the message processing model. 
+points 1 and 4 (`secureRequest` and `validateResponse`) of the message processing model. 
 Similarly, a server message processing runtime interacts with an implementation of the
  `ServerAuthContext` interface to invoke the modules of the context to perform message processing at
 points 2 and 3 (`validateRequest` and `secureResponse`) of the message processing model.
@@ -283,22 +283,22 @@ a| [.small]#+++<font size=".8em">status or exception</font>+++#
 ^a| [.small]#+++<font size=".8em">semantic</font>+++#
 
 | SUCCESS
-| Validation of a received message was successful and produced either the request (validateRequest) message to be dispatched to the service, or the response (validateResponse) message to be returned to the client application.
+| Validation of a received message was successful and produced either the request (`validateRequest`) message to be dispatched to the service, or the response (`validateResponse`) message to be returned to the client application.
 
 |FAILURE
-|A failure occurred on the client-side (secureRequest or validateResponse) and produced a failure response message to be returned to the client application.
+|A failure occurred on the client-side (`secureRequest` or `validateResponse`) and produced a failure response message to be returned to the client application.
 
 |SEND_SUCCESS
-|Processing of a request (secureRequest or validateRequest) or response (secureResponse) message was successful and produced the request (secureRequest) or response (validateRequest, secureResponse) message to be sent to the peer.
+|Processing of a request (`secureRequest` or `validateRequest`) or response (`secureResponse`) message was successful and produced the request (`secureRequest`) or response (`validateRequest`, `secureResponse`) message to be sent to the peer.
 
 |SEND_FAILURE
-|A failure occurred on the service-side (validateRequest or secureResponse) and produced a failure response message to be sent to the client.
+|A failure occurred on the service-side (`validateRequest` or `secureResponse`) and produced a failure response message to be sent to the client.
 
 |SEND_CONTINUE
-|Processing was incomplete. Additional message exchanges will be required to achieve successful completion. The processing produced the next request (secureRequest or validateResponse) or response (validateRequest or secureResponse) message to be sent to the peer.
+|Processing was incomplete. Additional message exchanges will be required to achieve successful completion. The processing produced the next request (`secureRequest` or `validateResponse`) or response (`validateRequest` or `secureResponse`) message to be sent to the peer.
 
 |AuthException
-|A failure occurred on the client-side (secureRequest or validateResponse) or service-side (validateRequest or secureResponse) without producing a failure response message.
+|A failure occurred on the client-side (`secureRequest` or `validateResponse`) or service-side (`validateRequest` or `secureResponse`) without producing a failure response message.
 |===
 
 The expected behavior of runtimes in response
@@ -417,7 +417,7 @@ acquisition of the authentication context. If the Subject is not null, additiona
 Appropriate to its point of processing in the messaging model, the messaging runtime uses the 
 `MessageInfo` described in Step 3 to invoke a method of the authentication context obtained in Step 4.
 
-At point (1) in the messaging model, the`clientSubject` may contain the credentials used to secure the 
+At point (1) in the messaging model, the `clientSubject` may contain the credentials used to secure the 
 request, or the modules of the context may collect the client credentials including by using the callback
 handler passed through to them by the context. `MessageInfo` would contain a request message about to be sent. 
 On successful return from the context, the runtime would extract the secured request message from 
