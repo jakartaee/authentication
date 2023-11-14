@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.eclipse.ee4j.tck.authentication</groupId>
         <artifactId>old-authentication-tck-parent</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-authentication</artifactId>
@@ -189,8 +189,7 @@
                                 <tck-setting key="orb.port" value="${port.orb}"/>
                                 <tck-setting key="wsgen.ant.classname" value="com.sun.tools.ws.ant.WsGen"/>
                                 <tck-setting key="wsimport.ant.classname" value="com.sun.tools.ws.ant.WsImport"/>
-
-                                
+                                <tck-setting key="vendor.authconfig.factory" value="org.omnifaces.eleos.config.factory.file.AuthConfigFileFactory"/>
                                 
                                 <tck-setting key="report.dir" value="${tck.home}/authenticationtckreport/authenticationtck"/>
                                 <tck-setting key="work.dir" value="${tck.home}/authenticationtckwork/authenticationtck"/>
@@ -241,8 +240,8 @@
                                 <jvmarg value="-Djavatest.security.noSecurityManager=true"/>]]></replacevalue>
                                 </replace>
                                 
-                                <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="suspend-tck" >
-                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m"/>]]></replacetoken>
+                                <replace file="${tck.home}/bin/xml/ts.top.import.xml" if:set="tck.suspend" >
+                                  <replacetoken><![CDATA[<jvmarg value="-Xmx512m" />]]></replacetoken>
                                   <replacevalue><![CDATA[<jvmarg value="-Xmx512m"/>
                                 <jvmarg value="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9008"/>]]></replacevalue>
                                 </replace>
@@ -260,7 +259,7 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <target>
+                            <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
                                 
@@ -271,20 +270,24 @@
                                     <arg value="enable.jaspic"  />
                                 </exec>
                                 <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
-                                        <arg value="stop-domain"/>
-                                        <arg value="domain1"/>
+                                    <arg value="stop-domain"/>
+                                    <arg value="domain1"/>
                                 </exec>
-                                <limit maxwait="120">
+                                
+                                <!-- Restart GlassFish in debug mode if so requested -->
+                                <sequential>
+                                    <echo message="Starting GlassFish in suspended mode, waiting on port 9009" if:set="glassfish.suspend"/>
                                     <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="start-domain"/>
+                                        <arg value="--suspend" if:set="glassfish.suspend"/>
                                     </exec>
-                                </limit>
+                                </sequential>
                             </target>
                         </configuration>
                     </execution>
       
 
-                     <execution>
+                    <execution>
                         <id>run-tck-tests</id>
                         <phase>integration-test</phase>
                         <goals>
