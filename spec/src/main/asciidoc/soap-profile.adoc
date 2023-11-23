@@ -162,7 +162,7 @@ role. A runtime may operate in both the client and server roles.
 ==== Client-Side Application Context Identifier
 
 The application context identifier used by a
-client-runtime to acquire the `AuthConfigProvider`and ClientAuthConfig
+client-runtime to acquire the `AuthConfigProvider` and `ClientAuthConfig` 
 objects pertaining to the client side processing of a web service
 invocation shall begin with a client scope identifier that identifies
 the client. If the client-runtime may host multiple client applications,
@@ -226,8 +226,8 @@ In either event, the CallbackHandler must also support the requirements in <<a51
 
 ==== AuthConfigProvider Requirements
 
-If a non-null `AuthConfigProvider`is returned
-(by the call to getConfigProvider), the messaging runtime must call
+If a non-null `AuthConfigProvider` is returned
+(by the call to getConfigProvider), the messaging runtime must call 
 `getClientAuthConfig` on the provider to obtain the authentication context
 configuration object pertaining to the application context at the layer.
 The layer and appContext arguments of the call to getClientAuthConfig
@@ -482,7 +482,7 @@ the logical host that performs the service corresponding to a service
 invocation. Web service invocations may be directed to a logical host
 using various physical or `virtual host` names or addresses, and a message
 processing runtime may be composed of multiple logical hosts. Systems or
-administrators that register `AuthConfigProvider`objects with specific
+administrators that register `AuthConfigProvider` objects with specific
 server-side application context identifiers must have an ability to
 determine the hostname for which they wish to perform the registration.
 
