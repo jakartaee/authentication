@@ -15,19 +15,13 @@
  */
 package ee.jakarta.tck.authentication.test.authzpropagation.jacc;
 
-import static java.security.Policy.getPolicy;
 import static java.util.logging.Level.SEVERE;
 
-import java.security.CodeSource;
-import java.security.Principal;
-import java.security.ProtectionDomain;
-import java.security.cert.Certificate;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
-
 import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyFactory;
 import jakarta.security.jacc.WebResourcePermission;
+import java.util.logging.Logger;
+import javax.security.auth.Subject;
 
 /**
  *
@@ -49,13 +43,9 @@ public class JakartaAuthorization {
     }
 
     public static boolean hasAccess(String uri, Subject subject) {
-        return getPolicy().implies(
-            new ProtectionDomain(
-                new CodeSource(null, (Certificate[]) null),
-                null, null,
-                subject.getPrincipals().toArray(new Principal[subject.getPrincipals().size()])
-            ),
-            new WebResourcePermission(uri, "GET")
+        return PolicyFactory.getPolicyFactory().getPolicy().implies(
+                new WebResourcePermission(uri, "GET"),
+                subject.getPrincipals()
         );
     }
 }
