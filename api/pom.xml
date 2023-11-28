@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.8</version>
+        <version>1.0.9</version>
         <relativePath/>
     </parent>
 
@@ -99,9 +99,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
     </properties>
 
     <build>
@@ -159,12 +156,12 @@
                 </executions>
             </plugin>
         
-            <!-- Restricts the Java version to 21 -->
+            <!-- Restricts the Java version to 17 -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <release>21</release>
+                    <release>17</release>
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
                 </configuration>
             </plugin>
@@ -173,7 +170,7 @@
             <plugin>
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>spec-version-maven-plugin</artifactId>
-                <version>2.1</version>
+                <version>2.2</version>
                 <configuration>
                     <spec>
                         <specVersion>3.1</specVersion>
