@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2020, 2023 Contributors to Eclipse Foundation. All rights reserved.
+    Copyright (c) 2020, 2024 Contributors to Eclipse Foundation. All rights reserved.
     Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -159,7 +159,7 @@
             <!-- Restricts the Java version to 17 -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.12.1</version>
                 <configuration>
                     <release>17</release>
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
@@ -257,7 +257,7 @@
                             <header><![CDATA[<br>Jakarta Authentication API v${project.version}]]></header>
                             <bottom><![CDATA[
 Comments to: <a href="mailto:es-dev@eclipse.org">es-dev@eclipse.org</a>.<br>
-Copyright &#169; 2020, 2023 Eclipse Foundation. All rights reserved.<br>
+Copyright &#169; 2020, 2024 Eclipse Foundation. All rights reserved.<br>
 Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">license terms</a>.]]>
                             </bottom>
                             <docfilessubdirs>true</docfilessubdirs>
@@ -280,7 +280,7 @@ Use is subject to <a href="{@docRoot}/doc-files/speclicense.html" target="_top">
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.5.0</version>
+                <version>1.6.0</version>
                 <configuration>
                     <flattenMode>ossrh</flattenMode>
                 </configuration>
