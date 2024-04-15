@@ -23,7 +23,7 @@
      xsi:schemaLocation="http://java.oracle.com/xml/ns/jaspic provider-configuration.xsd">
    
    <provider-config-entry>
-        <provider-class>com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProvider</provider-class>
+        <provider-class>ee.jakarta.tck.authentication.test.basic.sam.config.TSAuthConfigProvider</provider-class>
         <properties version="1.0">
             <entry key="AuthStatus_SEND_SUCCESS">false</entry>
             <entry key="requestPolicy">USER_NAME_PASSWORD</entry>
@@ -34,7 +34,7 @@
     </provider-config-entry>
     
    <provider-config-entry>
-        <provider-class>com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProvider</provider-class>
+        <provider-class>ee.jakarta.tck.authentication.test.basic.sam.config.TSAuthConfigProvider</provider-class>
         <properties version="1.0">
             <entry key="AuthStatus_SEND_SUCCESS">false</entry>
             <entry key="requestPolicy">USER_NAME_PASSWORD</entry>
@@ -45,7 +45,7 @@
     </provider-config-entry>
     
     <provider-config-entry>
-        <provider-class>com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProviderServlet</provider-class>
+        <provider-class>ee.jakarta.tck.authentication.test.basic.sam.TSAuthConfigProviderServlet</provider-class>
         <properties version="1.0">
             <entry key="AuthStatus_SEND_SUCCESS">true</entry>
             <entry key="requestPolicy">USER_NAME_PASSWORD</entry>
@@ -56,7 +56,7 @@
     </provider-config-entry>
     
     <provider-config-entry>
-        <provider-class>com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProviderServlet</provider-class>
+        <provider-class>ee.jakarta.tck.authentication.test.basic.sam.TSAuthConfigProviderServlet</provider-class>
         <properties version="1.0">
             <entry key="AuthStatus_SEND_SUCCESS">true</entry>
             <entry key="requestPolicy">USER_NAME_PASSWORD</entry>

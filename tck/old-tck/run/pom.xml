@@ -38,12 +38,11 @@
         <tck.home>${project.build.directory}/authentication-tck</tck.home>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests/jaspic</tck.tests.home>
         <tck.mode>standalone</tck.mode>
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
+        <glassfish.home>${project.build.directory}/glassfish8</glassfish.home>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
         <jakartaee.profile>full</jakartaee.profile>
         <glassfish.artifact>glassfish</glassfish.artifact>
-        <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
-        <glassfish.version>7.0.0-M5</glassfish.version>
+        <glassfish.version>8.0.0-SNAPSHOT</glassfish.version>
 
        
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
