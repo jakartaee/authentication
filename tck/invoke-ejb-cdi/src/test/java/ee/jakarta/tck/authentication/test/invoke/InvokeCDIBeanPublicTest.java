@@ -37,9 +37,9 @@ public class InvokeCDIBeanPublicTest extends ArquillianBase {
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
-        return tryWrapEAR(
+        return 
             defaultWebArchive()
-                .addAsWebInfResource(resource("beans.xml"))
+                .addAsWebInfResource(resource("beans.xml")
         );
     }
 

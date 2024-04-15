@@ -39,11 +39,11 @@ public class JSFCDIForwardTest extends ArquillianBase {
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
-        return tryWrapEAR(
+        return
             defaultWebArchive()
                 .addAsWebInfResource(resource("beans.xml"))
                 .addAsWebInfResource(resource("faces-config.xml"))
-                .addAsWebResource(web("forward-cdi.xhtml"))
+                .addAsWebResource(web("forward-cdi.xhtml")
         );
     }
 
