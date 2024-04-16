@@ -38,10 +38,10 @@ public class JSFForwardTest extends ArquillianBase {
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
-        return tryWrapEAR(
+        return 
             defaultWebArchive()
                 .addAsWebInfResource(resource("faces-config.xml"))
-                .addAsWebResource(web("forward.xhtml"))
+                .addAsWebResource(web("forward.xhtml")
         );
     }
 

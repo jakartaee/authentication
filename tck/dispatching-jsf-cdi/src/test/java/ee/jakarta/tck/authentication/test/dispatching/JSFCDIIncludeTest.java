@@ -38,11 +38,11 @@ public class JSFCDIIncludeTest extends ArquillianBase {
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
-        return tryWrapEAR(
+        return
                 defaultWebArchive()
                     .addAsWebInfResource(resource("beans.xml"))
                     .addAsWebInfResource(resource("faces-config.xml"))
-                    .addAsWebResource(web("include-cdi.xhtml"))
+                    .addAsWebResource(web("include-cdi.xhtml")
             );
     }
 

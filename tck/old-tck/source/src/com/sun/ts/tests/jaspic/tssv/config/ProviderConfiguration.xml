@@ -21,6 +21,7 @@
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xmlns="http://java.oracle.com/xml/ns/jaspic"
      xsi:schemaLocation="http://java.oracle.com/xml/ns/jaspic provider-configuration.xsd">
+   
    <provider-config-entry>
         <provider-class>com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProvider</provider-class>
         <properties version="1.0">
@@ -31,6 +32,7 @@
         <app-context-id>null</app-context-id>
         <reg-description>TestSuite JSR 196 Config Provider</reg-description>
     </provider-config-entry>
+    
    <provider-config-entry>
         <provider-class>com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProvider</provider-class>
         <properties version="1.0">
@@ -41,6 +43,7 @@
         <app-context-id>localhost /Hello_web/Hello</app-context-id>
         <reg-description>TestSuite JSR 196 Config Provider</reg-description>
     </provider-config-entry>
+    
     <provider-config-entry>
         <provider-class>com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProviderServlet</provider-class>
         <properties version="1.0">
@@ -51,6 +54,7 @@
         <app-context-id>server /spitests_servlet_web</app-context-id>
         <reg-description>Registration for TSAuthConfigProviderServlet using spitests_servlet_web</reg-description>
     </provider-config-entry>
+    
     <provider-config-entry>
         <provider-class>com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProviderServlet</provider-class>
         <properties version="1.0">
