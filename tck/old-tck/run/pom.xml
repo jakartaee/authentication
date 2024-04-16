@@ -188,7 +188,7 @@
                                 <tck-setting key="orb.port" value="${port.orb}"/>
                                 <tck-setting key="wsgen.ant.classname" value="com.sun.tools.ws.ant.WsGen"/>
                                 <tck-setting key="wsimport.ant.classname" value="com.sun.tools.ws.ant.WsImport"/>
-                                <tck-setting key="vendor.authconfig.factory" value="org.omnifaces.eleos.config.factory.file.AuthConfigFileFactory"/>
+                                <tck-setting key="vendor.authconfig.factory" value="com.sun.ts.tests.jaspic.tssv.config.TSAuthConfigProviderStandalone"/>
                                 
                                 <tck-setting key="report.dir" value="${tck.home}/authenticationtckreport/authenticationtck"/>
                                 <tck-setting key="work.dir" value="${tck.home}/authenticationtckwork/authenticationtck"/>
