@@ -39,9 +39,24 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>jakarta.jws</groupId>
+            <artifactId>jakarta.jws-api</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.xml.ws</groupId>
+            <artifactId>jakarta.xml.ws-api</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+        <dependency>
             <groupId>jakarta.xml.soap</groupId>
             <artifactId>jakarta.xml.soap-api</artifactId>
             <version>3.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.epicyro</groupId>
@@ -88,5 +103,42 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        
+        <plugins>
+            <plugin>
+                <!-- wsimport for web service classes generation -->
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>4.0.2</version>
+
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <!-- 
+                                Generates JAX-WS portable artifacts used in JAX-WS clients and services. 
+                                This goal reads WSDL files and generates the required artifacts for web service development, 
+                                deployment, and invocation. 
+                            -->
+                            <goal>wsimport</goal>
+                        </goals>
+                        <configuration>
+                            <packageName>ee.jakarta.tck.authentication.test.basic.soap</packageName>
+
+                            <!-- For convenience, use a pre-copied wsdl file instead of requesting it from the server -->
+                            <wsdlFiles>
+                                <wsdlFile>${basedir}/src/main/webapp/WEB-INF/HelloService.wsdl</wsdlFile>
+                            </wsdlFiles>
+                            <!-- Set the location in the generated Java files as-if we had fetched the wsdl file from the server -->
+                            <wsdlLocation>http://localhost:8080/jaxws-endpoint/EBookStoreImplService?wsdl</wsdlLocation>
+                            
+                            <verbose>true</verbose>
+                            <sourceDestDir>${basedir}/src/main/java</sourceDestDir>
+                            <target>3.0</target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
