@@ -41,9 +41,9 @@ import org.junit.Test;
  * @author Arjan Tijms
  *
  */
-public class UnitTest {
+public class ServletUnitTest {
 
-    Logger logger = Logger.getLogger(UnitTest.class.getName());
+    Logger logger = Logger.getLogger(ServletUnitTest.class.getName());
 
     /**
     *

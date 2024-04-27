@@ -16,7 +16,11 @@
 
 package ee.jakarta.tck.authentication.test.basic.servlet;
 
+import jakarta.annotation.Resource;
 import jakarta.annotation.security.DeclareRoles;
+import jakarta.enterprise.concurrent.ContextServiceDefinition;
+import jakarta.enterprise.concurrent.ManagedExecutorDefinition;
+import jakarta.enterprise.concurrent.ManagedExecutorService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.HttpConstraint;
 import jakarta.servlet.annotation.HttpMethodConstraint;

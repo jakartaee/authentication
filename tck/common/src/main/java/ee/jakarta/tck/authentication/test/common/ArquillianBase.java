@@ -28,6 +28,7 @@ import static org.jsoup.parser.Parser.xmlParser;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Base64;
 import java.util.Map;
 import java.util.logging.Logger;
 import org.htmlunit.DefaultCredentialsProvider;
@@ -163,6 +164,10 @@ public class ArquillianBase {
         credentialsProvider.addCredentials(username, password.toCharArray());
 
         getWebClient().setCredentialsProvider(credentialsProvider);
+        getWebClient().addRequestHeader(
+            "Authorization",
+            "Basic " + Base64.getEncoder()
+                             .encodeToString((username + ":" + password).getBytes()));
 
         return readFromServer(path);
     }

@@ -3,13 +3,16 @@ package ee.jakarta.tck.authentication.test.basic;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import ee.jakarta.tck.authentication.test.basic.servlet.AuthFactoryContainerInitializer;
 import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
 import ee.jakarta.tck.authentication.test.common.ArquillianBase;
 import ee.jakarta.tck.authentication.test.common.logging.client.LogFileProcessor;
+import jakarta.servlet.ServletContainerInitializer;
 import org.htmlunit.WebResponse;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,7 +40,12 @@ public class ServletProfileSPITest extends ArquillianBase {
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
-        return defaultWebArchive("spitests_servlet_web");
+        WebArchive archive = defaultWebArchive("spitests_servlet_web");
+        archive.addAsServiceProvider(ServletContainerInitializer.class, AuthFactoryContainerInitializer.class);
+
+        System.out.println(archive.toString(true));
+
+        return archive;
     }
 
     /**

@@ -34,6 +34,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>jakarta.enterprise.concurrent</groupId>
+            <artifactId>jakarta.enterprise.concurrent-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.jakartaee</groupId>
             <artifactId>jaspic-common</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -42,6 +47,16 @@
             <groupId>jakarta.jws</groupId>
             <artifactId>jakarta.jws-api</artifactId>
             <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.metro</groupId>
+            <artifactId>webservices-rt</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.security</groupId>
+            <artifactId>webservices.security</artifactId>
+            <version>8.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>jakarta.xml.ws</groupId>
@@ -130,7 +145,7 @@
                                 <wsdlFile>${basedir}/src/main/webapp/WEB-INF/HelloService.wsdl</wsdlFile>
                             </wsdlFiles>
                             <!-- Set the location in the generated Java files as-if we had fetched the wsdl file from the server -->
-                            <wsdlLocation>http://localhost:8080/jaxws-endpoint/EBookStoreImplService?wsdl</wsdlLocation>
+                            <wsdlLocation>http://localhost:8080/spitests_servlet_web/HelloService?wsdl</wsdlLocation>
                             
                             <verbose>true</verbose>
                             <sourceDestDir>${basedir}/src/main/java</sourceDestDir>

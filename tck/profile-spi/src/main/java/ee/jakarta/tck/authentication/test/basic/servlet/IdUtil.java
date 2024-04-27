@@ -21,6 +21,8 @@ import ee.jakarta.tck.authentication.test.basic.sam.ProviderConfigurationXMLFile
 import ee.jakarta.tck.authentication.test.basic.sam.TSFileHandler;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSXMLFormatter;
+import jakarta.enterprise.concurrent.ManagedExecutorDefinition;
+import jakarta.enterprise.concurrent.ManagedScheduledExecutorDefinition;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;

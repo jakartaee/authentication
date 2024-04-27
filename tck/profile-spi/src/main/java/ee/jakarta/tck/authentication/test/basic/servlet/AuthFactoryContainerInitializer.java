@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,29 +13,20 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package ee.jakarta.tck.authentication.test.basic.sam;
+package ee.jakarta.tck.authentication.test.basic.servlet;
 
 import ee.jakarta.tck.authentication.test.basic.sam.config.TSAuthConfigFactory;
 import jakarta.security.auth.message.config.AuthConfigFactory;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.annotation.WebListener;
+import jakarta.servlet.ServletContainerInitializer;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import java.util.Set;
 
-/**
- *
- * @author Arjan Tijms
- *
- */
-@WebListener
-public class SamAutoRegistrationListener implements ServletContextListener {
+public class AuthFactoryContainerInitializer implements ServletContainerInitializer {
 
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
+    public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
         AuthConfigFactory.setFactory(new TSAuthConfigFactory());
-
-
-//        AuthConfigFactory.getFactory()
-//                         .registerServerAuthModule(new TestServerAuthModule(), sce.getServletContext());
     }
 
 }
