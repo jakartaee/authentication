@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1995, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,6 @@ package ee.jakarta.tck.authentication.test.basic.sam.util;
 
 import java.io.OutputStream;
 import java.io.PushbackInputStream;
-import java.io.PrintStream;
 
 /**
  * This class implements a BASE64 Character decoder as specified in RFC1521.
@@ -55,12 +55,14 @@ import java.io.PrintStream;
 public class BASE64Decoder extends CharacterDecoder {
 
   /** This class has 4 bytes per atom */
-  protected int bytesPerAtom() {
+  @Override
+protected int bytesPerAtom() {
     return (4);
   }
 
   /** Any multiple of 4 will do, 72 might be common */
-  protected int bytesPerLine() {
+  @Override
+protected int bytesPerLine() {
     return (72);
   }
 
@@ -95,7 +97,8 @@ public class BASE64Decoder extends CharacterDecoder {
   /**
    * Decode one BASE64 atom into 1, 2, or 3 bytes of data.
    */
-  protected void decodeAtom(PushbackInputStream inStream,
+  @Override
+protected void decodeAtom(PushbackInputStream inStream,
       OutputStream outStream, int rem) throws java.io.IOException {
     int i;
     byte a = -1, b = -1, c = -1, d = -1;

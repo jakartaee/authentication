@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,7 @@
 
 package ee.jakarta.tck.authentication.test.basic.sam.config;
 
+import static ee.jakarta.tck.authentication.test.basic.servlet.JASPICData.LAYER_SOAP;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
@@ -57,7 +59,7 @@ public class TSServerAuthConfig implements jakarta.security.auth.message.config.
         properties = props;
     }
 
-    public TSServerAuthConfig(String layer, String applicationCtxt, CallbackHandler cbkHandler, Map props, TSLogger tsLogger) {
+    public TSServerAuthConfig(String layer, String applicationCtxt, CallbackHandler cbkHandler, Map<String, Object> props, TSLogger tsLogger) {
         this(layer, applicationCtxt, cbkHandler, props);
 
         if (tsLogger != null) {
@@ -131,12 +133,9 @@ public class TSServerAuthConfig implements jakarta.security.auth.message.config.
      * map, but his may change in the future.
      */
     private void dumpServletProfileKeys(MessageInfo msgInfo, String callerMethod, String messageLayer) {
-        Map map = msgInfo.getMap();
+        Map<String, Object> map = msgInfo.getMap();
 
-        // for debugging only
-        // dumpAllKeyValues(map);
-
-        // lets pull out some servlet info that we can use to help uniquely
+        // Lets pull out some servlet info that we can use to help uniquely
         // identify the source of this request
         HttpServletRequest request = (HttpServletRequest) msgInfo.getRequestMessage();
         String servletName = request.getServletPath();
@@ -289,7 +288,7 @@ public class TSServerAuthConfig implements jakarta.security.auth.message.config.
         logger.log(INFO, logStr);
 
         logger.log(INFO,
-                "TSServerAuthConfig.getAuthContext:  layer=" + messageLayer + " : appContext=" + appContext + " operationId=" + operation);
+            "TSServerAuthConfig.getAuthContext:  layer=" + messageLayer + " : appContext=" + appContext + " operationId=" + operation);
 
         if (serviceSubject != null) {
             properties.put(JASPICData.SVC_SUBJECT_KEY, serviceSubject);
@@ -317,8 +316,8 @@ public class TSServerAuthConfig implements jakarta.security.auth.message.config.
             boolean bIsMand = getMandatoryStatusFromMap(messageLayer, appContext);
             ServerAuthContext serverAuthContext =
                 new TSServerAuthContext(
-                        messageLayer, appContext, handler, operation, serviceSubject, this.properties,
-                        bIsMand, logger);
+                    messageLayer, appContext, handler, operation, serviceSubject, this.properties,
+                    bIsMand, logger);
 
             logStr = "TSServerAuthConfig.getAuthContext: returned non-null ServerAuthContext";
             logger.log(INFO, logStr);
@@ -413,7 +412,7 @@ public class TSServerAuthConfig implements jakarta.security.auth.message.config.
                 logger.log(SEVERE, MNAME + sProfile + " : FAILED");
             }
 
-        } else if (layer.equals(JASPICData.LAYER_SOAP)) {
+        } else if (layer.equals(LAYER_SOAP)) {
             // Nothing to verify here for SOAP profile
         }
     }

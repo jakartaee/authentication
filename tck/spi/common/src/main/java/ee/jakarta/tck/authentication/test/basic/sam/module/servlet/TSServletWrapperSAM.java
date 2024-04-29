@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c)  2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -83,7 +84,7 @@ public class TSServletWrapperSAM implements ServerAuthModule {
 
         callbackHandler = handler;
 
-        // perform some checking to support assertion JASPI:SPEC:87
+        // Perform some checking to support assertion JASPI:SPEC:87
         verifyRequestPolicy(requestPolicy);
 
         logger.log(INFO, "CBH for HttpServlet supports type: " + handler.getClass().getName());
@@ -137,7 +138,6 @@ public class TSServletWrapperSAM implements ServerAuthModule {
      * later on in the Client code.
      */
     private void verifyRequestPolicy(MessagePolicy requestPolicy) {
-
         String errStr = "Layer=" + JASPICData.LAYER_SERVLET;
         errStr += " requestPolicy=invalid in TSServletWrapperSAM.initialize()";
 
@@ -205,7 +205,6 @@ public class TSServletWrapperSAM implements ServerAuthModule {
     }
 
     private void doServerCallbackChecks(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) {
-
         HttpServletRequest request = (HttpServletRequest) messageInfo.getRequestMessage();
         String servletPath = request.getContextPath() + request.getServletPath();
         String msg = "";

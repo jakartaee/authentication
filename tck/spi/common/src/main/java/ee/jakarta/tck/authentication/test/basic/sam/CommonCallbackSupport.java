@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,16 +37,17 @@ import javax.security.auth.callback.UnsupportedCallbackException;
  * @author Raja Perumal
  */
 public class CommonCallbackSupport {
-    private static TSLogger logger = null;
-    private static CallbackHandler callbackHandler = null;
-    private static String profile = null;
-    private static String runtimeType = null;
+    private static TSLogger logger;
+    private static CallbackHandler callbackHandler;
+    private static String profile;
+    private static String runtimeType;
 
     public CommonCallbackSupport(TSLogger tsLogger, CallbackHandler cbkHandler, String profile, String runtimeType) {
         logger = tsLogger;
         callbackHandler = cbkHandler;
-        this.profile = profile;
-        this.runtimeType = runtimeType;
+
+        CommonCallbackSupport.profile = profile;
+        CommonCallbackSupport.runtimeType = runtimeType;
     }
 
     public boolean verify() {
@@ -75,12 +77,9 @@ public class CommonCallbackSupport {
                 }
                 logMsg("CallbackHandler supports CertStoreCallback");
 
-            } catch (UnsupportedCallbackException usce) {
-                logMsg("CallbackHandler failed to support CertStoreCallback :" + usce.getMessage());
-                usce.printStackTrace();
-            } catch (IOException ioe) {
-                logMsg("CallbackHandler failed to support CertStoreCallback :" + ioe.getMessage());
-                ioe.printStackTrace();
+            } catch (UnsupportedCallbackException | IOException e) {
+                logMsg("CallbackHandler failed to support CertStoreCallback :" + e.getMessage());
+                e.printStackTrace();
             }
 
         }
@@ -105,12 +104,9 @@ public class CommonCallbackSupport {
                     logMsg("Private Key for s1as =" + privateKey.getAlgorithm());
                 }
                 logMsg("CallbackHandler supports PrivateKeyCallback");
-            } catch (UnsupportedCallbackException usce) {
+            } catch (UnsupportedCallbackException | IOException usce) {
                 logMsg("CallbackHandler failed to support PrivateKeyCallback :" + usce.getMessage());
                 usce.printStackTrace();
-            } catch (IOException ioe) {
-                logMsg("CallbackHandler failed to support PrivateKeyCallback :" + ioe.getMessage());
-                ioe.printStackTrace();
             }
 
         }
@@ -134,12 +130,9 @@ public class CommonCallbackSupport {
                     logMsg("Secret Key for s1as =" + secretKey.getAlgorithm());
                 }
                 logMsg("CallbackHandler supports SecretKeyCallback");
-            } catch (UnsupportedCallbackException usce) {
+            } catch (UnsupportedCallbackException | IOException usce) {
                 logMsg("CallbackHandler failed to support secretKeyCallback :" + usce.getMessage());
                 usce.printStackTrace();
-            } catch (IOException ioe) {
-                logMsg("CallbackHandler failed to support secretKeyCallback :" + ioe.getMessage());
-                ioe.printStackTrace();
             }
 
         }
@@ -159,12 +152,9 @@ public class CommonCallbackSupport {
                     logMsg("TrustStore type =" + trustStore.getType());
                 }
                 logMsg("CallbackHandler supports TrustStoreCallback");
-            } catch (UnsupportedCallbackException usce) {
+            } catch (UnsupportedCallbackException | IOException usce) {
                 logMsg("CallbackHandler failed to support TrustStoreCallback :" + usce.getMessage());
                 usce.printStackTrace();
-            } catch (IOException ioe) {
-                logMsg("CallbackHandler failed to support TrustStoreCallback :" + ioe.getMessage());
-                ioe.printStackTrace();
             }
         }
     }

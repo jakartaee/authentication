@@ -12,9 +12,7 @@ import org.htmlunit.WebResponse;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -215,12 +213,12 @@ public class ServletProfileSPITest extends ArquillianBase {
    */
    @Test
    public void CheckNoAuthReturnsValidStatusCode() {
-       // invokeServlet will attempt to access the resource that does
+       // InvokeServlet will attempt to access the resource that does
        // not have the proper role creds assigned to it
        // thus we expect a return status code != 200
        WebResponse response = responseFromServerWithCredentials("AnotherMandatoryAuthen", "j2ee", "j2ee");
 
-       // if status of 200 was returned then there is a problem since
+       // If status of 200 was returned then there is a problem since
        // we should have been forbidden from completing our request
        // as our username/pwd change means we should not be authenticated
        assertTrue(response.getStatusCode() != 200);
@@ -250,7 +248,7 @@ public class ServletProfileSPITest extends ArquillianBase {
    */
    @Test
    public void VerifyRequestDispatchedProperly() {
-       // we should see that our request is properly dispatched
+       // We should see that our request is properly dispatched
        // we will assume that a proper response code indicates success
        // as we are using correct creds
        WebResponse response = responseFromServerWithCredentials(
@@ -259,7 +257,7 @@ public class ServletProfileSPITest extends ArquillianBase {
 
        assertTrue(response.getStatusCode() == 200);
 
-       // invokeServlet will attempt to access the resource that
+       // InvokeServlet will attempt to access the resource that
        // does not have proper role creds assigned
        // thus we expect a return status code != 200
        response = responseFromServerWithCredentials("AnotherMandatoryAuthen", "j2ee", "j2ee");
@@ -912,10 +910,11 @@ public class ServletProfileSPITest extends ArquillianBase {
    * JASPIC:JAVADOC:51; JASPIC:JAVADOC:49; JASPIC:JAVADOC:54; JASPIC:JAVADOC:65; JASPIC:JAVADOC:63; JASPIC:JAVADOC:68;
    * JASPIC:JAVADOC:69; JASPIC:JAVADOC:71; JASPIC:JAVADOC:28; JASPIC:JAVADOC:107;
    *
-   * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
+   * @test_Strategy:
+   *    1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
    *
-   * 2. read the server side log to verify Whether the following callbackHandlers are supported:
-   * CallerPrincipalCallback, GroupPrincipalCallback, and PasswordValidationCallback.
+   *    2. read the server side log to verify Whether the following callbackHandlers are supported:
+   *       CallerPrincipalCallback, GroupPrincipalCallback, and PasswordValidationCallback.
    *
    * Description The CallbackHandler passed to ServerAuthModule.initialize must support the following callbacks:
    * CallerPrincipalCallback, GroupPrincipalCallback, and PasswordValidationCallback.
@@ -927,7 +926,7 @@ public class ServletProfileSPITest extends ArquillianBase {
       String strMsg2 = "In HttpServlet : ServerRuntime CallbackHandler supports GroupPrincipalCallback";
       String strMsg3 = "In HttpServlet : ServerRuntime CallbackHandler supports PasswordValidationCallback";
 
-      // by invoking this servlet, we are causing code to access our
+      // By invoking this servlet, we are causing code to access our
       // servlet profile TSServerAuthModule.validateRequest() method
       // which will perform checks to see which CBH's are supported.
       responseFromServerWithCredentials(
@@ -967,7 +966,7 @@ public class ServletProfileSPITest extends ArquillianBase {
       strMsg1 += " for servlet: /ModTestServlet";
       strMsg1 += " with isServletAuthMandatory = " + true;
 
-      // by invoking this servlet, we are causing code to access our
+      // By invoking this servlet, we are causing code to access our
       // servlet profile TSServerAuthModule.validateRequest() method
       // which will perform checks to see that GPC is supported and
       // that the IsUserInRole() is properly populated.
@@ -1014,7 +1013,7 @@ public class ServletProfileSPITest extends ArquillianBase {
       strMsg1 += " for servlet: /ModTestServlet";
       strMsg1 += " with isServletAuthMandatory = " + true;
 
-      // by invoking this servlet, we are causing code to access our
+      // By invoking this servlet, we are causing code to access our
       // servlet profile TSServerAuthModule.validateRequest() method
       // which will perform checks to see that GPC is supported and
       // that the GetUserPrincipal() is properly populated.
@@ -1060,7 +1059,7 @@ public class ServletProfileSPITest extends ArquillianBase {
       strMsg1 += " for servlet: /ModTestServlet";
       strMsg1 += " with isServletAuthMandatory = " + true;
 
-      // by invoking this servlet, we are causing code to access our
+      // By invoking this servlet, we are causing code to access our
       // servlet profile TSServerAuthModule.validateRequest() method
       // which will perform checks to see that GPC is supported and
       // that the GetAuthType() is properly populated.
@@ -1108,7 +1107,7 @@ public class ServletProfileSPITest extends ArquillianBase {
       String strMsg1 = "validateRequest():  ERROR - invalid authen scenario.";
       String tempArgs[] = { strMsg1 };
 
-      // by invoking this servlet, we are causing code to access our
+      // By invoking this servlet, we are causing code to access our
       // servlet profile TSServerAuthModule.validateRequest() method
       // which will perform checks to see which CBH's are supported.
       readFromServerWithCredentials("ModTestServlet" + "?method.under.test=CheckAuthenInValidateRequest", "j2ee", "j2ee");
@@ -1238,11 +1237,11 @@ public class ServletProfileSPITest extends ArquillianBase {
    */
   @Test
   public void testAuthenAfterLogout() {
-      // call a servlet that is open to all and requires NO authN to access
+      // Call a servlet that is open to all and requires NO authN to access
       // validate we were not pre-authenticated and if so, force logout
       String str = readFromServerWithCredentials(allAccessServletPath + "?method.under.test=TestAuthenAfterLogout", "j2ee", "j2ee");
 
-      // now make a call to a servlet that requires mandatory authN and
+      // Now make a call to a servlet that requires mandatory authN and
       // make sure we still successfully support callbacks
       str = readFromServerWithCredentials(servletPath + "?method.under.test=testAuthenAfterLogout", "j2ee", "j2ee");
 

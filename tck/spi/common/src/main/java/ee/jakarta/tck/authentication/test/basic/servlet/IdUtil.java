@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,9 +32,9 @@ import java.util.logging.Level;
  */
 public class IdUtil {
 
-    private static ProviderConfigurationXMLFileProcessor configFileProcessor = null;
+    private static ProviderConfigurationXMLFileProcessor configFileProcessor;
 
-    private static TSLogger logger = null;
+    private static TSLogger logger;
 
     public IdUtil() {
         initializeTSLogger();
@@ -61,7 +62,7 @@ public class IdUtil {
 
             Iterator<ProviderConfigurationEntry> iterator = providerConfigurationEntriesCollection.iterator();
             while (iterator.hasNext()) {
-                // obtain each ProviderConfigurationEntry and register it
+                // Obtain each ProviderConfigurationEntry and register it
                 // with TSAuthConfigFactory
                 pce = iterator.next();
 

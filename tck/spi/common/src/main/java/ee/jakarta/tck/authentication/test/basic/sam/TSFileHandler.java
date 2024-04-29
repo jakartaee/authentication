@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,29 +46,23 @@ public class TSFileHandler extends StreamHandler {
     private class MeteredStream extends OutputStream {
         OutputStream out;
 
-        int written;
-
         MeteredStream(OutputStream out, int written) {
             this.out = out;
-            this.written = written;
         }
 
         @Override
         public void write(int b) throws IOException {
             out.write(b);
-            written++;
         }
 
         @Override
         public void write(byte buff[]) throws IOException {
             out.write(buff);
-            written += buff.length;
         }
 
         @Override
         public void write(byte buff[], int off, int len) throws IOException {
             out.write(buff, off, len);
-            written += len;
         }
 
         @Override

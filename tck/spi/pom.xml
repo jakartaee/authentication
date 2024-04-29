@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2022, 2022 Contributors to Eclipse Foundation. All rights reserved.
+    Copyright (c) 2024 Contributors to Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,13 +28,45 @@
     <artifactId>spi</artifactId>
     <packaging>pom</packaging>
 
-    <name>Jakarta Authentication TCK - spi</name>
+     <name>Jakarta Authentication TCK - Profile SPI Parent</name>
+     <description>
+        A lot of tests about the nitty gritty regarding the SPI per profile.
+     </description>
 
     <modules>
+        <!--
+            The common module primarily contains a special AuthConfigFactory (the TSSV) that is installed
+            using a ServletContainerInitializer. This AuthConfigFactory traces a lot of operations
+            on it to a logging file (saved to location set by system property "log.file.location").
+            This logging file is read by the (client side) tests, which verify whether specific entries are
+            present or absent in said log file.
+            
+            Via this tracing AuthConfigFactory, a large number of other artefacts are vended, which 
+            all do their own tracing for the operations invoked on them.
+            
+            The common module also contains an amount of test code, which is invoked by several artefacts
+            in both the Servlet and Web profile. 
+        -->
         <module>common</module>
         
+        <!-- 
+            A number of SPI tests specifically for the Servlet Container Profile, and some general tests for 
+            functionality the Servlet Container Profile should support (the baseline functionality for Jakarta
+            Authentication).
+            
+            Contains both server side integration tests (which run on a servlet container) as well as unit-like tests
+            that execute on the client outside of any container.  
+         -->
         <module>servlet</module>
         
+        <!-- 
+            A number of SPI tests specifically for the SOAP Profile, and some general tests for 
+            functionality the SOAP Profile should support (the baseline functionality for Jakarta
+            Authentication).
+            
+            Contains both server side integration tests (which run on SOAP on top of a Servlet container) as well as 
+            unit-like tests that execute on the client outside of any container.  
+         -->
         <module>soap</module>
     </modules>
     

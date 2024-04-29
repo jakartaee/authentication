@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -59,8 +60,8 @@ public class ProviderConfigurationXMLFileProcessor {
 
     private static Collection<ProviderConfigurationEntry> providerConfigurationEntriesCollection = new Vector<ProviderConfigurationEntry>();
 
-    private static Document document = null;
-    private static File providerConfigFile = null;
+    private static Document document;
+    private static File providerConfigFile;
 
     /** Creates a new instance of ProviderConfigurationXMLFileReader */
     public ProviderConfigurationXMLFileProcessor(String fileName) throws Exception {
@@ -103,21 +104,15 @@ public class ProviderConfigurationXMLFileProcessor {
             throw new Exception("SAXException :" + se.getMessage());
         } catch (IOException ioe) {
             throw new Exception("IOException :" + ioe.getMessage());
-
-        } catch (SecurityException se) {
-            throw new Exception("SecurityException :" + se.getMessage());
         }
     }
 
     private void setProviderConfigEntryCollection(NodeList nodes) throws Exception {
-
         Node providerConfigEntryNode;
-        NodeList providerConfigEntryNodeChildren;
 
         for (int i = 0; i < nodes.getLength(); i++) {
             // Take the first node
             providerConfigEntryNode = nodes.item(i);
-            providerConfigEntryNodeChildren = providerConfigEntryNode.getChildNodes();
 
             // Skip empty text node processing
             if (providerConfigEntryNode.getNodeName().equals("#text"))
@@ -170,11 +165,11 @@ public class ProviderConfigurationXMLFileProcessor {
         Element rootElement = document.getDocumentElement();
 
         // create provider-config-entry
-        providerConfigEntry = (Element) document.createElement("provider-config-entry");
+        providerConfigEntry = document.createElement("provider-config-entry");
 
         if (className != null) {
             // create provider-class
-            Element providerClassEntry = (Element) document.createElement("provider-class");
+            Element providerClassEntry = document.createElement("provider-class");
             Text classNameText = document.createTextNode(className);
             providerClassEntry.appendChild(classNameText);
 
@@ -184,7 +179,7 @@ public class ProviderConfigurationXMLFileProcessor {
 
         if (props != null) {
             // create properties
-            Element propertiesNode = (Element) document.createElement("properties");
+            Element propertiesNode = document.createElement("properties");
 
             // Iterate through the map of properties(props) and add all the
             // entries
@@ -192,20 +187,18 @@ public class ProviderConfigurationXMLFileProcessor {
             Iterator iterator = entries.iterator();
             while (iterator.hasNext()) {
                 Map.Entry entry = (Map.Entry) iterator.next();
-                Element entryNode = (Element) document.createElement("entry");
+                Element entryNode = document.createElement("entry");
                 entryNode.setAttribute("key", entry.getKey().toString());
                 Text keyValueText = document.createTextNode(entry.getValue().toString());
                 entryNode.appendChild(keyValueText);
                 propertiesNode.appendChild(entryNode);
-                // System.out.println(entry.getKey() + " : "
-                // + entry.getValue());
             }
             providerConfigEntry.appendChild(propertiesNode);
         }
 
         if (messageLayer != null) {
-            // create message-layer
-            Element messageLayerEntry = (Element) document.createElement("message-layer");
+            // Create message-layer
+            Element messageLayerEntry = document.createElement("message-layer");
             Text messageLayerText = document.createTextNode(messageLayer);
             messageLayerEntry.appendChild(messageLayerText);
 
@@ -214,8 +207,8 @@ public class ProviderConfigurationXMLFileProcessor {
         }
 
         if (appContextId != null) {
-            // create app-context-id
-            Element appContextIdEntry = (Element) document.createElement("app-context-id");
+            // Create app-context-id
+            Element appContextIdEntry = document.createElement("app-context-id");
             Text appContextIdText = document.createTextNode(appContextId);
             appContextIdEntry.appendChild(appContextIdText);
 
@@ -224,8 +217,8 @@ public class ProviderConfigurationXMLFileProcessor {
         }
 
         if (description != null) {
-            // create reg-description
-            Element regDescriptionEntry = (Element) document.createElement("reg-description");
+            // Create reg-description
+            Element regDescriptionEntry = document.createElement("reg-description");
             Text regDescriptionText = document.createTextNode(description);
             regDescriptionEntry.appendChild(regDescriptionText);
 
@@ -248,7 +241,7 @@ public class ProviderConfigurationXMLFileProcessor {
 
         boolean alreadyExists = checkIfAlreadyPresent(providerConfigEntry);
 
-        // get the root element "provider-config"
+        // Get the root element "provider-config"
         Element rootElement = document.getDocumentElement();
 
         if (alreadyExists) {
@@ -277,7 +270,7 @@ public class ProviderConfigurationXMLFileProcessor {
         String topLevelNodeName;
         boolean result = false;
 
-        // get the root element "provider-config"
+        // Get the root element "provider-config"
         Element rootElement = document.getDocumentElement();
 
         NodeList nodes = rootElement.getChildNodes();
@@ -296,9 +289,6 @@ public class ProviderConfigurationXMLFileProcessor {
             if (topLevelNodeName.equals("provider-config-entry")) {
                 topLevelChildNode.normalize();
                 node.normalize();
-
-                // printNode(topLevelChildNode, i );
-                // printNode(node, i);
 
                 if (compareNode(topLevelChildNode, node)) {
                     return true;
@@ -707,6 +697,7 @@ public class ProviderConfigurationXMLFileProcessor {
     }
 
     public class DTDResolver implements EntityResolver {
+        @Override
         public InputSource resolveEntity(String publicID, String systemId) throws SAXException {
             String providerConfigurationFile = null;
             String providerConfigurationFileLocation = null;

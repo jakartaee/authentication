@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,7 +35,7 @@ import javax.security.auth.callback.CallbackHandler;
 public class TSAuthExceptionServerAuthModule implements ServerAuthModule {
     private static TSLogger logger;
 
-    private static Map options;
+    private static Map<String, Object> options;
 
     /**
      * Creates a new instance of TSAuthExceptionServerAuthModule
@@ -61,7 +62,7 @@ public class TSAuthExceptionServerAuthModule implements ServerAuthModule {
      * elements that are not supported by the module.
      */
     @Override
-    public void initialize(MessagePolicy reqPolicy, MessagePolicy resPolicy, CallbackHandler handler, Map optns) throws AuthException {
+    public void initialize(MessagePolicy reqPolicy, MessagePolicy resPolicy, CallbackHandler handler, Map<String, Object> optns) throws AuthException {
         options = optns;
 
         // Get the reference to TSLogger from the Map "options"
@@ -76,9 +77,9 @@ public class TSAuthExceptionServerAuthModule implements ServerAuthModule {
      * @return an array of Class objects, with at least one element defining a message type supported by the module.
      */
     @Override
-    public Class[] getSupportedMessageTypes() {
+    public Class<?>[] getSupportedMessageTypes() {
         logMsg("TSAuthExceptionServerAuthModule.getSupportedMessageTypes called");
-        Class[] classarray = { jakarta.xml.soap.SOAPMessage.class };
+        Class<?>[] classarray = { jakarta.xml.soap.SOAPMessage.class };
         return classarray;
     }
 

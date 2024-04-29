@@ -422,11 +422,19 @@
                     <scope>test</scope>
                 </dependency>
 
-                <!-- For the unit test to be able to instantiate vendor AuthConfigFactory -->
+                <!-- For the unit tests in /spi/ to be able to instantiate vendor AuthConfigFactory -->
                 <dependency>
                     <groupId>org.glassfish.epicyro</groupId>
                     <artifactId>epicyro</artifactId>
                     <version>3.1.0-SNAPSHOT</version>
+                    <scope>test</scope>
+                </dependency>
+                
+                <!-- For the client side SOAP test in /spi/soap  -->
+                <dependency>
+                    <groupId>org.glassfish.main.security</groupId>
+                    <artifactId>webservices.security</artifactId>
+                    <version>${glassfish.version}</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -464,7 +472,7 @@
                          <artifactId>maven-surefire-plugin</artifactId>
                          <configuration>
                              <systemPropertyVariables>
-                                 <provider.configuration.file>${maven.multiModuleProjectDirectory}/profile-spi/ProviderConfiguration.xml</provider.configuration.file>
+                                 <provider.configuration.file>${maven.multiModuleProjectDirectory}/spi/common/ProviderConfiguration.xml</provider.configuration.file>
                                  <vendor.authconfig.factory>org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory</vendor.authconfig.factory>
                                  <log.file.location>${glassfish.root}/glassfish8/glassfish/domains/domain1/logs</log.file.location>
                                  <logical.hostname.servlet>server</logical.hostname.servlet>
@@ -472,7 +480,7 @@
                                  <glassfish.systemProperties>
                                     j2eelogin.name=j2ee
                                     j2eelogin.password=j2ee
-                                    provider.configuration.file=${maven.multiModuleProjectDirectory}/profile-spi/ProviderConfiguration.xml
+                                    provider.configuration.file=${maven.multiModuleProjectDirectory}/spi/common/ProviderConfiguration.xml
                                     vendor.authconfig.factory=org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory
                                     log.file.location=${glassfish.root}/glassfish8/glassfish/domains/domain1/logs
                                  </glassfish.systemProperties>

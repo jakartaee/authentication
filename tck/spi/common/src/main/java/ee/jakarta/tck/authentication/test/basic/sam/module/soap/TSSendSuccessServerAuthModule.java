@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,14 @@
 
 package ee.jakarta.tck.authentication.test.basic.sam.module.soap;
 
+import static java.util.logging.Level.INFO;
+
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.MessagePolicy;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 
@@ -31,9 +33,8 @@ import javax.security.auth.callback.CallbackHandler;
  * @author Raja Perumal
  */
 public class TSSendSuccessServerAuthModule implements jakarta.security.auth.message.module.ServerAuthModule {
-    private static TSLogger logger = null;
-
-    private static Map options = null;
+    private static TSLogger logger;
+    private static Map<String, Object> options;
 
     /**
      * Creates a new instance of TSSendSuccessServerAuthModule
@@ -60,7 +61,7 @@ public class TSSendSuccessServerAuthModule implements jakarta.security.auth.mess
      * elements that are not supported by the module.
      */
     @Override
-    public void initialize(MessagePolicy reqPolicy, MessagePolicy resPolicy, CallbackHandler handler, Map optns) throws AuthException {
+    public void initialize(MessagePolicy reqPolicy, MessagePolicy resPolicy, CallbackHandler handler, Map<String, Object> optns) throws AuthException {
         options = optns;
 
         // Get the reference to TSLogger from the Map "options"
@@ -75,9 +76,10 @@ public class TSSendSuccessServerAuthModule implements jakarta.security.auth.mess
      * @return an array of Class objects, with at least one element defining a message type supported by the module.
      */
     @Override
-    public Class[] getSupportedMessageTypes() {
+    public Class<?>[] getSupportedMessageTypes() {
         logMsg("TSSendSuccessServerAuthModule.getSupportedMessageTypes called");
-        Class[] classarray = { jakarta.xml.soap.SOAPMessage.class };
+        Class<?>[] classarray = { jakarta.xml.soap.SOAPMessage.class };
+
         return classarray;
     }
 
@@ -132,9 +134,7 @@ public class TSSendSuccessServerAuthModule implements jakarta.security.auth.mess
      */
     @Override
     public AuthStatus validateRequest(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException {
-
-        String msg = "TSSendSuccessServerAuthModule.validateRequest called";
-        logMsg(msg);
+        logMsg("TSSendSuccessServerAuthModule.validateRequest called");
 
         return AuthStatus.SEND_SUCCESS;
     }
@@ -183,8 +183,8 @@ public class TSSendSuccessServerAuthModule implements jakarta.security.auth.mess
      */
     @Override
     public AuthStatus secureResponse(MessageInfo messageInfo, Subject serviceSubject) throws AuthException {
-        String msg = "TSSendSuccessServerAuthModule.secureResponse called";
-        logMsg(msg);
+        logMsg("TSSendSuccessServerAuthModule.secureResponse called");
+
         return AuthStatus.SEND_SUCCESS;
     }
 
@@ -203,13 +203,14 @@ public class TSSendSuccessServerAuthModule implements jakarta.security.auth.mess
     @Override
     public void cleanSubject(MessageInfo messageInfo, Subject subject) throws AuthException {
         logMsg("TSSendSuccessServerAuthModule.cleanSubject called");
-        // remove the contents of the subject and return an empty subject
+
+        // Remove the contents of the subject and return an empty subject
         subject = null;
     }
 
     public void logMsg(String str) {
         if (logger != null) {
-            logger.log(Level.INFO, str);
+            logger.log(INFO, str);
         } else {
             System.out.println("*** TSLogger Not Initialized properly ***");
             System.out.println("*** TSSVLogMessage : ***" + str);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,8 @@
 
 package ee.jakarta.tck.authentication.test.basic.sam.module.soap;
 
+import static java.util.logging.Level.INFO;
+
 import ee.jakarta.tck.authentication.test.basic.sam.CommonCallbackSupport;
 import ee.jakarta.tck.authentication.test.basic.sam.ServerCallbackSupport;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
@@ -27,7 +30,6 @@ import java.security.Principal;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 
@@ -37,10 +39,9 @@ import javax.security.auth.callback.CallbackHandler;
  */
 public class TSServerAuthModule implements jakarta.security.auth.message.module.ServerAuthModule {
     private static TSLogger logger;
-
     private static CallbackHandler callbackHandler;
 
-    private static Map options;
+    private static Map<String, Object> options;
 
     /**
      * Creates a new instance of TSServerAuthModule
@@ -67,7 +68,7 @@ public class TSServerAuthModule implements jakarta.security.auth.message.module.
      * elements that are not supported by the module.
      */
     @Override
-    public void initialize(MessagePolicy reqPolicy, MessagePolicy resPolicy, CallbackHandler handler, Map optns) throws AuthException {
+    public void initialize(MessagePolicy reqPolicy, MessagePolicy resPolicy, CallbackHandler handler, Map<String, Object> optns) throws AuthException {
         callbackHandler = handler;
         options = optns;
 
@@ -83,9 +84,10 @@ public class TSServerAuthModule implements jakarta.security.auth.message.module.
      * @return an array of Class objects, with at least one element defining a message type supported by the module.
      */
     @Override
-    public Class[] getSupportedMessageTypes() {
+    public Class<?>[] getSupportedMessageTypes() {
         logMsg("TSServerAuthModule.getSupportedMessageTypes called");
-        Class[] classarray = { jakarta.xml.soap.SOAPMessage.class };
+        Class<?>[] classarray = { jakarta.xml.soap.SOAPMessage.class };
+
         return classarray;
     }
 
@@ -140,7 +142,6 @@ public class TSServerAuthModule implements jakarta.security.auth.message.module.
      */
     @Override
     public AuthStatus validateRequest(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException {
-
         String msg = "";
         if (clientSubject != null) {
             msg = "TSServerAuthModule.validateRequest called with client Subject :" + getPrincipalNameFromSubject(clientSubject);
@@ -245,7 +246,7 @@ public class TSServerAuthModule implements jakarta.security.auth.message.module.
 
     public void logMsg(String str) {
         if (logger != null) {
-            logger.log(Level.INFO, str);
+            logger.log(INFO, str);
         } else {
             System.out.println("*** TSLogger Not Initialized properly ***");
             System.out.println("*** TSSVLogMessage : ***" + str);

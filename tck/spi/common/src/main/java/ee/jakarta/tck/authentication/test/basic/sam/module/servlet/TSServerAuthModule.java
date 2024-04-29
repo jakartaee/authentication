@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -82,7 +83,7 @@ public class TSServerAuthModule implements jakarta.security.auth.message.module.
      * elements that are not supported by the module.
      */
     @Override
-    public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options)
+    public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map<String, Object> options)
             throws AuthException {
 
         if ((options != null) && options.get("TSLogger") != null) {
@@ -91,7 +92,7 @@ public class TSServerAuthModule implements jakarta.security.auth.message.module.
 
         callbackHandler = handler;
 
-        // perform some checking to support assertion JASPI:SPEC:87
+        // Perform some checking to support assertion JASPI:SPEC:87
         verifyRequestPolicy(requestPolicy);
 
         logger.log(INFO, "CBH for HttpServlet supports type: " + handler.getClass().getName());
@@ -103,7 +104,6 @@ public class TSServerAuthModule implements jakarta.security.auth.message.module.
      * later on in the Client code.
      */
     private void verifyRequestPolicy(MessagePolicy requestPolicy) {
-
         String errStr = "Layer=" + JASPICData.LAYER_SERVLET;
         errStr += " requestPolicy=invalid in TSServerAuthModule.initialize()";
 
@@ -148,9 +148,9 @@ public class TSServerAuthModule implements jakarta.security.auth.message.module.
      * @return an array of Class objects, with at least one element defining a message type supported by the module.
      */
     @Override
-    public Class[] getSupportedMessageTypes() {
+    public Class<?>[] getSupportedMessageTypes() {
         logMsg("TSServerAuthModule.getSupportedMessageTypes called");
-        Class[] classarray = { jakarta.servlet.http.HttpServletRequest.class, jakarta.servlet.http.HttpServletResponse.class };
+        Class<?>[] classarray = { jakarta.servlet.http.HttpServletRequest.class, jakarta.servlet.http.HttpServletResponse.class };
         return classarray;
     }
 
@@ -263,7 +263,6 @@ public class TSServerAuthModule implements jakarta.security.auth.message.module.
      * see any pre-authenticated status. This method should be called before any callback handler invocations occur.
      */
     private boolean doCheckForPreLogin(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) {
-
         boolean rval = true;
         String theServlet = "OpenToAllServlet";
 

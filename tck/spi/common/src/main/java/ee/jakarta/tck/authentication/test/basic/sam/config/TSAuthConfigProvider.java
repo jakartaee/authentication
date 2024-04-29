@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,8 @@
 
 package ee.jakarta.tck.authentication.test.basic.sam.config;
 
+import static ee.jakarta.tck.authentication.test.basic.servlet.JASPICData.LAYER_SERVLET;
+import static ee.jakarta.tck.authentication.test.basic.servlet.JASPICData.LAYER_SOAP;
 import static java.util.logging.Level.INFO;
 
 import ee.jakarta.tck.authentication.test.basic.sam.AuthDataCallbackHandler;
@@ -39,11 +42,11 @@ public class TSAuthConfigProvider implements jakarta.security.auth.message.confi
 
     private static TSLogger logger;
     private static Map<String, Object> properties;
-    private HashMap clientAuthConfigMap = new HashMap();
-    private HashMap serverAuthConfigMap = new HashMap();
+    private Map<String, ClientAuthConfig> clientAuthConfigMap = new HashMap<>();
+    private Map<String, ServerAuthConfig> serverAuthConfigMap = new HashMap<>();
 
     // This will be called when a vendor registers TSAuthConfigProvider
-    public TSAuthConfigProvider(Map props, AuthConfigFactory factory) {
+    public TSAuthConfigProvider(Map<String, Object> props, AuthConfigFactory factory) {
         properties = props;
 
         // For self registration
@@ -57,7 +60,7 @@ public class TSAuthConfigProvider implements jakarta.security.auth.message.confi
     }
 
     // TSAuthConfigFactory invokes this constructor with TSLogger
-    public TSAuthConfigProvider(Map props, AuthConfigFactory factory, TSLogger tsLogger) {
+    public TSAuthConfigProvider(Map<String, Object> props, AuthConfigFactory factory, TSLogger tsLogger) {
         properties = props;
 
         // For self registration
@@ -65,8 +68,9 @@ public class TSAuthConfigProvider implements jakarta.security.auth.message.confi
             factory.registerConfigProvider(this, null, null, "TSAuthConfig Provider self registration");
         }
 
-        if (tsLogger != null)
+        if (tsLogger != null) {
             logger = tsLogger;
+        }
 
     }
 
@@ -108,13 +112,15 @@ public class TSAuthConfigProvider implements jakarta.security.auth.message.confi
 
         try {
             if (handler == null) {
-                // instantiate a default callback handler that gets
+
+                // Instantiate a default callback handler that gets
                 // username and password from the environment using
                 // system property j2eelogin.name j2eelogin.password
                 handler = new AuthDataCallbackHandler();
             } else {
-                // even if we receive vendor callbackhandler replace it with our own
-                // callbackhandler for jaspic test.
+
+                // Even if we receive vendor callbackhandler replace it with our own
+                // callbackhandler for Jakarta Authentication test.
                 System.out.println("Received callbackHandler =" + handler.getClass().getName());
                 handler = new AuthDataCallbackHandler();
             }
@@ -164,13 +170,15 @@ public class TSAuthConfigProvider implements jakarta.security.auth.message.confi
         logger.log(INFO, logStr);
         try {
 
-            if ((!layer.equals(JASPICData.LAYER_SERVLET)) && (handler == null)) {
-                // instantiate a default callback handler that gets
+            if (!layer.equals(LAYER_SERVLET) && handler == null) {
+
+                // Instantiate a default callback handler that gets
                 // username and password from the environment using
                 // system property j2eelogin.name j2eelogin.password
                 handler = new AuthDataCallbackHandler();
-            } else if ((layer.equals(JASPICData.LAYER_SERVLET)) && (handler == null)) {
-                // this is used to help verify assertion JASPI:SPEC:71 which
+            } else if (layer.equals(LAYER_SERVLET) && handler == null) {
+
+                // This is used to help verify assertion JASPI:SPEC:71 which
                 // that we should NOT have a null cbh passed in
                 String msg = "FAILURE: layer=" + layer + " appContext=" + appContext;
                 msg += " getServerAuthConfig() received CallbackHandler=null";
@@ -179,7 +187,7 @@ public class TSAuthConfigProvider implements jakarta.security.auth.message.confi
 
             ServerAuthConfig serverAuthConfig = null;
 
-            if (JASPICData.LAYER_SOAP.equals(layer)) {
+            if (LAYER_SOAP.equals(layer)) {
                 serverAuthConfig = new SOAPTSServerAuthConfig(layer, appContext, handler, properties, logger);
             } else {
                 serverAuthConfig = new TSServerAuthConfig(layer, appContext, handler, properties, logger);

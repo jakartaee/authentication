@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2022, 2024 Contributors to Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022, 2024 Contributors to Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,11 +53,6 @@
             <groupId>org.glassfish.metro</groupId>
             <artifactId>webservices-rt</artifactId>
             <version>4.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.security</groupId>
-            <artifactId>webservices.security</artifactId>
-            <version>8.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>jakarta.xml.ws</groupId>

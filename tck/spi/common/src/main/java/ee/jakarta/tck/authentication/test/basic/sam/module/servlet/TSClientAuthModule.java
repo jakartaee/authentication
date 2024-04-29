@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,8 +14,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package ee.jakarta.tck.authentication.test.basic.sam.module.servlet;
+
+import static java.util.logging.Level.INFO;
 
 import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
@@ -23,7 +25,6 @@ import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.MessagePolicy;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 
@@ -34,7 +35,7 @@ import javax.security.auth.callback.CallbackHandler;
  * @author Sun Microsystems
  */
 public class TSClientAuthModule implements jakarta.security.auth.message.module.ClientAuthModule {
-    private TSLogger logger = null;
+    private TSLogger logger;
 
     /**
      * Creates a new instance of ClientAuthModuleImpl
@@ -50,6 +51,7 @@ public class TSClientAuthModule implements jakarta.security.auth.message.module.
         } else {
             logger = TSLogger.getTSLogger(JASPICData.LOGGER_NAME);
         }
+
         logMsg("TSClientAuthModule(TSLogger) constructor called.");
     }
 
@@ -72,10 +74,8 @@ public class TSClientAuthModule implements jakarta.security.auth.message.module.
      * elements that are not supported by the module.
      */
     @Override
-    public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options)
-            throws AuthException {
-
-        if ((options != null) && (options.get("TSLogger") != null)) {
+    public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map<String, Object> options) throws AuthException {
+        if (options != null && options.get("TSLogger") != null) {
             logger = (TSLogger) options.get("TSLogger");
         }
 
@@ -90,9 +90,10 @@ public class TSClientAuthModule implements jakarta.security.auth.message.module.
      * message type. This method never returns null.
      */
     @Override
-    public Class[] getSupportedMessageTypes() {
+    public Class<?>[] getSupportedMessageTypes() {
         logMsg("TSClientAuthModule.getSupportedMessageTypes() called.");
-        Class[] classarray = { jakarta.servlet.http.HttpServletRequest.class, jakarta.servlet.http.HttpServletResponse.class };
+
+        Class<?>[] classarray = { jakarta.servlet.http.HttpServletRequest.class, jakarta.servlet.http.HttpServletResponse.class };
         return classarray;
     }
 
@@ -140,8 +141,8 @@ public class TSClientAuthModule implements jakarta.security.auth.message.module.
      */
     @Override
     public AuthStatus secureRequest(MessageInfo messageInfo, Subject clientSubject) throws AuthException {
-
         logMsg("TSClientAuthModule.secureRequest() called.");
+
         return AuthStatus.SUCCESS;
     }
 
@@ -192,6 +193,7 @@ public class TSClientAuthModule implements jakarta.security.auth.message.module.
     @Override
     public AuthStatus validateResponse(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException {
         logMsg("TSClientAuthModule.validateResponse() called.");
+
         return AuthStatus.SUCCESS;
     }
 
@@ -213,7 +215,7 @@ public class TSClientAuthModule implements jakarta.security.auth.message.module.
 
     public void logMsg(String str) {
         if (logger != null) {
-            logger.log(Level.INFO, str);
+            logger.log(INFO, str);
         } else {
             System.out.println("*** TSLogger Not Initialized properly ***");
             System.out.println("*** TSSVLogMessage : ***" + str);

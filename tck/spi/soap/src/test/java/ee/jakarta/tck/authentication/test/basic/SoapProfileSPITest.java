@@ -4,9 +4,7 @@ import static ee.jakarta.tck.authentication.test.basic.servlet.JASPICData.TSSV_A
 import static jakarta.security.auth.message.config.AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY;
 import static org.junit.Assert.assertTrue;
 
-import com.sun.xml.ws.api.client.ClientPipelineHook;
 import ee.jakarta.tck.authentication.test.basic.soap.AuthFactoryContainerInitializer;
-import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
 import ee.jakarta.tck.authentication.test.basic.soap.HelloService;
 import ee.jakarta.tck.authentication.test.common.ArquillianBase;
 import ee.jakarta.tck.authentication.test.common.logging.client.LogFileProcessor;
@@ -15,8 +13,6 @@ import jakarta.servlet.ServletContainerInitializer;
 import java.io.File;
 import java.net.URL;
 import java.security.Security;
-import java.util.Optional;
-import java.util.ServiceLoader;
 import javax.xml.namespace.QName;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -42,12 +38,6 @@ public class SoapProfileSPITest extends ArquillianBase {
 
     String logicalHostName = "localhost";
     String expectedAppContextId = "localhost /Hello_web/Hello";
-
-    // this must be the decoded context path corresponding to the web module
-    private String contextPath = "/" + JASPICData.SCP_CONTEXT_PATH;
-    private String openToAllServletPath = "OpenToAllServlet";
-
-    private String appContext = System.getProperty("logical.hostname.servlet") + " " + contextPath;
 
     LogFileProcessor logProcessor = new LogFileProcessor();
     LogFileProcessor clientLogProcessor = new LogFileProcessor(true);
@@ -82,11 +72,6 @@ public class SoapProfileSPITest extends ArquillianBase {
         }
 
         Security.setProperty(DEFAULT_FACTORY_SECURITY_PROPERTY, TSSV_ACF);
-        Optional<ClientPipelineHook> optionalHook = ServiceLoader.load(ClientPipelineHook.class).findFirst();
-        if (optionalHook.isPresent()) {
-            int a;
-            a = 4;
-        }
 
         HelloService helloService = new HelloService(
                 new URL(getBase(), "Hello?wsdl"),
@@ -107,7 +92,7 @@ public class SoapProfileSPITest extends ArquillianBase {
     }
 
 
-    // ### Client side tests
+    // ### Client side tests ###
 
     /**
      * @keywords: jaspic_soap
@@ -118,7 +103,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      *
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
      *
-     * 2. Use FetchLog servlet to read the server side log to verify Whether ClientAuthContext.validateResponse() is called
+     * 2. Read the server side log to verify Whether ClientAuthContext.validateResponse() is called
      *
      * Description The runtime must invoke ClientAuthContext.validateResponse()
      *
@@ -139,7 +124,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @assertion_ids: JASPIC:SPEC:34; JASPIC:JAVADOC:72; JASPIC:JAVADOC:97; JASPIC:JAVADOC:98
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
      *
-     * 2. Use FetchLog servlet to read the server side log to verify Whether ClientAuthConfig.getAuthContext() is called
+     * 2. Read the server side log to verify Whether ClientAuthConfig.getAuthContext() is called
      *
      * Description The runtime must invoke clientAuthConfig().getAuthContext() to obtain the ClientAuthContext.
      *
@@ -159,9 +144,10 @@ public class SoapProfileSPITest extends ArquillianBase {
      *
      * @assertion_ids: JASPIC:SPEC:123; JASPIC:JAVADOC:103
      *
-     * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
+     * @test_Strategy:
+     *  1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
      *
-     * 2. Use FetchLog servlet to read the server side log to verify Whether CallbackHandler for client runtime supports
+     *  2. Read the server side log to verify Whether CallbackHandler for client runtime supports
      * NameCallback and PasswordCallback
      *
      * Description Unless the client runtime is embedded in a server runtime (e.g.; an invocation of a web service by a
@@ -184,9 +170,10 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @assertion_ids: JASPIC:SPEC:114; JASPIC:JAVADOC:35; JASPIC:JAVADOC:36; JASPIC:JAVADOC:49; JASPIC:JAVADOC:51;
      * JASPIC:JAVADOC:54; JASPIC:JAVADOC:63; JASPIC:JAVADOC:65; JASPIC:JAVADOC:68; JASPIC:JAVADOC:69; JASPIC:JAVADOC:71;
      *
-     * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
+     * @test_Strategy:
+     *  1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
      *
-     * 2. Use FetchLog servlet to read the server side log to verify Whether CallbackHandler for client runtime supports
+     *  2. Read the server side log to verify Whether CallbackHandler for client runtime supports
      * CertStoreCallback, PrivateKeyCallback, SecretKeyCallback, TrustStoreCallback
      *
      * Description
@@ -216,9 +203,10 @@ public class SoapProfileSPITest extends ArquillianBase {
      *
      * @assertion_ids: JASPIC:SPEC:124; JASPIC:JAVADOC:77
      *
-     * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
+     * @test_Strategy:
+     *  1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
      *
-     * 2. Use FetchLog servlet to read the server side log to verify Whether the arguments(layer and appcontextId) passed to
+     *  2. Read the server side log to verify Whether the arguments(layer and appcontextId) passed to
      * obtain AuthConfigProvider is same as the arguments used in calling getClientAuthConfig.
      *
      * Description
@@ -252,9 +240,10 @@ public class SoapProfileSPITest extends ArquillianBase {
      *
      * @assertion_ids: JASPIC:SPEC:130; JASPIC:JAVADOC:7; JASPIC:JAVADOC:9; JASPIC:SPEC:19; JASPIC:SPEC:23; JASPIC:SPEC:129;
      *
-     * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
+     * @test_Strategy:
+     *  1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
      *
-     * 2. Use FetchLog servlet to read the server side log to verify whether for a non-null ClientAuthContext, secureRequest
+     *  2. Read the server side log to verify whether for a non-null ClientAuthContext, secureRequest
      * and validateResponse are called properly.
      *
      * Description
@@ -284,9 +273,10 @@ public class SoapProfileSPITest extends ArquillianBase {
      *
      * @assertion_ids: JASPIC:SPEC:133; JASPIC:JAVADOC:7
      *
-     * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
+     * @test_Strategy:
+     *  1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
      *
-     * 2. Use FetchLog servlet to read the server side log to verify whether the Map in messageInfo object passed to
+     *  2. Read the server side log to verify whether the Map in messageInfo object passed to
      * secureRequest and validateResponse contains the right value for key jakarta.xml.ws.wsdl.service
      *
      * Description This profile requires that the message processing runtime establish the following key-value pairs within
@@ -312,9 +302,10 @@ public class SoapProfileSPITest extends ArquillianBase {
      *
      * @assertion_ids: JASPIC:SPEC:208
      *
-     * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
+     * @test_Strategy:
+     *  1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
      *
-     * 2. Use FetchLog servlet to read the server side log to verify whether for the client side appilcation context
+     *  2. Read the server side log to verify whether for the client side appilcation context
      * Identifier is correctly used by the runtime.
      *
      * Description A Client application context Identifier must be the String value composed by concatenating the client
@@ -344,7 +335,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether AuthConfigProvider.ClientAuthConfig is
      *                 called in the server.
      *
@@ -377,7 +368,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether ClientAuthContext.secureRequest() is called
      *
      *                 Description The runtime must invoke
@@ -404,9 +395,10 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @assertion_ids: JASPIC:SPEC:8; JASPIC:SPEC:14; JASPIC:SPEC:116; JASPIC:SPEC:117; JASPIC:JAVADOC:77;
      * JASPIC:JAVADOC:79; JASPIC:JAVADOC:80; JASPIC:JAVADOC:84; JASPIC:JAVADOC:85; JASPIC:JAVADOC:91; JASPIC:SPEC:110;
      *
-     * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
+     * @test_Strategy:
+     *  1. Register TSSV with the AppServer. (See User guide for Registering TSSV with your AppServer ).
      *
-     * 2. Use FetchLog servlet to read the server side log to verify Whether AuthConfigFactory.getConfigProvider is called
+     *  2. Read the server side log to verify Whether AuthConfigFactory.getConfigProvider is called
      * in the server.
      *
      * Description The runtime must invoke AuthConfigFactory.getConfigProvider to obtain the AuthConfigProvider. The runtime
@@ -434,7 +426,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether AuthConfigFactory.getConfigProvider is
      *                 called in the server.
      *
@@ -462,7 +454,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether provider.getServerAuthConfig is called in
      *                 the server.
      *
@@ -495,7 +487,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether ServerAuthContext.validateRequest() is
      *                 called
      *
@@ -522,7 +514,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether ServerAuthContext.secureResponse() is called
      *
      *                 Description The runtime must invoke
@@ -548,7 +540,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether ServerAuthConfig.getAuthContext() is called
      *
      *                 Description The runtime must invoke
@@ -580,7 +572,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether the messageInfo passed to secureRequest()
      *                 validateRequest(), secureResponse() and validateResponse()
      *                 contiains right values for getRequestMessage() and
@@ -605,16 +597,10 @@ public class SoapProfileSPITest extends ArquillianBase {
       assertTrue(
           "MessageInfo failed : " + "The request and response messages contains incorrect values",
               logProcessor.verifyLogContains(
-                      // "secureRequest : MessageInfo.getRequestMessage() is of type jakarta.xml.soap.SOAPMessage",
                   "validateRequest : MessageInfo.getRequestMessage() is of type jakarta.xml.soap.SOAPMessage",
                   "secureResponse : MessageInfo.getRequestMessage() is of type jakarta.xml.soap.SOAPMessage",
                   "secureResponse : MessageInfo.getResponseMessage() is of type jakarta.xml.soap.SOAPMessage"
-
-
               ));
-
-      // "validateResponse : MessageInfo.getRequestMessage() is of type jakarta.xml.soap.SOAPMessage",
-      //"validateResponse : MessageInfo.getResponseMessage() is of type jakarta.xml.soap.SOAPMessage"
     }
 
     /**
@@ -628,7 +614,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether CallbackHandler for server runtime supports
      *                 CertStoreCallback, PrivateKeyCallback, SecretKeyCallback,
      *                 TrustStoreCallback
@@ -668,7 +654,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether CallbackHandler for server runtime supports
      *                 CallerPrincipalCallback, GroupPrincipalCallback and
      *                 PasswordValidationCallback
@@ -692,7 +678,6 @@ public class SoapProfileSPITest extends ArquillianBase {
               "In SOAP : ServerRuntime CallbackHandler supports CallerPrincipalCallback",
               "In SOAP : ServerRuntime CallbackHandler supports GroupPrincipalCallback",
               "In SOAP : ServerRuntime CallbackHandler supports PasswordValidationCallback"));
-
     }
 
     /**
@@ -705,7 +690,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether the operationId is "sayHelloProtected"
      *
      *                 Description
@@ -742,7 +727,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether the arguments(operation) passed to obtain
      *                 getAuthContext is same as defined in Section 4.7.1
      *
@@ -760,16 +745,6 @@ public class SoapProfileSPITest extends ArquillianBase {
             logProcessor.verifyLogContains(
                 "TSAuthConfigFactory.getConfigProvider returned non-null provider for" + " Layer : SOAP and AppContext :" + expectedAppContextId,
                 "TSServerAuthConfig.getAuthContext:  layer=SOAP" + " : appContext=" + expectedAppContextId + " operationId=sayHelloProtected"));
-
-
-//      String cArgs[] = { "service/HelloService",
-//          "http://" + hostname + ":" + portnum + "/Hello_web/Hello" };
-//
-//      // verify whether the log contains required messages.
-//      logProcessor.verifyLogContainsOneOfSubString(cArgs,
-//              "TSClientAuthConfig.getAuthContext:  layer=SOAP"
-//                      + " : appContext=");
-
     }
 
     /**
@@ -782,7 +757,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify Whether the arguments(layer and appcontextId) passed
      *                 to obtain AuthConfigProvider is same as the arguments used
      *                 in calling getServerAuthConfig.
@@ -819,7 +794,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify whether for a non-null ServerAuthContext,
      *                 validateRequest and secureResponse are called properly.
      *
@@ -853,7 +828,7 @@ public class SoapProfileSPITest extends ArquillianBase {
      * @test_Strategy: 1. Register TSSV with the AppServer. (See User guide for
      *                 Registering TSSV with your AppServer ).
      *
-     *                 2. Use FetchLog servlet to read the server side log to
+     *                 2. Read the server side log to
      *                 verify whether for the server side appilcation context
      *                 Identifier is correctly used by the runtime.
      *

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,8 @@
 
 package ee.jakarta.tck.authentication.test.basic.sam.config;
 
+import static java.util.logging.Level.INFO;
+
 import ee.jakarta.tck.authentication.test.basic.sam.TSFileHandler;
 import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
@@ -26,7 +29,6 @@ import jakarta.security.auth.message.config.ClientAuthConfig;
 import jakarta.security.auth.message.config.ServerAuthConfig;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.security.auth.callback.CallbackHandler;
 
 /**
@@ -46,32 +48,32 @@ public class TSAuthConfigProviderStandalone implements jakarta.security.auth.mes
 
     private static TSLogger logger;
 
-    private HashMap serverAuthConfigMap = new HashMap();
+    private Map<String, ServerAuthConfig> serverAuthConfigMap = new HashMap<>();
 
-    private static Map properties = null;
+    private static Map<String, Object> properties;
 
-    private String description = null;
+    private String description;
 
     // This will be called when a vendor registers TSAuthConfigProviderStandalone
-    public TSAuthConfigProviderStandalone(Map props, AuthConfigFactory factory) {
+    public TSAuthConfigProviderStandalone(Map<String, Object> props, AuthConfigFactory factory) {
         this(props, null, factory, null);
 
-        logger.log(Level.INFO, "invoked TSAuthConfigProviderStandalone() constructor(2 args)");
+        logger.log(INFO, "invoked TSAuthConfigProviderStandalone() constructor(2 args)");
     }
 
     /**
      * This constructor takes a TSLogger instance as a param.
      */
-    public TSAuthConfigProviderStandalone(Map props, TSLogger tsLogger, AuthConfigFactory factory) {
+    public TSAuthConfigProviderStandalone(Map<String, Object> props, TSLogger tsLogger, AuthConfigFactory factory) {
         this(props, tsLogger, factory, null);
 
-        logger.log(Level.INFO, "invoked TSAuthConfigProviderStandalone() constructor(3 args)");
+        logger.log(INFO, "invoked TSAuthConfigProviderStandalone() constructor(3 args)");
     }
 
     /**
      * This constructor takes a TSLogger instance as a param.
      */
-    public TSAuthConfigProviderStandalone(Map props, TSLogger tsLogger, AuthConfigFactory factory, String description) {
+    public TSAuthConfigProviderStandalone(Map<String, Object> props, TSLogger tsLogger, AuthConfigFactory factory, String description) {
         properties = props;
 
         // For self registration
@@ -80,7 +82,7 @@ public class TSAuthConfigProviderStandalone implements jakarta.security.auth.mes
         }
 
         if (tsLogger != null) {
-            this.logger = tsLogger;
+            TSAuthConfigProviderStandalone.logger = tsLogger;
         } else {
             initializeTSLogger();
         }
@@ -96,10 +98,10 @@ public class TSAuthConfigProviderStandalone implements jakarta.security.auth.mes
             }
         }
 
-        logger.log(Level.INFO, "invoked TSAuthConfigProviderStandalone() constructor(4 args)");
+        logger.log(INFO, "invoked TSAuthConfigProviderStandalone() constructor(4 args)");
     }
 
-    private String getDescFromProps(Map props) {
+    private String getDescFromProps(Map<String, Object> props) {
         String strDesc = null;
         if (props != null) {
             strDesc = (String) props.get(DESC_KEY);
@@ -140,9 +142,9 @@ public class TSAuthConfigProviderStandalone implements jakarta.security.auth.mes
      */
     @Override
     public ClientAuthConfig getClientAuthConfig(String layer, String appContext, CallbackHandler handler) throws AuthException {
-        logger.log(Level.INFO, "WARNING:  shouldnt get into ClientAuthConfig() for servlet profile");
+        logger.log(INFO, "WARNING:  shouldnt get into ClientAuthConfig() for servlet profile");
 
-        // shouldnt get in here for servlet profile
+        // Shouldnt get in here for servlet profile
         return null;
     }
 
@@ -178,21 +180,21 @@ public class TSAuthConfigProviderStandalone implements jakarta.security.auth.mes
      */
     @Override
     public ServerAuthConfig getServerAuthConfig(String layer, String appContext, CallbackHandler handler) throws AuthException {
-        logger.log(Level.INFO, "TSAuthConfigProviderStandalone.getServerAuthConfig() called");
+        logger.log(INFO, "TSAuthConfigProviderStandalone.getServerAuthConfig() called");
 
         String logStr = "TSAuthConfigProviderStandalone.getServerAuthConfig" + " : layer=" + layer + " : appContext=" + appContext;
-        logger.log(Level.INFO, logStr);
+        logger.log(INFO, logStr);
         try {
             if (handler == null) {
                 // this is used to help verify assertion JASPI:SPEC:71 which
                 // that we should NOT have a null cbh passed in
                 String msg = "FAILURE: layer=" + layer + " appContext=" + appContext;
                 msg += " getServerAuthConfig() received CallbackHandler=null";
-                logger.log(Level.INFO, msg);
+                logger.log(INFO, msg);
             } else {
                 String msg = "layer=" + layer + " appContext=" + appContext;
                 msg += " getServerAuthConfig() received CallbackHandler=non-null";
-                logger.log(Level.INFO, msg);
+                logger.log(INFO, msg);
             }
 
             ServerAuthConfig serverAuthConfig = new TSServerAuthConfig(layer, appContext, handler, properties, logger);
@@ -220,25 +222,25 @@ public class TSAuthConfigProviderStandalone implements jakarta.security.auth.mes
 
     private static void initializeTSLogger() {
         String logFileLocation = null;
-        if (logger != null)
+        if (logger != null) {
             return;
-        else {
-            try {
-                logFileLocation = System.getProperty("log.file.location");
-                if (logFileLocation != null) {
-                    logger = TSLogger.getTSLogger(JASPICData.LOGGER_NAME);
-                    boolean appendMode = true;
+        }
 
-                    // if log file already exists, just append to it
-                    TSFileHandler fileHandler = new TSFileHandler(logFileLocation + "/" + JASPICData.DEFAULT_LOG_FILE, appendMode);
-                    fileHandler.setFormatter(new TSXMLFormatter());
-                    logger.addHandler(fileHandler);
-                } else {
-                    throw new RuntimeException("log.file.location not set");
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("TSLogger Initialization failed", e);
+        try {
+            logFileLocation = System.getProperty("log.file.location");
+            if (logFileLocation != null) {
+                logger = TSLogger.getTSLogger(JASPICData.LOGGER_NAME);
+                boolean appendMode = true;
+
+                // if log file already exists, just append to it
+                TSFileHandler fileHandler = new TSFileHandler(logFileLocation + "/" + JASPICData.DEFAULT_LOG_FILE, appendMode);
+                fileHandler.setFormatter(new TSXMLFormatter());
+                logger.addHandler(fileHandler);
+            } else {
+                throw new RuntimeException("log.file.location not set");
             }
+        } catch (Exception e) {
+            throw new RuntimeException("TSLogger Initialization failed", e);
         }
     }
 

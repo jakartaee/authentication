@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 1995, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,11 +14,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package ee.jakarta.tck.authentication.test.basic.sam.util;
 
 import java.io.IOException;
 
 /** This exception is thrown when EOF is reached */
 public class CEStreamExhausted extends IOException {
+
+    private static final long serialVersionUID = 1L;
 };

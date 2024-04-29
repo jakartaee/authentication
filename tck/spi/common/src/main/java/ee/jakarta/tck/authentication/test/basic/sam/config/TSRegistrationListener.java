@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,7 +14,6 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package ee.jakarta.tck.authentication.test.basic.sam.config;
 
 import jakarta.security.auth.message.config.AuthConfigFactory;
@@ -24,18 +24,18 @@ public class TSRegistrationListener implements RegistrationListener {
     String profileLayer;
     String appContext;
     boolean notified = false;
-    AuthConfigFactory acf = null;
+    AuthConfigFactory authConfigFactory;
 
     public TSRegistrationListener() {
         this.profileLayer = null;
         this.appContext = null;
-        acf = AuthConfigFactory.getFactory();
+        authConfigFactory = AuthConfigFactory.getFactory();
     }
 
     public TSRegistrationListener(String profileLayer, String appContext) {
         this.profileLayer = profileLayer;
         this.appContext = appContext;
-        acf = AuthConfigFactory.getFactory();
+        authConfigFactory = AuthConfigFactory.getFactory();
     }
 
     public String getProfileLayer() {

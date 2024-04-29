@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -13,10 +14,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package ee.jakarta.tck.authentication.test.basic.sam.config;
 
-import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
+import static ee.jakarta.tck.authentication.test.basic.servlet.JASPICData.LAYER_SERVLET;
+import static ee.jakarta.tck.authentication.test.basic.servlet.JASPICData.LAYER_SOAP;
+import static java.util.logging.Level.INFO;
+
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.MessageInfo;
@@ -32,7 +35,6 @@ import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.soap.SOAPPart;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 
@@ -47,23 +49,23 @@ public class TSClientAuthConfig implements jakarta.security.auth.message.config.
     private static CallbackHandler callbackHandler;
     private static TSLogger logger;
 
-    private Map properties = null;
+    private Map<String, Object> properties;
 
     /**
      * Creates a new instance of ClientAuthConfigImpl
      */
-    public TSClientAuthConfig(String layer, String applicationCtxt, CallbackHandler cbkHandler, Map props) {
+    public TSClientAuthConfig(String layer, String applicationCtxt, CallbackHandler cbkHandler, Map<String, Object> props) {
         messageLayer = layer;
         appContext = applicationCtxt;
         callbackHandler = cbkHandler;
         properties = props;
     }
 
-    public TSClientAuthConfig(String layer, String applicationCtxt, CallbackHandler cbkHandler, Map props, TSLogger tsLogger) {
+    public TSClientAuthConfig(String layer, String applicationCtxt, CallbackHandler cbkHandler, Map<String, Object> props, TSLogger tsLogger) {
         this(layer, applicationCtxt, cbkHandler, props);
         logger = tsLogger;
         String str = "TSClientAuthConfig called for  layer=" + layer + " : appContext=" + applicationCtxt;
-        logger.log(Level.INFO, str);
+        logger.log(INFO, str);
     }
 
     /**
@@ -79,18 +81,18 @@ public class TSClientAuthConfig implements jakarta.security.auth.message.config.
      */
     @Override
     public String getAuthContextID(MessageInfo messageInfo) {
-        String rval = null;
-        logger.log(Level.INFO, "TSClientAuthConfig.getOperation called");
-        if (messageLayer.equals(JASPICData.LAYER_SOAP)) {
+        logger.log(INFO, "TSClientAuthConfig.getOperation called");
 
+        if (messageLayer.equals(LAYER_SOAP)) {
             return getOpName((SOAPMessage) messageInfo.getRequestMessage());
+        }
 
-        } else if (messageLayer.equals(JASPICData.LAYER_SERVLET)) {
+        if (messageLayer.equals(LAYER_SERVLET)) {
             HttpServletRequest request = (HttpServletRequest) messageInfo.getRequestMessage();
-            rval = request.getServletPath() + " " + request.getMethod();
-            return rval;
-        } else
-            return null;
+            return request.getServletPath() + " " + request.getMethod();
+        }
+
+        return null;
     }
 
     private String getOpName(SOAPMessage message) {
@@ -98,35 +100,36 @@ public class TSClientAuthConfig implements jakarta.security.auth.message.config.
             return null;
         }
 
-        String rvalue = null;
+        String opName = null;
 
-        // first look for a SOAPAction header.
+        // First look for a SOAPAction header.
         // this is what .net uses to identify the operation
         MimeHeaders headers = message.getMimeHeaders();
         if (headers != null) {
             String[] actions = headers.getHeader("SOAPAction");
             if (actions != null && actions.length > 0) {
-                rvalue = actions[0];
-                if (rvalue != null && rvalue.equals("\"\"")) {
-                    rvalue = null;
+                opName = actions[0];
+                if (opName != null && opName.equals("\"\"")) {
+                    opName = null;
                 }
             }
         }
 
-        // if that doesn't work then we default to trying the name
+        // If that doesn't work then we default to trying the name
         // of the first child element of the SOAP envelope.
-        if (rvalue == null) {
+        if (opName == null) {
             Name name = getName(message);
             if (name != null) {
-                rvalue = name.getLocalName();
+                opName = name.getLocalName();
             }
         }
 
-        return rvalue;
+        return opName;
     }
 
     private Name getName(SOAPMessage message) {
-        Name rvalue = null;
+        Name name = null;
+
         SOAPPart soap = message.getSOAPPart();
         if (soap != null) {
             try {
@@ -137,19 +140,19 @@ public class TSClientAuthConfig implements jakarta.security.auth.message.config.
                         Iterator<?> it = body.getChildElements();
                         while (it.hasNext()) {
                             Object o = it.next();
-                            if (o instanceof SOAPElement) {
-                                rvalue = ((SOAPElement) o).getElementName();
+                            if (o instanceof SOAPElement soapElement) {
+                                name = soapElement.getElementName();
                                 break;
                             }
                         }
                     }
                 }
             } catch (SOAPException se) {
-                logger.log(Level.INFO, "WSS: Unable to get SOAP envelope");
+                logger.log(INFO, "WSS: Unable to get SOAP envelope");
             }
         }
 
-        return rvalue;
+        return name;
     }
 
     /**
@@ -221,8 +224,7 @@ public class TSClientAuthConfig implements jakarta.security.auth.message.config.
      * @exception AuthException if this operation fails.
      */
     @Override
-    public ClientAuthContext getAuthContext(String operation, Subject clientSubject, Map properties) throws AuthException {
-
+    public ClientAuthContext getAuthContext(String operation, Subject clientSubject, Map<String, Object> properties) throws AuthException {
         // Copy properties that are passed in this method to this.properties
         //
         // Note: this.properties is obtained from the Provider which gets those
@@ -232,16 +234,17 @@ public class TSClientAuthConfig implements jakarta.security.auth.message.config.
         try {
 
             String logStr = "TSClientAuthConfig.getAuthContext:  layer=" + messageLayer + " : appContext=" + appContext;
-            logger.log(Level.INFO, logStr);
+            logger.log(INFO, logStr);
 
-            logger.log(Level.INFO, "TSClientAuthConfig.getAuthContext:  layer=" + messageLayer + " : appContext=" + appContext
+            logger.log(INFO, "TSClientAuthConfig.getAuthContext:  layer=" + messageLayer + " : appContext=" + appContext
                     + " operationId=" + operation);
 
             ClientAuthContext clientAuthContext = new TSClientAuthContext(messageLayer, appContext, callbackHandler, operation,
                     clientSubject, this.properties, logger);
 
             logStr = "TSClientAuthConfig.getAuthContext: returned non-null" + " ClientAuthContext for operationId=" + operation;
-            logger.log(Level.INFO, logStr);
+            logger.log(INFO, logStr);
+
             return clientAuthContext;
         } catch (Exception e) {
             throw new AuthException(e.getMessage());

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,6 +29,7 @@ import ee.jakarta.tck.authentication.test.basic.sam.TSFileHandler;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSXMLFormatter;
 import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.config.AuthConfigFactory;
 import jakarta.security.auth.message.config.AuthConfigProvider;
 import jakarta.security.auth.message.config.RegistrationListener;
 import jakarta.security.auth.message.module.ServerAuthModule;
@@ -52,7 +54,7 @@ import java.util.Vector;
  * client code. Because of this, refrain from changing log messages in this file.
  *
  */
-public class TSAuthConfigFactoryForStandalone extends jakarta.security.auth.message.config.AuthConfigFactory {
+public class TSAuthConfigFactoryForStandalone extends AuthConfigFactory {
 
     private static TSLogger logger = null;
     private static Map<String, AuthConfigProvider> authConfigProviderMap = new Hashtable<>();

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,15 @@
 
 package ee.jakarta.tck.authentication.test.basic.sam.module.soap;
 
+import static java.util.logging.Level.INFO;
+
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.module.ClientAuthModule;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 
@@ -30,10 +33,9 @@ import javax.security.auth.callback.CallbackHandler;
  *
  * @author Raja Perumal
  */
-public class TSSendSuccessClientAuthModule implements jakarta.security.auth.message.module.ClientAuthModule {
-    private static TSLogger logger = null;
-
-    private static Map options = null;
+public class TSSendSuccessClientAuthModule implements ClientAuthModule {
+    private static TSLogger logger;
+    private static Map<String, Object> options;
 
     /**
      * Creates a new instance of ClientAuthModuleImpl
@@ -61,7 +63,7 @@ public class TSSendSuccessClientAuthModule implements jakarta.security.auth.mess
      */
 
     @Override
-    public void initialize(MessagePolicy reqPolicy, MessagePolicy resPolicy, CallbackHandler handler, Map optns) throws AuthException {
+    public void initialize(MessagePolicy reqPolicy, MessagePolicy resPolicy, CallbackHandler handler, Map<String, Object> optns) throws AuthException {
         options = optns;
 
         // Get the reference to TSLogger from the Map "options"
@@ -77,9 +79,10 @@ public class TSSendSuccessClientAuthModule implements jakarta.security.auth.mess
      * message type. This method never returns null.
      */
     @Override
-    public Class[] getSupportedMessageTypes() {
-        Class[] classarray = { jakarta.xml.soap.SOAPMessage.class };
+    public Class<?>[] getSupportedMessageTypes() {
+        Class<?>[] classarray = { jakarta.xml.soap.SOAPMessage.class };
         logMsg("TSSendSuccessClientAuthModule.getSupportedMessageTypes called");
+
         return classarray;
     }
 
@@ -127,9 +130,7 @@ public class TSSendSuccessClientAuthModule implements jakarta.security.auth.mess
      */
     @Override
     public AuthStatus secureRequest(MessageInfo messageInfo, Subject clientSubject) throws AuthException {
-
-        String msg = "TSSendSuccessClientAuthModule.secureRequest called";
-        logMsg(msg);
+        logMsg("TSSendSuccessClientAuthModule.secureRequest called");
 
         return AuthStatus.SEND_SUCCESS;
     }
@@ -180,8 +181,7 @@ public class TSSendSuccessClientAuthModule implements jakarta.security.auth.mess
      */
     @Override
     public AuthStatus validateResponse(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException {
-        String msg = "TSSendSuccessClientAuthModule.validateResponse called";
-        logMsg(msg);
+        logMsg("TSSendSuccessClientAuthModule.validateResponse called");
 
         return AuthStatus.SUCCESS;
     }
@@ -208,7 +208,7 @@ public class TSSendSuccessClientAuthModule implements jakarta.security.auth.mess
 
     public void logMsg(String str) {
         if (logger != null) {
-            logger.log(Level.INFO, str);
+            logger.log(INFO, str);
         } else {
             System.out.println("*** TSLogger Not Initialized properly ***");
             System.out.println("*** TSSVLogMessage : ***" + str);

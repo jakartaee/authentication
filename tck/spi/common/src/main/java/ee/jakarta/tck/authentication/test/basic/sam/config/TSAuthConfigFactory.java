@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,7 +62,6 @@ public class TSAuthConfigFactory extends jakarta.security.auth.message.config.Au
     private static ProviderConfigurationXMLFileProcessor configFileProcessor;
 
     public TSAuthConfigFactory() {
-        // initializeTSLogger();
         logger.log(INFO, "Initialized TSLogger");
         readProviderConfigurationXMLFile();
     }
@@ -73,7 +73,7 @@ public class TSAuthConfigFactory extends jakarta.security.auth.message.config.Au
         String providerConfigFileLocation = System.getProperty("provider.configuration.file");
 
         if (providerConfigFileLocation == null) {
-            // looks like prop (via jvm option) is not set correctly
+            // Looks like prop (via jvm option) is not set correctly
             logger.log(SEVERE, "provider.configuration.file property is not properly set/specified");
             System.out.println("provider.configuration.file property is not properly set/specified");
         }

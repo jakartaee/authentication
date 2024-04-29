@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +22,7 @@ import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.AuthStatus;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.MessagePolicy;
+import jakarta.security.auth.message.module.ClientAuthModule;
 import jakarta.xml.soap.SOAPBody;
 import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
@@ -36,10 +38,10 @@ import javax.security.auth.callback.CallbackHandler;
  *
  * @author Raja Perumal
  */
-public class TSSendFailureClientAuthModule implements jakarta.security.auth.message.module.ClientAuthModule {
-    private static TSLogger logger = null;
+public class TSSendFailureClientAuthModule implements ClientAuthModule {
 
-    private static Map options = null;
+    private static TSLogger logger;
+    private static Map<String, Object> options;
 
     /**
      * Creates a new instance of ClientAuthModuleImpl
@@ -67,7 +69,7 @@ public class TSSendFailureClientAuthModule implements jakarta.security.auth.mess
      */
 
     @Override
-    public void initialize(MessagePolicy reqPolicy, MessagePolicy resPolicy, CallbackHandler handler, Map optns) throws AuthException {
+    public void initialize(MessagePolicy reqPolicy, MessagePolicy resPolicy, CallbackHandler handler, Map<String, Object> optns) throws AuthException {
         options = optns;
 
         // Get the reference to TSLogger from the Map "options"
@@ -83,9 +85,10 @@ public class TSSendFailureClientAuthModule implements jakarta.security.auth.mess
      * message type. This method never returns null.
      */
     @Override
-    public Class[] getSupportedMessageTypes() {
-        Class[] classarray = { jakarta.xml.soap.SOAPMessage.class };
+    public Class<?>[] getSupportedMessageTypes() {
+        Class<?>[] classarray = { jakarta.xml.soap.SOAPMessage.class };
         logMsg("TSSendFailureClientAuthModule.getSupportedMessageTypes called");
+
         return classarray;
     }
 
@@ -133,9 +136,7 @@ public class TSSendFailureClientAuthModule implements jakarta.security.auth.mess
      */
     @Override
     public AuthStatus secureRequest(MessageInfo messageInfo, Subject clientSubject) throws AuthException {
-
-        String msg = "TSSendFailureClientAuthModule.secureRequest called";
-        logMsg(msg);
+        logMsg("TSSendFailureClientAuthModule.secureRequest called");
 
         return AuthStatus.SEND_SUCCESS;
     }
@@ -186,15 +187,13 @@ public class TSSendFailureClientAuthModule implements jakarta.security.auth.mess
      */
     @Override
     public AuthStatus validateResponse(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException {
-        String msg = "TSSendFailureClientAuthModule.validateResponse called";
-        logMsg(msg);
+        logMsg("TSSendFailureClientAuthModule.validateResponse called");
 
-        SOAPMessage smsg = (SOAPMessage) messageInfo.getResponseMessage();
-        String faultString = getSOAPFaultString(smsg);
+        String faultString = getSOAPFaultString((SOAPMessage) messageInfo.getResponseMessage());
         if (faultString != null) {
-            msg = "TSSendFailureClientAuthModule.validateResponse received SOAPFault :" + faultString;
-            logMsg(msg);
+            logMsg("TSSendFailureClientAuthModule.validateResponse received SOAPFault :" + faultString);
         }
+
         return AuthStatus.SUCCESS;
     }
 
@@ -247,6 +246,7 @@ public class TSSendFailureClientAuthModule implements jakarta.security.auth.mess
 
             }
         }
+
         return faultString;
     }
 

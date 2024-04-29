@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,12 @@
 
 package ee.jakarta.tck.authentication.test.basic.sam;
 
+import static ee.jakarta.tck.authentication.test.basic.servlet.JASPICData.LAYER_SERVLET;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+
 import ee.jakarta.tck.authentication.test.basic.sam.util.BASE64Decoder;
-import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.callback.CallerPrincipalCallback;
@@ -26,10 +31,7 @@ import jakarta.security.auth.message.callback.PasswordValidationCallback;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -41,34 +43,33 @@ import javax.security.auth.callback.UnsupportedCallbackException;
  */
 public class ServerCallbackSupport {
 
-    private static TSLogger logger = null;
-    private static CallbackHandler callbackHandler = null;
-    private static String profile = null;
+    private static TSLogger logger;
+    private static CallbackHandler callbackHandler;
+    private static String profile;
     private static final String runtimeType = "ServerRuntime";
-    private static MessageInfo messageInfo = null;
-    private static Subject clientSubject = null;
-    private static Subject serverSubject = null;
+    private static MessageInfo messageInfo;
+    private static Subject clientSubject;
 
-    // user corresponds to ts.jte user property (e.g. "j2ee")
+    // User corresponds to system property "j2eelogin.name" (e.g. "j2ee")
     private static String user = System.getProperty("j2eelogin.name");
 
-    // password corresponds to ts.jte password property (e.g. "j2ee")
+    // Password corresponds to system property "j2eelogin.password" (e.g. "j2ee")
     private static String passwd = System.getProperty("j2eelogin.password");
 
     /** Creates a new instance of ServerCallbackSupport */
     public ServerCallbackSupport(TSLogger tsLogger, CallbackHandler cbkHandler, String profile) {
         logger = tsLogger;
         callbackHandler = cbkHandler;
-        this.profile = profile;
+        ServerCallbackSupport.profile = profile;
     }
 
     public ServerCallbackSupport(TSLogger tsLogger, CallbackHandler cbkHandler, String profile, MessageInfo msgInfo, Subject clientSubj, Subject serverSubj) {
         logger = tsLogger;
         callbackHandler = cbkHandler;
-        this.profile = profile;
-        this.messageInfo = msgInfo;
-        this.clientSubject = clientSubj;
-        this.serverSubject = serverSubj;
+
+        ServerCallbackSupport.profile = profile;
+        ServerCallbackSupport.messageInfo = msgInfo;
+        ServerCallbackSupport.clientSubject = clientSubj;
     }
 
     public boolean verify() {
@@ -111,22 +112,22 @@ public class ServerCallbackSupport {
 
         if (callbackHandler != null) {
             try {
-                // note: we should be able to have a subject that has NO
+                // Note: we should be able to have a subject that has NO
                 // principals for the case of optional authen. Which means
                 // we should not have to explicitly set the principal here.
                 // however, for the case of mandatory authen, we will want
                 // to create a CPC using a username as opposed to a null principal.
 
                 CallerPrincipalCallback callerPrincipalCallback = null;
-                if (profile.equals(JASPICData.LAYER_SERVLET)) {
+                if (profile.equals(LAYER_SERVLET)) {
                     Principal principal = null;
                     if (messageInfo != null) {
-                        HttpServletRequest req = (HttpServletRequest) messageInfo.getRequestMessage();
-                        String username = getServletUsername(req);
+                        HttpServletRequest httpServletRequest = (HttpServletRequest) messageInfo.getRequestMessage();
+                        String username = getServletUsername(httpServletRequest);
                         String principalName = getPrincipalNameFromSubject(clientSubject);
                         String nameToLog = null;
 
-                        // better to call cbh with a null principal when the policy is Not
+                        // Better to call cbh with a null principal when the policy is Not
                         // mandatory
                         // and with a legitimate principal when the policy is mandatory
                         // (unless testing send-failure or send-continue - which we are
@@ -150,7 +151,7 @@ public class ServerCallbackSupport {
                             callerPrincipalCallback = new CallerPrincipalCallback(clientSubject, (Principal) null);
                         }
 
-                        // now for some simple invocations to ensure we can call the API's
+                        // Now for some simple invocations to ensure we can call the API's
                         // these lines serve no other purpose than to validate we can
                         // invoke the api's in order to satisfy the javadoc assertions of:
                         // JSR-196:JAVADOC:32, JSR-196:JAVADOC:33, JSR-196:JAVADOC:34
@@ -177,11 +178,11 @@ public class ServerCallbackSupport {
                         logMsg(msg);
 
                     } else {
-                        // uses a null principal
+                        // Uses a null principal
                         callerPrincipalCallback = new CallerPrincipalCallback(clientSubject, principal);
                     }
                 } else {
-                    // should not get into here.
+                    // Should not get into here.
                     logMsg("WARNING:  ServerCallbackSupport.CallerPrincipalCallbackSupport() - profile != servlet.");
                     Subject subject = new Subject();
                     callerPrincipalCallback = new CallerPrincipalCallback(subject, (Principal) null);
@@ -213,9 +214,7 @@ public class ServerCallbackSupport {
         } else {
             String msg = "CallerPrincipalCallback has a null callbackHandler";
             msg += "  profile=" + profile;
-            if (profile.equals(JASPICData.LAYER_SERVLET) && (messageInfo != null)) {
-                // HttpServletRequest request =
-                // (HttpServletRequest)messageInfo.getRequestMessage();
+            if (profile.equals(LAYER_SERVLET) && messageInfo != null) {
                 if (request != null) {
                     String servletPath = request.getContextPath() + request.getServletPath();
                     msg += " for servletPath=" + servletPath;
@@ -249,18 +248,19 @@ public class ServerCallbackSupport {
      * This returns just the decoded username.
      *
      */
-    private String getServletUsername(HttpServletRequest req) {
+    private String getServletUsername(HttpServletRequest request) {
         String username = null;
-        String authorization = req.getHeader("authorization");
+
+        String authorization = request.getHeader("authorization");
         BASE64Decoder decoder = new BASE64Decoder();
 
-        if ((authorization != null) && (authorization.startsWith("Basic "))) {
+        if (authorization != null && authorization.startsWith("Basic ")) {
             try {
                 String authStr = authorization.substring(6).trim();
                 String value = new String(decoder.decodeBuffer(authStr));
                 logMsg("decoded (request) authorization string of: " + value);
 
-                // at this point value should be in the form of <username>:<pwd>
+                // At this point value should be in the form of <username>:<pwd>
                 if (value != null) {
                     username = value.substring(0, value.indexOf(":"));
                 }
@@ -273,82 +273,57 @@ public class ServerCallbackSupport {
     }
 
     /*
-     * Convenience method to get our context info. (This currently only works for servlet profile since thats all we need it
-     * for at this point.)
-     *
-     */
-    private String getServletContext(MessageInfo mInfo, String profile) {
-        String sContext = "";
-        if (profile.equals(JASPICData.LAYER_SERVLET) && (mInfo != null)) {
-            HttpServletRequest req = (HttpServletRequest) mInfo.getRequestMessage();
-            if (req != null) {
-                sContext = req.getContextPath() + req.getServletPath();
-            }
-        }
-
-        logger.log(Level.INFO, "getServletContext() returning " + sContext);
-
-        return sContext;
-    }
-
-    /*
      * This is a convenience method that is used to determine if Authentication is mandatory. Based on the answer, there are
      * certain requirements that will need to be met wrt setting of principals.
      */
     private boolean isServletAuthMandatory(MessageInfo msgInfo) {
-        boolean bval = false;
-        Map map = msgInfo.getMap();
+        boolean servletAuthMandatory = false;
+        Map<String, Object> map = msgInfo.getMap();
 
-        // lets pull out some context info that we can use to help uniquely
+        // Lets pull out some context info that we can use to help uniquely
         // identify the source of this request
         HttpServletRequest request = (HttpServletRequest) msgInfo.getRequestMessage();
 
         String servletName = request.getServletPath();
 
-        // see assertion JASPI:SPEC:306 for details on this
+        // See assertion JASPI:SPEC:306 for details on this
         // jsr-196 states the following key must exist for servlet profile
         String strKey = "jakarta.security.auth.message.MessagePolicy.isMandatory";
         String msg;
         if (map != null) {
             String keyVal = (String) map.get(strKey);
             msg = "isServletAuthMandatory() called with attrs: ";
-            msg += " layer=" + JASPICData.LAYER_SERVLET;
+            msg += " layer=" + LAYER_SERVLET;
             msg += " servletName=" + servletName;
             msg += " key=" + strKey;
 
             if (keyVal == null) {
                 msg += " value=NULL";
-                bval = false; // assume false if we cant determine
+                servletAuthMandatory = false; // assume false if we cant determine
             } else if (Boolean.valueOf(keyVal).booleanValue() == true) {
                 msg += " value=Valid";
-                bval = true;
+                servletAuthMandatory = true;
             } else {
                 // assume false
                 msg += " value=false";
-                bval = false;
+                servletAuthMandatory = false;
             }
-            logger.log(Level.FINE, msg);
+            logger.log(FINE, msg);
         } else {
             msg = "FAILURE:  No map in MessageInfo thus no key=" + strKey;
-            logger.log(Level.SEVERE, msg);
+            logger.log(SEVERE, msg);
         }
 
-        return bval;
+        return servletAuthMandatory;
     }
 
-    public String getPrincipalNameFromSubject(Subject sub) {
-        Principal principal = null;
-
-        if (sub == null) {
+    public String getPrincipalNameFromSubject(Subject subject) {
+        if (subject == null) {
             return null;
         }
 
         String concatPrincipalName = "";
-        Set principalSet = sub.getPrincipals();
-
-        Iterator iterator = principalSet.iterator();
-        while (iterator.hasNext()) {
-            principal = (Principal) iterator.next();
+        for (Principal principal : subject.getPrincipals()) {
             concatPrincipalName += principal.getName();
         }
 
@@ -357,14 +332,13 @@ public class ServerCallbackSupport {
 
     private boolean GroupPrincipalCallbackSupport() {
         boolean bval = false;
-        ;
         boolean isAuthMandatory = false;
         String strServletContext = "";
         String principalName = "";
 
         if (callbackHandler != null) {
             try {
-                // note: we should be able to have a subject that has NO
+                // Note: we should be able to have a subject that has NO
                 // principals for the case of optional authen. Which means
                 // we should not have to explicitly set the principal here.
                 // however, for the case of mandatory authen, we will want
@@ -375,14 +349,14 @@ public class ServerCallbackSupport {
                 GroupPrincipalCallback groupPrincipalCallback = new GroupPrincipalCallback(subject, strArray);
 
                 CallerPrincipalCallback callerPrincipalCallback = null;
-                if (profile.equals(JASPICData.LAYER_SERVLET)) {
+                if (profile.equals(LAYER_SERVLET)) {
                     if (messageInfo != null) {
                         HttpServletRequest req = (HttpServletRequest) messageInfo.getRequestMessage();
                         String username = getServletUsername(req);
                         principalName = getPrincipalNameFromSubject(clientSubject);
                         strServletContext = req.getServletPath();
 
-                        // better to call cbh with a null principal when the policy is Not
+                        // Better to call cbh with a null principal when the policy is Not
                         // mandatory
                         // and with a legitimate principal when the policy is mandatory
                         // (unless testing send-failure or send-continue - which we are
@@ -405,12 +379,12 @@ public class ServerCallbackSupport {
                             callerPrincipalCallback = new CallerPrincipalCallback(subject, (Principal) null);
                         }
                     } else {
-                        // uses a null principal
+                        // Uses a null principal
                         debug("GroupPrincipalCallbackSupport(): messageInfo == null, using null principal");
                         callerPrincipalCallback = new CallerPrincipalCallback(clientSubject, (Principal) null);
                     }
                 } else {
-                    // if here, we were erroneously called by non-servlet profile
+                    // If here, we were erroneously called by non-servlet profile
                     debug("WARNING:  ServerCallbackSupport.CallerPrincipalCallbackSupport() - profile != servlet.");
                     callerPrincipalCallback = new CallerPrincipalCallback(subject, (Principal) null);
                 }
@@ -418,7 +392,7 @@ public class ServerCallbackSupport {
                 Callback[] callbacks = new Callback[] { groupPrincipalCallback, callerPrincipalCallback };
                 callbackHandler.handle(callbacks);
 
-                // this string will be searched for on client side
+                // This string will be searched for on client side
                 String theMessage = "GroupPrincipalCallbackSupport():";
                 theMessage += " successfully called callbackHandler.handle(callbacks)";
                 theMessage += " for servlet: " + strServletContext;
@@ -429,12 +403,9 @@ public class ServerCallbackSupport {
 
                 bval = true; // if here assume successful authen
 
-            } catch (UnsupportedCallbackException usce) {
+            } catch (UnsupportedCallbackException | IOException usce) {
                 logMsg("CallbackHandler failed to support GroupPrincipalCallback :" + usce.getMessage());
                 usce.printStackTrace();
-            } catch (IOException ioe) {
-                logMsg("CallbackHandler failed to support GroupPrincipalCallback :" + ioe.getMessage());
-                ioe.printStackTrace();
             }
         }
 
@@ -451,33 +422,26 @@ public class ServerCallbackSupport {
                 char[] password = passwd.toCharArray(); // e.g. {'j','2','e','e'};
 
                 PasswordValidationCallback passwordValidationCallback = new PasswordValidationCallback(subject, username, password);
+                CallerPrincipalCallback callerPrincipalCallback = new CallerPrincipalCallback(subject, (Principal) null);
 
-                CallerPrincipalCallback cpc = new CallerPrincipalCallback(subject, (Principal) null);
-
-                Callback[] callbacks = new Callback[] { passwordValidationCallback, cpc };
+                Callback[] callbacks = new Callback[] { passwordValidationCallback, callerPrincipalCallback };
 
                 callbackHandler.handle(callbacks);
+
                 Subject returnedSubject = passwordValidationCallback.getSubject();
                 boolean result = passwordValidationCallback.getResult();
                 String userName = passwordValidationCallback.getUsername();
                 char[] returnedPassword = passwordValidationCallback.getPassword();
                 passwordValidationCallback.clearPassword();
 
-                // logMsg("PasswordValidation callback returned subject
-                // ="+returnedSubject);
-                // logMsg("PasswordValidation callback returned password
-                // ="+returnedPassword);
                 logMsg("PasswordValidation callback returned result =" + result);
                 logMsg("CallbackHandler supports PasswordValidationCallback");
 
                 bval = result;
 
-            } catch (UnsupportedCallbackException usce) {
+            } catch (UnsupportedCallbackException | IOException usce) {
                 logMsg("CallbackHandler failed to support PasswordValidationCallback :" + usce.getMessage());
                 usce.printStackTrace();
-            } catch (IOException ioe) {
-                logMsg("CallbackHandler failed to support PasswordValidationCallback :" + ioe.getMessage());
-                ioe.printStackTrace();
             }
         }
 
@@ -486,7 +450,7 @@ public class ServerCallbackSupport {
 
     public void logMsg(String str) {
         if (logger != null) {
-            logger.log(Level.INFO, "In " + profile + " : " + runtimeType + " " + str);
+            logger.log(INFO, "In " + profile + " : " + runtimeType + " " + str);
         } else {
             System.out.println("*** TSLogger Not Initialized properly ***");
             System.out.println("*** TSSVLogMessage : ***" + str);

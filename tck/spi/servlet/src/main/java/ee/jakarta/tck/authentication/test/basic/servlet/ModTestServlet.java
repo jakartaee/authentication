@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,8 +40,9 @@ import java.security.Principal;
 @WebServlet(name = "ModTestServlet", urlPatterns = { "/ModTestServlet" })
 public class ModTestServlet extends HttpServlet {
 
+    private static final long serialVersionUID = 1L;
+
     private String logFileLocation;
-    private String servletAppContext = null;
     private String providerConfigFileLocation;
     private String testMethod = null;
 
@@ -74,15 +76,7 @@ public class ModTestServlet extends HttpServlet {
     }
 
     public void doTests(HttpServletRequest request, HttpServletResponse response) {
-        PrintWriter out = null;
-        try {
-            out = response.getWriter();
-        } catch (Exception ex) {
-            debug("got exception in ModTestServlet");
-            ex.printStackTrace();
-        }
-
-        // get some common props that are passed into our servlet request
+        // Get some common props that are passed into our servlet request
         getPropsAndParams(request, response);
 
         if (testMethod.equals("testAuthenResultsOnHttpServlet")) {
@@ -139,10 +133,10 @@ public class ModTestServlet extends HttpServlet {
             debug("getPropsAndParams(): providerConfigFileLocation = " + providerConfigFileLocation);
         }
 
-        // set testMethod
+        // Set testMethod
         testMethod = req.getParameter("method.under.test");
 
-        servletAppContext = IdUtil.getAppContextId(JASPICData.LAYER_SERVLET);
+        IdUtil.getAppContextId(JASPICData.LAYER_SERVLET);
 
         return;
     }

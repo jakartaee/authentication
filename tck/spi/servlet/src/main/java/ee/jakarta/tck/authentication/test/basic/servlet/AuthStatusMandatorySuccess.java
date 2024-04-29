@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -89,7 +90,7 @@ public class AuthStatusMandatorySuccess extends HttpServlet {
             out.println("Enterred AuthStatusMandatorySuccess->_testSecRespCalledAfterSvcInvoc()");
             System.out.println("In AuthStatusMandatorySuccess->_testSecRespCalledAfterSvcInvoc()");
 
-            // see if a cts proprietary requestAttribute was set in the secureResponse
+            // See if a cts proprietary requestAttribute was set in the secureResponse
             // call and if so, we have a problem. The secure response should be called
             // AFTER this servlet invocation thus we should not see this attribute set
             // yet. If set, it means our secureResponse was called BEFOR the service

@@ -1,5 +1,6 @@
 /*
- * Copyright (c)  2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,8 +14,9 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package ee.jakarta.tck.authentication.test.basic.sam.module.servlet;
+
+import static java.util.logging.Level.INFO;
 
 import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
@@ -24,12 +26,11 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
-import java.util.logging.Level;
 
 public class TSRequestWrapper extends HttpServletRequestWrapper {
-    private TSLogger logger = null;
+    private TSLogger logger;
 
-    Map optionsMap = null;
+    Map<String, Object> optionsMap;
 
     public TSRequestWrapper(HttpServletRequest request) {
         super(request);
@@ -39,7 +40,6 @@ public class TSRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public Object getAttribute(String name) {
-
         if ("isRequestWrapped".equals(name)) {
             return Boolean.TRUE;
         }
@@ -49,7 +49,6 @@ public class TSRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
-
         boolean bval = super.authenticate(response);
 
         debug("made it into TSRequestWrapper.authenticate()");
@@ -61,28 +60,33 @@ public class TSRequestWrapper extends HttpServletRequestWrapper {
         // of those error messages from within the tests in spi/servlet.
         //
 
-        // do some checks and validation relates to JASPIC 1.1 spec
+        // Do some checks and validation relates to JASPIC 1.1 spec
         // section 3.8.4 (para 1) per assertion JASPIC:SPEC:322
         if (bval) {
             String msg = "";
+
             // "Both cases, must also ensure that the value returned by calling
             // getAuthType on the HttpServletRequest is consistent in terms of
             // being null or non-null with the value returned by getUserPrincipal."
-            if ((super.getAuthType() != null) && super.getRemoteUser() != null) {
+            if (super.getAuthType() != null && super.getRemoteUser() != null) {
+
                 // This is good - both non-null so this is okay
                 msg = "HttpServletRequest authentication results match with getAuthType() and getRemoteUser()";
-            } else if ((super.getAuthType() == null) && super.getRemoteUser() == null) {
+            } else if (super.getAuthType() == null && super.getRemoteUser() == null) {
+
                 // This is good - both null, so this is okay too
                 msg = "HttpServletRequest authentication results match with getAuthType() and getRemoteUser()";
             } else {
+
                 // This is bad - must be mismatch between getAuthType() and
                 // getRemoteUser()
                 msg = "ERROR - HttpServletRequest authentication result mis-match with getAuthType() and getRemoteUser()";
             }
-            logger.log(Level.INFO, msg);
+
+            logger.log(INFO, msg);
         }
 
-        // test for assertion: JASPIC:SPEC:323 from spec section 3.8.4, para 2:
+        // Test for assertion: JASPIC:SPEC:323 from spec section 3.8.4, para 2:
         // check if getAuthType() != null, and if not null, then check if
         // MessageInfo Map
         // sets/users key=jakarta.servlet.http.authType. If so, getAuthType should be
@@ -91,24 +95,30 @@ public class TSRequestWrapper extends HttpServletRequestWrapper {
         if (bval) {
             String msg = "";
 
-            if ((super.getAuthType() != null) && (optionsMap != null)) {
-                // see if key=jakarta.servlet.http.authType exists and if so, make
+            if (super.getAuthType() != null && optionsMap != null) {
+
+                // See if key=jakarta.servlet.http.authType exists and if so, make
                 // sure it matches the getAuthType() value
                 if (optionsMap.get("jakarta.servlet.http.authType") != null) {
-                    // if here, then we need to make sure the value specified for
+
+                    // If here, then we need to make sure the value specified for
                     // getAuthType matches this value.
                     String val = (String) optionsMap.get("jakarta.servlet.http.authType");
                     if (val == null) {
-                        // spec violation - cant be null if key exists!!!
+
+                        // Spec violation - cant be null if key exists!!!
                         msg = "ERROR - invalid setting for jakarta.servlet.http.authType = null";
                     } else if (!val.equalsIgnoreCase(super.getAuthType())) {
-                        // spec violation - these have to match!!
+
+                        // Spec violation - these have to match!!
                         msg = "ERROR - mismatch value set for jakarta.servlet.http.authType and getAuthType()";
                     } else {
-                        // we are good if here.
+
+                        // We are good if here.
                         msg = "getAuthType() matches value for jakarta.servlet.http.authType";
                     }
-                    logger.log(Level.INFO, msg);
+
+                    logger.log(INFO, msg);
                     debug(msg);
                     debug("authenticate(): getAuthType() = " + super.getAuthType());
                     debug("authenticate(): jakarta.servlet.http.authType  = " + val);
@@ -120,17 +130,17 @@ public class TSRequestWrapper extends HttpServletRequestWrapper {
         return bval;
     }
 
-    public void setOptionsMap(Map options) {
+    public void setOptionsMap(Map<String, Object> options) {
         optionsMap = options;
     }
 
-    public Map getOptionsMap() {
+    public Map<String, Object> getOptionsMap() {
         return optionsMap;
     }
 
     public void logMsg(String str) {
         if (logger != null) {
-            logger.log(Level.INFO, str);
+            logger.log(INFO, str);
         } else {
             System.out.println("*** TSLogger Not Initialized properly ***");
             System.out.println("*** TSSVLogMessage : ***" + str);
