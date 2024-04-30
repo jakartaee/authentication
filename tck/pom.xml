@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2022, 2022 Contributors to Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022, 2024 Contributors to Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -100,6 +100,12 @@
         
          -->
         <module>spi</module>
+        
+        <!-- 
+            Tests that the signature of the API jar in the compatible implementation matches a previously
+            recorded signature.
+        -->
+        <module>authentication-signaturetest</module>
         
     </modules>
 
@@ -411,6 +417,15 @@
             <properties>
                 <glassfish.version>8.0.0-SNAPSHOT</glassfish.version>
                 <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
+                
+                <!--
+                    Exact artefact used by GlassFish that holds the API classes. The actual API
+                    jar in the GlassFish root folder is installed to these coordinates below.
+                    This is used by the signature test in module /authentication-signaturetest 
+                -->
+                <sigtest.api.groupId>jakarta.authentication</sigtest.api.groupId>
+                <sigtest.api.artifactId>jakarta.authentication-vendor-api</sigtest.api.artifactId>
+                <sigtest.api.version>${glassfish.version}</sigtest.api.version>
             </properties>
 
             <dependencies>
@@ -468,6 +483,32 @@
                             </execution>
                         </executions>
                     </plugin>
+                    
+                    <!--
+                        Installs the jakarta.authentication-api.jar from GF on the filesystem to the
+                        coordinates expected by the signature test. 
+                    -->
+                    <plugin>
+                        <artifactId>maven-install-plugin</artifactId>
+                        <version>3.1.1</version>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>install-file</goal>
+                                </goals>
+                                <configuration>
+                                    <file>${glassfish.root}/glassfish8/glassfish/modules/jakarta.authentication-api.jar</file>
+                                    <groupId>${sigtest.api.groupId}</groupId>
+                                    <artifactId>${sigtest.api.artifactId}</artifactId>
+                                    <version>${sigtest.api.version}</version>
+                                    <packaging>jar</packaging>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
                     <plugin>
                          <artifactId>maven-surefire-plugin</artifactId>
                          <configuration>
