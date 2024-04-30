@@ -49,19 +49,32 @@ and configuration to support your implementation and Arqulillian container imple
 starts up your container and deploys the test wars into it.
 
 
-4.3 Setting up an Evironment Against a Jakarta EE {JakartaEEVersion} CI for legacy TCK tests
+4.3 Setting up an Evironment Against a Jakarta EE {JakartaEEVersion} CI for SPI TCK tests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The legacy tests which are part of the latest Jakarta Authentication TCK use `KEYWORDS` parameter to identify the
-tests that need to be executed for JakartaEE Full and Web profile implementations. The tck/old-tck/run/pom.xml includes
-example of using the profiles `platform` (for JakartaEE Platform - Full profile by default) and `web` (for Web Profile) 
-that sets the appropirate values for `KEYWORDS` in the CI.
+The SPI tests (in [tck]/spi which are part of the latest Jakarta Authentication TCK need additional configuration.
 
-```
-For JakartaEE Platform Full profile , KEYWORDS = jaspic_baseline|javaee
-For JakartaEE Platform Web platform , KEYWORDS = jaspic_web_profile
-```
+These SPI tests dive a little deeper into the assertions of the Jakarta Authentication SPI, and directly test for a number of 
+technical expectations. In contrast, most other tests in the Jakarta Authentication TCK look more at observable system
+behavior and are more akin to Integration Tests (IT).
 
-The `tck/old-tck/source/src/com/sun/ts/lib/harness/keyword.properties` has the full list of keywords 
-mapped to the test directories in tck/old-tck/
+The common sub-module ([tck]/spi/module) of the SPI module primarily contains a special AuthConfigFactory (the TSSV) that is installed
+using a ServletContainerInitializer. This AuthConfigFactory traces a lot of operations
+on it to a logging file (saved to location set by system property "log.file.location").
+This logging file is read by the (client side) tests, which verify whether specific entries are present or absent in said log file.
+
+Both the CI (e.g. Eclipse GlassFish) and the client environment running the tests (junit) needs to have this "log.file.location" specified and
+pointing to the same location.
+
+Among the SPI tests is a test for the "auth context ID", which can be obtained in a standard way, but contains an implementation specific 
+value. In order to test that this value is correct, the expected value for a CI needs to be configured using the client environment
+system property "logical.hostname.servlet".
+
+A Jakarta Authentication implementation provides an "AuthConfigFactory" implementation, which can be obtained in a standard way, but
+obviously is of a implementation specific type. In order to test various assumptions about this "vendor AuthConfigFactory", the exact type
+needs to be provided to the tests via the system property "vendor.authconfig.factory". Both the CI (e.g. GlassFish) and the client 
+environment running the tests (junit) needs to have this "vendor.authconfig.factory" specified and set to the same value.
+
+The `tck/pom.xml` file contains a full example for Eclipse GlassFish in the "glassfish-ci-managed" profile in the surefire configuration
+section.
 
