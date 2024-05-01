@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2022, 2022 Contributors to Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022, 2024 Contributors to Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.8</version>
+        <version>1.0.9</version>
         <relativePath/>
     </parent>
 
@@ -99,12 +99,18 @@
             the test client inspects that file for specific behaviour.
         
          -->
-        <module>profile-spi</module>
+        <module>spi</module>
+        
+        <!-- 
+            Tests that the signature of the API jar in the compatible implementation matches a previously
+            recorded signature.
+        -->
+        <module>authentication-signaturetest</module>
         
     </modules>
 
     <properties>
-        <maven.compiler.release>11</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <!-- Tests to skip interactions with certain technologies if not appropriate for an environment -->
@@ -134,8 +140,8 @@
             </dependency>
             <dependency>
                 <groupId>org.omnifaces.arquillian</groupId>
-   			    <artifactId>glassfish-client-ee9</artifactId>
-                <version>1.0</version>
+   			    <artifactId>glassfish-client-ee10</artifactId>
+                <version>1.4</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -172,21 +178,21 @@
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
-            <version>3.0.1</version>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
         
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
-            <version>4.0.0</version>
+            <version>4.0.1</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -194,7 +200,7 @@
         <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
-            <version>2.1.0</version>
+            <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -203,7 +209,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -236,7 +241,7 @@
         <dependency>
             <groupId>org.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>3.11.0</version>
+            <version>4.1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -267,22 +272,22 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.10.1</version>
+					<version>3.13.0</version>
 				</plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.3.2</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.6.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.2.5</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -295,7 +300,6 @@
              <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -305,7 +309,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.6.3</version>
+                                    <version>3.8.6</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
@@ -327,12 +331,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.3.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
+                <version>3.2.5</version>
                 <configuration>
                     <trimStackTrace>false</trimStackTrace>
                     <properties>
@@ -384,7 +388,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.0.0-M6</version>
+                <version>3.2.5</version>
                 <configuration>
                     <aggregate>true</aggregate>
                     <linkXRef>true</linkXRef>
@@ -413,6 +417,15 @@
             <properties>
                 <glassfish.version>8.0.0-SNAPSHOT</glassfish.version>
                 <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
+                
+                <!--
+                    Exact artefact used by GlassFish that holds the API classes. The actual API
+                    jar in the GlassFish root folder is installed to these coordinates below.
+                    This is used by the signature test in module /authentication-signaturetest 
+                -->
+                <sigtest.api.groupId>jakarta.authentication</sigtest.api.groupId>
+                <sigtest.api.artifactId>jakarta.authentication-vendor-api</sigtest.api.artifactId>
+                <sigtest.api.version>${glassfish.version}</sigtest.api.version>
             </properties>
 
             <dependencies>
@@ -421,6 +434,22 @@
                     <groupId>org.omnifaces.arquillian</groupId>
                     <artifactId>arquillian-glassfish-server-managed</artifactId>
                     <version>1.4</version>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- For the unit tests in /spi/ to be able to instantiate vendor AuthConfigFactory -->
+                <dependency>
+                    <groupId>org.glassfish.epicyro</groupId>
+                    <artifactId>epicyro</artifactId>
+                    <version>3.1.0-SNAPSHOT</version>
+                    <scope>test</scope>
+                </dependency>
+                
+                <!-- For the client side SOAP test in /spi/soap  -->
+                <dependency>
+                    <groupId>org.glassfish.main.security</groupId>
+                    <artifactId>webservices.security</artifactId>
+                    <version>${glassfish.version}</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -454,11 +483,37 @@
                             </execution>
                         </executions>
                     </plugin>
+                    
+                    <!--
+                        Installs the jakarta.authentication-api.jar from GF on the filesystem to the
+                        coordinates expected by the signature test. 
+                    -->
+                    <plugin>
+                        <artifactId>maven-install-plugin</artifactId>
+                        <version>3.1.2</version>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>install-file</goal>
+                                </goals>
+                                <configuration>
+                                    <file>${glassfish.root}/glassfish8/glassfish/modules/jakarta.authentication-api.jar</file>
+                                    <groupId>${sigtest.api.groupId}</groupId>
+                                    <artifactId>${sigtest.api.artifactId}</artifactId>
+                                    <version>${sigtest.api.version}</version>
+                                    <packaging>jar</packaging>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    
                     <plugin>
                          <artifactId>maven-surefire-plugin</artifactId>
                          <configuration>
                              <systemPropertyVariables>
-                                 <provider.configuration.file>${maven.multiModuleProjectDirectory}/profile-spi/ProviderConfiguration.xml</provider.configuration.file>
+                                 <provider.configuration.file>${maven.multiModuleProjectDirectory}/spi/common/ProviderConfiguration.xml</provider.configuration.file>
                                  <vendor.authconfig.factory>org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory</vendor.authconfig.factory>
                                  <log.file.location>${glassfish.root}/glassfish8/glassfish/domains/domain1/logs</log.file.location>
                                  <logical.hostname.servlet>server</logical.hostname.servlet>
@@ -466,7 +521,7 @@
                                  <glassfish.systemProperties>
                                     j2eelogin.name=j2ee
                                     j2eelogin.password=j2ee
-                                    provider.configuration.file=${maven.multiModuleProjectDirectory}/profile-spi/ProviderConfiguration.xml
+                                    provider.configuration.file=${maven.multiModuleProjectDirectory}/spi/common/ProviderConfiguration.xml
                                     vendor.authconfig.factory=org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory
                                     log.file.location=${glassfish.root}/glassfish8/glassfish/domains/domain1/logs
                                  </glassfish.systemProperties>
@@ -752,22 +807,6 @@
                 <maven.test.skip>true</maven.test.skip>
                 <skipTests>true</skipTests>
             </properties>
-        </profile>
-
-        <profile>
-            <id>old-tck</id>
-
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-            <!-- Runs the old TCK, which is the Javatest based one. It's not entirely clear what this tests, but it includes Java SE like unit tests
-                 for setting up factories and checking whether things are on the classpath 
-                 TODO: document here what these tests actually test for.
-             -->
-            <modules>
-                <module>old-tck</module>
-            </modules>
         </profile>
     </profiles>
 </project>

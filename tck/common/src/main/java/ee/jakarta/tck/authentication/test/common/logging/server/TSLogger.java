@@ -84,22 +84,27 @@ public class TSLogger extends Logger {
                 logger = TSLogger.getTSLogger("jacc");
                 boolean appendMode = true;
 
+                String fileName = "/authentication-trace-log.xml";
+
                 // Clean the content of authentication-trace-log.xml if it exists
                 File file = new File(logFileLocation + "/authentication-trace-log.xml");
                 if (file.exists()) {
+                    System.out.println("XXXX:  in initializeTSLogger() - authentication-trace-log.xml exists");
                     // Delete the file, if it exists
-                    file.delete();
+                    // file.delete();
+                    fileName = "/client-authentication-trace-log.xml";
                 }
 
                 File fileLock = new File(logFileLocation + "/authentication-trace-log.xml.lck");
                 if (fileLock.exists()) {
+                    System.out.println("XXXX:  in initializeTSLogger() - authentication-trace-log.xml.lck exists");
                     // Delete the file, if it exists
-                    fileLock.delete();
+                    // fileLock.delete();
                 }
 
                 // Create a new file
                 System.out.println("XXXX:  in initializeTSLogger() - about to create authentication-trace-log.xml");
-                fileHandler = new FileHandler(logFileLocation + "/authentication-trace-log.xml", appendMode);
+                fileHandler = new FileHandler(logFileLocation + fileName, appendMode);
                 fileHandler.setFormatter(new TSXMLFormatter());
                 logger.addHandler(fileHandler);
                 setTSLogger(logger);
@@ -119,7 +124,7 @@ public class TSLogger extends Logger {
     }
 
     public static void close() {
-        fileHandler.close();
+        // fileHandler.close();
     }
 
 

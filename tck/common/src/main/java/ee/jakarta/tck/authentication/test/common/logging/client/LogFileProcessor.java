@@ -23,7 +23,6 @@ import java.io.SequenceInputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
@@ -56,13 +55,19 @@ import org.w3c.dom.NodeList;
  */
 public class LogFileProcessor {
 
-    //private Properties props = null;
-    private String logFileLocation = null;
-    private Collection recordCollection = null;
-    private Collection appIdRecordCollection = null;
-    private Collection appSpecificRecordCollection = null;
+    private String logFileLocation;
+    private Collection recordCollection;
+    private Collection appIdRecordCollection;
+    private Collection appSpecificRecordCollection;
+
+    private boolean client;
 
     public LogFileProcessor() {
+        this(false);
+    }
+
+    public LogFileProcessor(boolean client) {
+        this.client = client;
         boolean pass = true;
         try {
             logFileLocation = System.getProperty("log.file.location");
@@ -73,15 +78,13 @@ public class LogFileProcessor {
 
             if (!pass) {
                 TestUtil.logErr("Setup Failed ");
-                TestUtil.logErr("Please verify the following in ts.jte");
-                TestUtil.logErr("log.file.location");
+                TestUtil.logErr("Please verify \"log.file.location\"");
             }
             TestUtil.logMsg("Setup ok");
 
         } catch (Exception e) {
             TestUtil.logErr("Setup Failed ");
-            TestUtil.logErr("Please verify the following in ts.jte");
-            TestUtil.logErr("log.file.location");
+            TestUtil.logErr("Please verify \"log.file.location\"");
         }
     }
 
@@ -94,12 +97,17 @@ public class LogFileProcessor {
         URL url = null;
 
         try {
+            String fileName = "authentication-trace-log.xml";
+            if (client) {
+                fileName = "client-authentication-trace-log.xml";
+            }
+
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
             String strFilePathAndName = "";
-            if (logFileLocation.indexOf("authentication-trace-log.xml") <= 0) {
-                strFilePathAndName = logFileLocation + "/authentication-trace-log.xml";
+            if (logFileLocation.indexOf(fileName) <= 0) {
+                strFilePathAndName = logFileLocation + "/" + fileName;
             }
             System.out.println("Log File = " + strFilePathAndName);
 

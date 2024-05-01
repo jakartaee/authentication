@@ -102,27 +102,10 @@ The tests in the directory are run.
 
 All the tests can be run against GlassFish by
 invoking the following from the tck/ directory:
-`mvn clean verify`. This will include the legacy 
-TCK JavaTest based tests in tck/old-tck.
+`mvn clean verify`. 
 
 
 [[GDMSS]][[running-the-tck-against-the-glassfish]]
-
-5.4 Running the Legacy TCK tests Against GlassFish
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The legacy JavaTest based TCK tests are in tck/old-tck folder.
-They can be run by below:
-
-1.  Change to the directory tck/old-tck.
-2.  Start the test run by executing the following command: +
-+
-[source]
-----
-mvn clean verify
-----
-+
-The legacy JavaTest based TCK tests in the directory are run.
 
 
 include::using.inc[]
