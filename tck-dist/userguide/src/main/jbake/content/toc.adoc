@@ -72,7 +72,6 @@ link:using.html#GBFWO[5 Executing Tests]
 *** link:using.html#GBFWK[5.2.1 To Run a Subset of Tests in Command-Line Mode]
 ** link:using.html#GCLRR[5.3 Running the TCK Against GlassFish]
 
-
 [[debugging-test-problems]]
 link:debug.html#GBFUV[6 Debugging Test Problems]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
