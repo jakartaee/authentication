@@ -20,7 +20,7 @@
 
     <parent>
         <groupId>org.eclipse.ee4j.tck.authentication</groupId>
-        <artifactId>jakarta-authentication-tck</artifactId>
+        <artifactId>spi</artifactId>
         <version>3.1.0-SNAPSHOT</version>
     </parent>
 
