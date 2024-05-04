@@ -122,6 +122,8 @@
         <resultlistener.home>${maven.multiModuleProjectDirectory}/target</resultlistener.home>
         <maven.test.skip>false</maven.test.skip>
         <skipTests>false</skipTests>
+        
+        <jakarta.authentication.version>3.1.0</jakarta.authentication.version>
     </properties>
 
     <dependencyManagement>
@@ -150,7 +152,7 @@
         <dependency>
             <groupId>jakarta.authentication</groupId>
             <artifactId>jakarta.authentication-api</artifactId>
-            <version>3.1.0-SNAPSHOT</version>
+            <version>${jakarta.authentication.version}</version>
             <scope>provided</scope>
         </dependency>
         
@@ -417,6 +419,11 @@
             <properties>
                 <glassfish.version>8.0.0-SNAPSHOT</glassfish.version>
                 <glassfish.root>${maven.multiModuleProjectDirectory}/target</glassfish.root>
+                
+                <authentication.api.update>false</authentication.api.update>
+                
+                <epicyro.update>false</epicyro.update>
+                <epicyro.version>3.1.0</epicyro.version>
                 
                 <!--
                     Exact artefact used by GlassFish that holds the API classes. The actual API
