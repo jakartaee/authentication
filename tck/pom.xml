@@ -511,6 +511,17 @@
                     <plugin>
                          <artifactId>maven-surefire-plugin</artifactId>
                          <configuration>
+                             <additionalClasspathElements>
+                                <additionalClasspathElement>
+                                    ${glassfish.root}/glassfish8/glassfish/lib/bootstrap/glassfish-jul-extension.jar
+                                </additionalClasspathElement>
+                                <additionalClasspathElement>
+                                    ${glassfish.root}/glassfish8/glassfish/modules/webservices.security.jar
+                                </additionalClasspathElement>
+                                <useManifestOnlyJar>false</useManifestOnlyJar>  
+                                <useSystemClassLoader>false</useSystemClassLoader>
+                            </additionalClasspathElements>
+                             
                              <systemPropertyVariables>
                                  <provider.configuration.file>${maven.multiModuleProjectDirectory}/spi/common/ProviderConfiguration.xml</provider.configuration.file>
                                  <vendor.authconfig.factory>org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory</vendor.authconfig.factory>
