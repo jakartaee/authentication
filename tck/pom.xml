@@ -451,14 +451,6 @@
                     <version>${epicyro.version}</version>
                     <scope>test</scope>
                 </dependency>
-                
-                <!-- For the client side SOAP test in /spi/soap  -->
-                <dependency>
-                    <groupId>org.glassfish.main.security</groupId>
-                    <artifactId>webservices.security</artifactId>
-                    <version>${glassfish.version}</version>
-                    <scope>test</scope>
-                </dependency>
             </dependencies>
 
             <build>
