@@ -36,7 +36,7 @@ slashes as a path separator instead.
 The Jakarta Authentication TCK is retrieved from 
 
 ```
-https://download.eclipse.org/jakartaee/authentication/3.0/jakarta-authentication-tck-3.0.1.zip
+https://download.eclipse.org/jakartaee/authentication/3.1/jakarta-authentication-tck-3.1.0.zip
 ```
 
 4.2 Setting up an Evironment for the Maven Surefire based TCK Against a Compatible Implementation
