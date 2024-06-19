@@ -20,7 +20,7 @@ Locate the html file:
 - target/generated-docs/jakarta-authentication-spec-{project.version}.html
 
 Locate the PDF file:
-- target/generated-docs/jakarta-authentication-spec-{project.version}.html
+- target/generated-docs/jakarta-authentication-spec-{project.version}.pdf
 
 Locate the zip archive containing both formats of the specification:
 - target/authentication-spec-{project.version}.zip
