@@ -370,7 +370,7 @@ exception thrown by these methods.
 
 A `ServerAuthModule` must only call `MessageInfo.setResponseMessage()` to wrap or unwrap the existing 
 response within `MessageInfo`. That is, if a `ServerAuthModule` calls `MessageInfo.setResponseMessage()`, 
-the response argument must be an `HtppServletResponseWrapper` that wraps the `HttpServletResponse` 
+the response argument must be an `HttpServletResponseWrapper` that wraps the `HttpServletResponse` 
 within `MessageInfo`, or the response argument must be an `HttpServletResponse` that is wrapped by the `HttpServletResponseWrapper` within `MessageInfo`. The analogous requirements apply to 
 `MessageInfo.setRequestMessage()`.
 
@@ -530,7 +530,7 @@ the `HttpServletResponse`, but need not do so if the response is unavailable or 
 
 The container implementation of `logout` must call `cleanSubject` on the acquired `ServerAuthContext`. 
 The `MessageInfo` argument to the call to `cleanSubject` must be as defined above. The `clientSubject` 
-argument must be a non-null `Subject` and should be the `Subject` resulting from the most recent call to `validateRequest` which may have occurred either as described in <<a442>> or as described in <<a487>. 
+argument must be a non-null `Subject` and should be the `Subject` resulting from the most recent call to `validateRequest` which may have occurred either as described in <<a442>> or as described in <<a487>>. 
 If the prior `Subject` is not used, a new `clientSubject` must be instantiated and passed in the call.
 
 Following the return from `cleanSubject`, `logout` must perform the logout processing that it performs 
