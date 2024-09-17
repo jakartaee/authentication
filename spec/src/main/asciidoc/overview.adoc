@@ -417,7 +417,7 @@ acquisition of the authentication context. If the Subject is not null, additiona
 Appropriate to its point of processing in the messaging model, the messaging runtime uses the 
 `MessageInfo` described in Step 3 to invoke a method of the authentication context obtained in Step 4.
 
-At point (1) in the messaging model, the`clientSubject` may contain the credentials used to secure the 
+At point (1) in the messaging model, the `clientSubject` may contain the credentials used to secure the 
 request, or the modules of the context may collect the client credentials including by using the callback
 handler passed through to them by the context. `MessageInfo` would contain a request message about to be sent. 
 On successful return from the context, the runtime would extract the secured request message from 
