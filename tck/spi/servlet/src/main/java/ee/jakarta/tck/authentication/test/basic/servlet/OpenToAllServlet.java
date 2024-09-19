@@ -39,12 +39,12 @@ public class OpenToAllServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
-        debug("Enterred OpenToAllServlet->doGet()");
+        debug("Entered OpenToAllServlet->doGet()");
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        debug("Enterred OpenToAllServlet->doPost()");
+        debug("Entered OpenToAllServlet->doPost()");
 
         doTests(request, response);
     }
@@ -97,7 +97,7 @@ public class OpenToAllServlet extends HttpServlet {
     public void TestGPCWithNoRequiredAuth(HttpServletRequest request, HttpServletResponse response) {
         try {
             PrintWriter out = response.getWriter();
-            out.println("Enterred OpenToAllServlet->TestGPCWithNoRequiredAuth()");
+            out.println("Entered OpenToAllServlet->TestGPCWithNoRequiredAuth()");
             System.out.println("In OpenToAllServlet->TestGPCWithNoRequiredAuth()");
 
             // after successful login, we should see true value for isUserInRole

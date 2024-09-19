@@ -44,14 +44,14 @@ public class AnotherMandatoryAuthen extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
-        printOut("Enterred AnotherMandatoryAuthen->doGet()", response);
+        printOut("Entered AnotherMandatoryAuthen->doGet()", response);
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("In AnotherMandatoryAuthen->doPost()");
 
-        printOut("Enterred AnotherMandatoryAuthen->doPost()", response);
+        printOut("Entered AnotherMandatoryAuthen->doPost()", response);
         printOut("request.getServletPath() = " + request.getServletPath(), response);
         printOut("request.getPathInfo() = " + request.getPathInfo(), response);
         printOut("request.getMethod() = " + request.getMethod(), response);
@@ -60,7 +60,7 @@ public class AnotherMandatoryAuthen extends HttpServlet {
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("In AnotherMandatoryAuthen->service()");
-        printOut("Enterred AnotherMandatoryAuthen->service()", response);
+        printOut("Entered AnotherMandatoryAuthen->service()", response);
     }
 
     private void printOut(String str, HttpServletResponse response) {

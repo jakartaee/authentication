@@ -46,7 +46,7 @@ public class AuthStatusMandatorySuccess extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         doPost(request, response);
-        out.println("Enterred AuthStatusMandatorySuccess->doGet()");
+        out.println("Entered AuthStatusMandatorySuccess->doGet()");
     }
 
     @Override
@@ -87,7 +87,7 @@ public class AuthStatusMandatorySuccess extends HttpServlet {
         try {
             PrintWriter out = response.getWriter();
 
-            out.println("Enterred AuthStatusMandatorySuccess->_testSecRespCalledAfterSvcInvoc()");
+            out.println("Entered AuthStatusMandatorySuccess->_testSecRespCalledAfterSvcInvoc()");
             System.out.println("In AuthStatusMandatorySuccess->_testSecRespCalledAfterSvcInvoc()");
 
             // See if a cts proprietary requestAttribute was set in the secureResponse

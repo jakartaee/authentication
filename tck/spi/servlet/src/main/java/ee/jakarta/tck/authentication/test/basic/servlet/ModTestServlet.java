@@ -49,11 +49,11 @@ public class ModTestServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        out.println("Enterred ModTestServlet->doGet()");
+        out.println("Entered ModTestServlet->doGet()");
 
         doTests(request, response);
 
-        out.println("Laving ModTestServlet->doGet()");
+        out.println("Leaving ModTestServlet->doGet()");
     }
 
     @Override
@@ -63,14 +63,14 @@ public class ModTestServlet extends HttpServlet {
         doTests(request, response);
 
         PrintWriter out = response.getWriter();
-        out.println("Enterred ModTestServlet->doPost()");
+        out.println("Entered ModTestServlet->doPost()");
     }
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("In ModTestServlet->service()");
         PrintWriter out = response.getWriter();
-        out.println("Enterred ModTestServlet->service()");
+        out.println("Entered ModTestServlet->service()");
 
         super.service(request, response);
     }
@@ -147,7 +147,7 @@ public class ModTestServlet extends HttpServlet {
     public void MTSAuthenResultsOnHttpServlet(HttpServletRequest request, HttpServletResponse response) {
         try {
             PrintWriter out = response.getWriter();
-            out.println("Enterred ModTestServlet->MTSAuthenResultsOnHttpServlet()");
+            out.println("Entered ModTestServlet->MTSAuthenResultsOnHttpServlet()");
             System.out.println("In ModTestServlet->MTSAuthenResultsOnHttpServlet()");
 
             // after successful login, we should see non-null values for all of these!
@@ -189,7 +189,7 @@ public class ModTestServlet extends HttpServlet {
     public void testAuthenAfterLogout(HttpServletRequest request, HttpServletResponse response) {
         try {
             PrintWriter out = response.getWriter();
-            out.println("Enterred ModTestServlet->testAuthenAfterLogout()");
+            out.println("Entered ModTestServlet->testAuthenAfterLogout()");
             debug("In ModTestServlet->testAuthenAfterLogout()");
 
             // after successful login, we must get a non-null
@@ -218,7 +218,7 @@ public class ModTestServlet extends HttpServlet {
     public void MTSAuthenIsUserInRole(HttpServletRequest request, HttpServletResponse response) {
         try {
             PrintWriter out = response.getWriter();
-            out.println("Enterred ModTestServlet->MTSAuthenIsUserInRole()");
+            out.println("Entered ModTestServlet->MTSAuthenIsUserInRole()");
             System.out.println("In ModTestServlet->MTSAuthenIsUserInRole()");
 
             // after successful login, we should see true value for isUserInRole
@@ -260,7 +260,7 @@ public class ModTestServlet extends HttpServlet {
     public void MTSRemoteUserCorrespondsToPrin(HttpServletRequest request, HttpServletResponse response) {
         try {
             PrintWriter out = response.getWriter();
-            out.println("Enterred ModTestServlet->MTSRemoteUserCorrespondsToPrin()");
+            out.println("Entered ModTestServlet->MTSRemoteUserCorrespondsToPrin()");
             System.out.println("In ModTestServlet->MTSRemoteUserCorrespondsToPrin()");
 
             // after successful login, we should see true value for isUserInRole
@@ -302,7 +302,7 @@ public class ModTestServlet extends HttpServlet {
         try {
             boolean bval = false;
             PrintWriter out = response.getWriter();
-            out.println("Enterred ModTestServlet->testGPCIsUserInRole()");
+            out.println("Entered ModTestServlet->testGPCIsUserInRole()");
 
             // first make sure user is in role!
             // after successful login, we should see true value for isUserInRole
@@ -336,7 +336,7 @@ public class ModTestServlet extends HttpServlet {
             boolean bval = false;
 
             PrintWriter out = response.getWriter();
-            out.println("Enterred ModTestServlet->testGPCGetUserPrincipal()");
+            out.println("Entered ModTestServlet->testGPCGetUserPrincipal()");
 
             // getUserPrincipal() should have been set on proper validateRequest()
             if (request.getUserPrincipal() == null) {
@@ -373,7 +373,7 @@ public class ModTestServlet extends HttpServlet {
             boolean bval = false;
 
             PrintWriter out = response.getWriter();
-            out.println("Enterred ModTestServlet->testGPCGetRemoteUser()");
+            out.println("Entered ModTestServlet->testGPCGetRemoteUser()");
 
             // getRemoteUser() should have been set on proper validateRequest()
             String remoteUser = request.getRemoteUser();
@@ -406,7 +406,7 @@ public class ModTestServlet extends HttpServlet {
             boolean bval = false;
 
             PrintWriter out = response.getWriter();
-            out.println("Enterred ModTestServlet->testGPCGetAuthType()");
+            out.println("Entered ModTestServlet->testGPCGetAuthType()");
             debug("enterred ModTestServlet->testGPCGetAuthType()");
 
             // getAuthType() should have been set on proper validateRequest()

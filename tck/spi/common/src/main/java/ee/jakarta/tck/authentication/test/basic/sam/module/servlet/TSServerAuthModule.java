@@ -603,7 +603,7 @@ public class TSServerAuthModule implements jakarta.security.auth.message.module.
      */
     @Override
     public AuthStatus secureResponse(MessageInfo messageInfo, Subject serviceSubject) throws AuthException {
-        logMsg("Enterred secureResponse");
+        logMsg("Entered secureResponse");
 
         String msg = "";
         if (serviceSubject != null) {
