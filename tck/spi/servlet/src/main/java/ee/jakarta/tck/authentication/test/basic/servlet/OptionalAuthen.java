@@ -38,7 +38,7 @@ public class OptionalAuthen extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         doPost(request, response);
-        out.println("Enterred OptionalAuthen->doGet()");
+        out.println("Entered OptionalAuthen->doGet()");
     }
 
     @Override
@@ -46,7 +46,7 @@ public class OptionalAuthen extends HttpServlet {
         System.out.println("In OptionalAuthen->doPost()");
 
         PrintWriter out = response.getWriter();
-        out.println("Enterred OptionalAuthen->doPost()");
+        out.println("Entered OptionalAuthen->doPost()");
 
         out.println("request.getRequestURI() = " + request.getRequestURI());
         out.println("request.getServletPath() = " + request.getServletPath());
@@ -58,7 +58,7 @@ public class OptionalAuthen extends HttpServlet {
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("In OptionalAuthen->service()");
         PrintWriter out = response.getWriter();
-        out.println("Enterred OptionalAuthen->service()");
+        out.println("Entered OptionalAuthen->service()");
         doPost(request, response);
     }
 
