@@ -160,10 +160,6 @@ public class ArquillianBase {
     }
 
     protected String readFromServerWithCredentials(String path, String username, String password) {
-        DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-        credentialsProvider.addCredentials(username, password.toCharArray());
-
-        getWebClient().setCredentialsProvider(credentialsProvider);
         getWebClient().addRequestHeader(
             "Authorization",
             "Basic " + Base64.getEncoder()
@@ -188,10 +184,10 @@ public class ArquillianBase {
     }
 
     protected WebResponse responseFromServerWithCredentials(String path, String username, String password) {
-        DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-        credentialsProvider.addCredentials(username, password.toCharArray());
-
-        getWebClient().setCredentialsProvider(credentialsProvider);
+        getWebClient().addRequestHeader(
+            "Authorization",
+            "Basic " + Base64.getEncoder()
+                             .encodeToString((username + ":" + password).getBytes()));
 
         return responseFromServer(path);
     }

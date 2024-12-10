@@ -180,8 +180,8 @@ public class ServletProfileSPITest extends ArquillianBase {
    */
    @Test
    public void testSecRespCalledAfterSvcInvoc() {
-       String response = getFromServerPath(
-           JASPICData.AUTHSTAT_MAND_SUCCESS + "?" + "method.under.test=" + "testSecRespCalledAfterSvcInvoc");
+       String response = readFromServerWithCredentials(
+           JASPICData.AUTHSTAT_MAND_SUCCESS + "?" + "method.under.test=" + "testSecRespCalledAfterSvcInvoc", "j2ee", "j2ee");
 
        assertTrue(response.contains("testSecRespCalledAfterSvcInvoc() passed"));
    }
