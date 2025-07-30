@@ -137,8 +137,7 @@ public class TSFileHandler extends StreamHandler {
     //
     // Note: We don't lock files or rotate files based on size limit.
     private void openFiles() throws IOException {
-        LogManager manager = LogManager.getLogManager();
-        manager.checkAccess();
+        LogManager.getLogManager();
         if (count < 1) {
             throw new IllegalArgumentException("file count = " + count);
         }
