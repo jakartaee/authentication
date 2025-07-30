@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -35,8 +36,6 @@ import java.util.logging.XMLFormatter;
  */
 public class TSXMLFormatter extends XMLFormatter {
 
-    private String contextId;
-
     /**
      * Override parent class format method
      *
@@ -48,8 +47,7 @@ public class TSXMLFormatter extends XMLFormatter {
 
         String message = lrecord.getMessage();
         Level level = lrecord.getLevel();
-        TSLogRecord record = new TSLogRecord(level, message);
-
+        TSLogRecord record = lrecord instanceof TSLogRecord ? (TSLogRecord) lrecord : new TSLogRecord(level, message);
         return format(record);
     }
 
@@ -59,10 +57,9 @@ public class TSXMLFormatter extends XMLFormatter {
      * @param record the log record to be formatted.
      * @return a formatted log record
      */
-    public String format(TSLogRecord record) {
+    private String format(TSLogRecord record) {
 
-        // TSLogRecord record = (TSLogRecord)lrecord;
-        StringBuffer sb = new StringBuffer(500);
+        StringBuilder sb = new StringBuilder(500);
         sb.append("<record>\n");
 
         sb.append("  <sequence>");
@@ -169,7 +166,7 @@ public class TSXMLFormatter extends XMLFormatter {
     // Append to the given StringBuffer an escaped version of the
     // given text string where XML special characters have been escaped.
     // For a null string we appebd "<null>"
-    private void escape(StringBuffer sb, String text) {
+    private void escape(StringBuilder sb, String text) {
         if (text == null) {
             text = "<null>";
         }
@@ -196,7 +193,7 @@ public class TSXMLFormatter extends XMLFormatter {
      */
     @Override
     public String getHead(Handler h) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\"");
         String encoding = "UTF-8";
 

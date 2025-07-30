@@ -1,5 +1,6 @@
 /*
- * Copyright (c)  2014, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,9 +40,17 @@ import java.io.PrintWriter;
 public class WrapperServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    private TSLogger logger;
     private String providerConfigFileLocation;
     private String vendorACFClass;
     private String testMethod;
+
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        logger = TSLogger.getTSLogger();
+    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,8 +64,6 @@ public class WrapperServlet extends HttpServlet {
 
     public void doTests(HttpServletRequest request, HttpServletResponse response) {
         debug("in WrapperServlet.doTests");
-
-        TSLogger logger = TSLogger.getTSLogger();
 
         // get some common props
         getPropsAndParams(request, response);

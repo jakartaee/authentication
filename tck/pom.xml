@@ -526,20 +526,48 @@
                              <systemPropertyVariables>
                                  <provider.configuration.file>${maven.multiModuleProjectDirectory}/spi/common/ProviderConfiguration.xml</provider.configuration.file>
                                  <vendor.authconfig.factory>org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory</vendor.authconfig.factory>
+                                 <log.file.name.test>authentication-tck-test.log</log.file.name.test>
+                                 <log.file.name.webapp>authentication-tck-webapp.log</log.file.name.webapp>
                                  <log.file.location>${glassfish.root}/glassfish8/glassfish/domains/domain1/logs</log.file.location>
                                  <logical.hostname.servlet>server</logical.hostname.servlet>
-                                
+
                                  <glassfish.systemProperties>
                                     j2eelogin.name=j2ee
                                     j2eelogin.password=j2ee
                                     provider.configuration.file=${maven.multiModuleProjectDirectory}/spi/common/ProviderConfiguration.xml
                                     vendor.authconfig.factory=org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory
                                     log.file.location=${glassfish.root}/glassfish8/glassfish/domains/domain1/logs
+                                    log.file.name.webapp=authentication-tck-webapp.log
                                  </glassfish.systemProperties>
-                                 
                                  <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                              </systemPropertyVariables>
                          </configuration>
+                         <executions>
+                            <execution>
+                                <id>default-test</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <configuration>
+                                    <includes>
+                                        <include>**/*UnitTest.java</include>
+                                    </includes>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>integration-test</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <configuration>
+                                    <excludes>
+                                        <exclude>**/*UnitTest.java</exclude>
+                                    </excludes>
+                                </configuration>
+                            </execution>
+                         </executions>
                     </plugin>
                 </plugins>
             </build>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,7 +42,6 @@ public class ModTestServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private String logFileLocation;
     private String providerConfigFileLocation;
     private String testMethod = null;
 
@@ -110,21 +109,6 @@ public class ModTestServlet extends HttpServlet {
     // that is made from within the client code (e.g. Client.java).
     private void getPropsAndParams(HttpServletRequest req, HttpServletResponse response) {
 
-        // set logfile location
-        logFileLocation = req.getParameter("log.file.location");
-        if ((logFileLocation != null) && (-1 < logFileLocation.indexOf(JASPICData.DEFAULT_LOG_FILE))) {
-            // if here, we have logfile location value which contains
-            // JASPICData.DEFAULT_LOG_FILE
-            debug("logFileLocation already set");
-        } else if (logFileLocation != null) {
-            debug("logFileLocation NOT set completely");
-            System.setProperty("log.file.location", logFileLocation);
-        } else {
-            debug("ModTestServlet: logFileLocation null");
-        }
-        debug("logFileLocation = " + logFileLocation);
-
-        // set provider config file
         providerConfigFileLocation = req.getParameter("provider.configuration.file");
         debug("TS Provider ConfigFile = " + providerConfigFileLocation);
         if (providerConfigFileLocation == null) {
@@ -137,8 +121,6 @@ public class ModTestServlet extends HttpServlet {
         testMethod = req.getParameter("method.under.test");
 
         IdUtil.getAppContextId(JASPICData.LAYER_SERVLET);
-
-        return;
     }
 
     /*

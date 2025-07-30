@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,9 +19,7 @@ package ee.jakarta.tck.authentication.test.basic.servlet;
 
 import ee.jakarta.tck.authentication.test.basic.sam.ProviderConfigurationEntry;
 import ee.jakarta.tck.authentication.test.basic.sam.ProviderConfigurationXMLFileProcessor;
-import ee.jakarta.tck.authentication.test.basic.sam.TSFileHandler;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
-import ee.jakarta.tck.authentication.test.common.logging.server.TSXMLFormatter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -91,28 +89,14 @@ public class IdUtil {
     }
 
     private static void initializeTSLogger() {
-        String logFileLocation = null;
         if (logger != null) {
             return;
-        } else {
-            try {
-                logFileLocation = System.getProperty("log.file.location");
-                System.out.println("logFileLocation = " + logFileLocation);
-                if (logFileLocation != null) {
-                    logger = TSLogger.getTSLogger(JASPICData.LOGGER_NAME);
-                    boolean appendMode = true;
-
-                    // create a new file
-                    TSFileHandler fileHandler = new TSFileHandler(logFileLocation + "/" + JASPICData.DEFAULT_LOG_FILE, appendMode);
-                    fileHandler.setFormatter(new TSXMLFormatter());
-                    logger.addHandler(fileHandler);
-                } else {
-                    throw new RuntimeException("log.file.location not set");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("TSLogger Initialization failed", e);
-            }
+        }
+        try {
+            logger = TSLogger.getTSLogger(JASPICData.LOGGER_NAME);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("TSLogger Initialization failed", e);
         }
     }
 }
