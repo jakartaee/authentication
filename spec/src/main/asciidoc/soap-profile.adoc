@@ -91,9 +91,9 @@ for those application contexts for which pluggable authentication
 modules have been configured at the “SOAP” layer.
 
 For each application context for which it is
-servicing requests, the runtime must call getConfigProvider to acquire
+servicing requests, the runtime must call `getConfigProvider` to acquire
 the provider object corresponding to the layer and application context.
-The layer and appContext arguments to getConfigProvider must be as
+The layer and appContext arguments to `getConfigProvider` must be as
 defined in <<a505>> and <<a507>> respectively.
 
 A null return value from `getConfigProvider`
@@ -226,8 +226,8 @@ In either event, the CallbackHandler must also support the requirements in <<a51
 
 ==== AuthConfigProvider Requirements
 
-If a non-null `AuthConfigProvider`is returned
-(by the call to getConfigProvider), the messaging runtime must call
+If a non-null `AuthConfigProvider` is returned
+(by the call to `getConfigProvider`), the messaging runtime must call
 `getClientAuthConfig` on the provider to obtain the authentication context
 configuration object pertaining to the application context at the layer.
 The layer and appContext arguments of the call to getClientAuthConfig
