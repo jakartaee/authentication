@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,44 +19,42 @@ package ee.jakarta.tck.authentication.test.common.logging.client;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.SequenceInputStream;
-import java.net.URL;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- *
- * @author Raja Perumal
- */
+import ee.jakarta.tck.authentication.test.common.TSLogging;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * LogFileProcessor does the following operations
  *
  * 1) Fetches log records from authentication-trace-log.xml
  *
- * 2) Checks for the existance of search string in the log for example to verify whether server log contains a string
+ * 2) Checks for the existence of search string in the log for example to verify whether server log contains a string
  * "Java EE rocks" use the following code
- *
- * LogFileProcessor logProcessor = new LogFileProcessor(properties); boolean contains =
- * logProcessor.verifyLogContains("Java EE rocks");
- *
- * where "properties" contains the following key value pair 1) log.file.location
+ * <code>
+ * LogFileProcessor logProcessor = new LogFileProcessor(...);
+ * boolean contains = logProcessor.verifyLogContains("Jakarta EE rocks");
+ * </code>
  *
  * 3) Prints the collection of log records.
  *
+ * @author Raja Perumal
  */
 public class LogFileProcessor {
 
-    private String logFileLocation;
     private Collection recordCollection;
     private Collection appIdRecordCollection;
     private Collection appSpecificRecordCollection;
@@ -68,24 +67,6 @@ public class LogFileProcessor {
 
     public LogFileProcessor(boolean client) {
         this.client = client;
-        boolean pass = true;
-        try {
-            logFileLocation = System.getProperty("log.file.location");
-            if (logFileLocation == null)
-                pass = false;
-
-            TestUtil.logMsg("log.file.location = " + logFileLocation);
-
-            if (!pass) {
-                TestUtil.logErr("Setup Failed ");
-                TestUtil.logErr("Please verify \"log.file.location\"");
-            }
-            TestUtil.logMsg("Setup ok");
-
-        } catch (Exception e) {
-            TestUtil.logErr("Setup Failed ");
-            TestUtil.logErr("Please verify \"log.file.location\"");
-        }
     }
 
     /**
@@ -93,74 +74,33 @@ public class LogFileProcessor {
      *
      */
     public void fetchLogs() {
-        File logfile = null;
-        URL url = null;
 
         try {
-            String fileName = "authentication-trace-log.xml";
-            if (client) {
-                fileName = "client-authentication-trace-log.xml";
-            }
-
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
-            String strFilePathAndName = "";
-            if (logFileLocation.indexOf(fileName) <= 0) {
-                strFilePathAndName = logFileLocation + "/" + fileName;
-            }
-            System.out.println("Log File = " + strFilePathAndName);
-
-            if (strFilePathAndName != null)
-                logfile = new File(strFilePathAndName);
-
-            if (!logfile.exists()) {
-                String header = "Log file does not exists";
-                // ostream.writeObject(header);
-
-                System.out.println("Log File : " + logfile.getName() + " does not exists");
+            final File logFile = client ? TSLogging.FILE_TEST : TSLogging.FILE_WEBAPP;
+            if (logFile == null || !logFile.exists()) {
                 System.out.println("Check permissions for log file ");
                 System.out.println("See User guide for Configuring log file permissions");
-            } else {
-                // LogRecords will be added to authentication-trace-log.xml as long as the server is
-                // up and running. Since authentication-trace-log.xml is continuously updated with
-                // more record there will not be any end tag </log> at the end of the
-                // log file.
-                //
-                // This will cause the SAXParser to throw fatal error message
-                // "XML Document structures must start and end with the
-                // same entity"
-                //
-                // In order to avoid this error message the FileInputStream
-                // should have the end tag </log>, this can be achieved by
-                // creating a SequenceInputStream which includes a
-                // FileInputStream and a ByteArrayInputStream, where the
-                // ByteArrayInputStream contains the bytes for </log>
-                //
-                String endLogTag = "</log>";
-                ByteArrayInputStream bais = new ByteArrayInputStream(endLogTag.getBytes());
-                SequenceInputStream sis = new SequenceInputStream(new FileInputStream(strFilePathAndName), bais);
-
-                Document document = documentBuilder.parse(sis);
-                Element rootElement = document.getDocumentElement();
-                NodeList nodes = rootElement.getChildNodes();
-
-                String queryString = "pullAllRecords";
-                String queryParams = "fullLog";
-
-                if (queryString.equals("pullAllRecords")) {
-                    recordCollection = pullAllLogRecords(queryParams, nodes);
-                    // printCollection(recordCollection);
-                }
-
+                throw new Error("Log File " + logFile + " not set or does not exist");
             }
-
+            // Sometimes we parse unfinished log files
+            String content = Files.readString(logFile.toPath(), UTF_8).trim();
+            String endLogTag = "</log>";
+            if (!content.endsWith(endLogTag)) {
+                content += endLogTag;
+            }
+            final NodeList nodes;
+            try (ByteArrayInputStream input = new ByteArrayInputStream(content.getBytes(UTF_8))) {
+                Document document = documentBuilder.parse(input);
+                Element rootElement = document.getDocumentElement();
+                nodes = rootElement.getChildNodes();
+            }
+            recordCollection = pullAllLogRecords("fullLog", nodes);
         } catch (Exception e) {
-            TestUtil.logErr(e.getMessage());
-            TestUtil.printStackTrace(e);
-            e.printStackTrace();
+            throw new Error("Error in fetchLogs()", e);
         }
-
     }
 
     /**
@@ -211,12 +151,10 @@ public class LogFileProcessor {
 
     /**
      * Checks for the existance of search string in the log. For example to verify whether server log contains a string
-     * "Java EE rocks" use the following code
+     * "Jakarta EE rocks" use the following code
      *
-     * LogProcessor logProcessor = new LogProcessor(properties); boolean contains = logProcessor.verifyLogContains("Java EE
-     * rocks");
-     *
-     * where "properties" contains the key value pair for 1) log.file.location
+     * LogFileProcessor logProcessor = new LogFileProcessor(...);
+     * boolean contains = logProcessor.verifyLogContains("Jakarta EE rocks");
      */
     public boolean verifyLogContains(String... args) {
         return verifyLogContains(false, args);
@@ -226,10 +164,8 @@ public class LogFileProcessor {
      * Checks for the existance of search string in the log. For example to verify whether server log contains a string
      * "Java EE rocks" use the following code
      *
-     * LogProcessor logProcessor = new LogProcessor(properties); boolean contains = logProcessor.verifyLogContains("Java EE
-     * rocks");
-     *
-     * where "properties" contains the key value pair for 1) log.file.location
+     * LogFileProcessor logProcessor = new LogFileProcessor(...);
+     * boolean contains = logProcessor.verifyLogContains("Jakarta EE rocks");
      */
     public boolean verifyLogContains(boolean validateOrder, String... args) {
         LogRecordEntry recordEntry = null;
@@ -293,8 +229,9 @@ public class LogFileProcessor {
                 }
                 // Return true if, we found matches for all strings
                 // in the given string array
-                if (numberOfMatches == numberOfArgs)
+                if (numberOfMatches == numberOfArgs) {
                     return true;
+                }
             }
 
             // if here, our non-order-specific search did not find all matches...
@@ -368,12 +305,10 @@ public class LogFileProcessor {
      *
      * For example to verify whether server log contains one of the following String String[] arr ={"aaa", "bbb", "ccc"};
      *
-     * LogProcessor logProcessor = new LogProcessor(properties); boolean contains =
+     * LogFileProcessor logProcessor = new LogFileProcessor(...); boolean contains =
      * logProcessor.verifyLogContainsOneOf(arr);
      *
      * This method will return true if the log file contains one of the specified String (say "aaa" )
-     *
-     * where "properties" contains the key value pair for 1) log.file.location
      */
     public boolean verifyLogContainsOneOf(String args[]) {
         LogRecordEntry recordEntry = null;
@@ -432,15 +367,13 @@ public class LogFileProcessor {
      *
      * String[] arr ={"aaa", "bbb", "ccc"}; String srchStrPrefix ="appContextId";
      *
-     * LogProcessor logProcessor = new LogProcessor(properties); boolean contains =
-     * logProcessor.verifyLogContainsOneOf(arr);
+     * LogFileProcessor logProcessor = new LogFileProcessor(...);
+     * boolean contains = logProcessor.verifyLogContainsOneOf(arr);
      *
      * "appContextId= xxxx aaa yyyyyyyyyyyyyyyyy" "appContextId= yyyy bbb xxxxxxxxxxxxxxxxx"
      *
      * This method will return true if the log file contains one of the specified String (say "aaa" ) in the message log
      * with "appContextId" as its message prefix.
-     *
-     * where "properties" contains the key value pair for 1) log.file.location
      */
     public boolean verifyLogContainsOneOfSubString(String args[], String srchStrPrefix) {
         LogRecordEntry recordEntry = null;
@@ -505,14 +438,18 @@ public class LogFileProcessor {
         TestUtil.logMsg("Milli Seconds  =" + rec.getMilliSeconds());
         TestUtil.logMsg("Seqence no  =" + rec.getSequenceNumber());
         TestUtil.logMsg("Message     =" + rec.getMessage());
-        if (rec.getClassName() != null)
+        if (rec.getClassName() != null) {
             TestUtil.logMsg("Class name  =" + rec.getClassName());
-        if (rec.getMethodName() != null)
+        }
+        if (rec.getMethodName() != null) {
             TestUtil.logMsg("Method name =" + rec.getMethodName());
-        if (rec.getLevel() != null)
+        }
+        if (rec.getLevel() != null) {
             TestUtil.logMsg("Level        =" + rec.getLevel());
-        if (rec.getThrown() != null)
+        }
+        if (rec.getThrown() != null) {
             TestUtil.logMsg("Thrown       =" + rec.getThrown());
+        }
         TestUtil.logMsg("");
     }
 
@@ -525,16 +462,18 @@ public class LogFileProcessor {
         strtok = new StringTokenizer(ContextId, DELIMETER);
         if (ContextId.indexOf(DELIMETER) > 0) {
             qstring = strtok.nextToken();
-            if (strtok.hasMoreTokens())
+            if (strtok.hasMoreTokens()) {
                 qparams = strtok.nextToken();
+            }
         }
 
         // return query string or query params based on the content
         // of the string str
-        if (str.equals("LogQueryString"))
+        if (str.equals("LogQueryString")) {
             return qstring;
-        else
+        } else {
             return qparams;
+        }
     }
 
     // This method tokenize the given string and

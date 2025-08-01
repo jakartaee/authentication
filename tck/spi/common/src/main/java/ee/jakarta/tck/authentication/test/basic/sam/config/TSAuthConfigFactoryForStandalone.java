@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,6 @@
 
 package ee.jakarta.tck.authentication.test.basic.sam.config;
 
-import static ee.jakarta.tck.authentication.test.basic.servlet.JASPICData.DEFAULT_LOG_FILE;
 import static ee.jakarta.tck.authentication.test.basic.servlet.JASPICData.LOGGER_NAME;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -25,9 +24,7 @@ import static java.util.logging.Level.SEVERE;
 import ee.jakarta.tck.authentication.test.basic.sam.ProviderConfigurationEntry;
 import ee.jakarta.tck.authentication.test.basic.sam.ProviderConfigurationXMLFileProcessor;
 import ee.jakarta.tck.authentication.test.basic.sam.TSAuthConfigProviderServlet;
-import ee.jakarta.tck.authentication.test.basic.sam.TSFileHandler;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
-import ee.jakarta.tck.authentication.test.common.logging.server.TSXMLFormatter;
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.config.AuthConfigFactory;
 import jakarta.security.auth.message.config.AuthConfigProvider;
@@ -181,7 +178,7 @@ public class TSAuthConfigFactoryForStandalone extends AuthConfigFactory {
         logger.log(INFO, "getConfigProvider called for Layer : " + layer + " and AppContext :" + appContext);
 
         if (authConfigProviderMap != null) {
-            localAuthConfigProvider = (AuthConfigProvider) authConfigProviderMap.get(layer + appContext);
+            localAuthConfigProvider = authConfigProviderMap.get(layer + appContext);
 
             // register the listener for AuthConfigProvider
             if ((listener != null) && (localAuthConfigProvider != null)) {
@@ -376,7 +373,7 @@ public class TSAuthConfigFactoryForStandalone extends AuthConfigFactory {
 
             RegistrationContext previousRegistrationContext = null;
             AuthConfigProvider previousAuthConfigProvider = null;
-            previousAuthConfigProvider = (AuthConfigProvider) authConfigProviderMap.get(layer + appContext);
+            previousAuthConfigProvider = authConfigProviderMap.get(layer + appContext);
             previousRegistrationContext = (RegistrationContext) registrationContextMap.get(layer + appContext);
 
             if (previousAuthConfigProvider == null) {
@@ -454,7 +451,7 @@ public class TSAuthConfigFactoryForStandalone extends AuthConfigFactory {
         try {
             RegistrationContext previousRC = null;
             AuthConfigProvider previousACP = null;
-            previousACP = (AuthConfigProvider) authConfigProviderMap.get(layer + appContext);
+            previousACP = authConfigProviderMap.get(layer + appContext);
             previousRC = (RegistrationContext) registrationContextMap.get(layer + appContext);
 
             if (previousACP == null) {
@@ -548,31 +545,16 @@ public class TSAuthConfigFactoryForStandalone extends AuthConfigFactory {
     }
 
     private static void initializeTSLogger() {
-        String logFileLocation = null;
         if (logger != null) {
             return;
         }
 
         try {
-            logFileLocation = System.getProperty("log.file.location");
-            System.out.println("logFileLocation = " + logFileLocation);
-            if (logFileLocation == null) {
-                throw new RuntimeException("log.file.location not set");
-            }
-
             logger = TSLogger.getTSLogger(LOGGER_NAME);
-            boolean appendMode = true;
-
-            // Create a new file
-            TSFileHandler fileHandler = new TSFileHandler(logFileLocation + "/" + DEFAULT_LOG_FILE, appendMode);
-            fileHandler.setFormatter(new TSXMLFormatter());
-            logger.addHandler(fileHandler);
-
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("TSLogger Initialization failed", e);
         }
-
     }
 
     private static class RegistrationContextImpl implements RegistrationContext {

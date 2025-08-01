@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,146 +15,47 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/**
- * $Id$
- *
- * @author Raja Perumal
- *         07/13/02
- */
-
 package ee.jakarta.tck.authentication.test.common.logging.server;
 
-import static java.util.logging.Level.SEVERE;
-
 import java.io.File;
-import java.util.logging.FileHandler;
-import java.util.logging.Filter;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import ee.jakarta.tck.authentication.test.common.TSLogging;
+
+
 /**
  * TSLogger is the custom Logger which extends java.util.Logger
  *
+ * @author Raja Perumal 07/13/02
+ * @author David Matejcek 2025
  **/
 public class TSLogger extends Logger {
 
-    private int levelValue = Level.INFO.intValue();
-    private int offValue = Level.OFF.intValue();
-    private Filter filter;
+    private static final String DEFAULT_LOGGER_NAME = "jacc";
+    private static final LogManager LOG_MANAGER = LogManager.getLogManager();
+    private static final Map<String, TSLogger> LOGGERS = new HashMap<>();
+    private static final Map<File, TSFileHandler> HANDLERS = new HashMap<>();
 
-    // Note : The logger instance should not be
-    // stored in this instance variable,
-    // it should be kept at the log Manager using
-    //
-    // LogManager.addLogger(TSlogger);
-    //
-    // and it can be retrieved using
-    //
-    // LogManager.getLogger(name);
-    //
-    // Since Logger and TSLogger are of different types
-    // we cannot use the above logic and hence we have
-    // no choice except to store it here.
-    //
-    private static TSLogger tsLogger = null;
-    public static TSLogger logger;
+    private final TSFileHandler handler;
 
-    private static FileHandler fileHandler;
-
-    protected TSLogger(String name) {
+    private TSLogger(String name, boolean testSide) {
         super(name, null);
-        levelValue = Level.INFO.intValue();
-    }
-
-    public static TSLogger getTSLogger() {
-        initializeTSLogger();
-        return logger;
-    }
-
-    public static void initializeTSLogger() {
-        if (logger != null) {
+        setLevel(Level.INFO);
+        File file = testSide ? TSLogging.FILE_TEST : TSLogging.FILE_WEBAPP;
+        if (file == null) {
+            handler = null;
             return;
         }
-
-        try {
-            String logFileLocation = System.getProperty("log.file.location");
-            if (logFileLocation != null) {
-                logger = TSLogger.getTSLogger("jacc");
-                boolean appendMode = true;
-
-                String fileName = "/authentication-trace-log.xml";
-
-                // Clean the content of authentication-trace-log.xml if it exists
-                File file = new File(logFileLocation + "/authentication-trace-log.xml");
-                if (file.exists()) {
-                    System.out.println("XXXX:  in initializeTSLogger() - authentication-trace-log.xml exists");
-                    // Delete the file, if it exists
-                    // file.delete();
-                    fileName = "/client-authentication-trace-log.xml";
-                }
-
-                File fileLock = new File(logFileLocation + "/authentication-trace-log.xml.lck");
-                if (fileLock.exists()) {
-                    System.out.println("XXXX:  in initializeTSLogger() - authentication-trace-log.xml.lck exists");
-                    // Delete the file, if it exists
-                    // fileLock.delete();
-                }
-
-                // Create a new file
-                System.out.println("XXXX:  in initializeTSLogger() - about to create authentication-trace-log.xml");
-                fileHandler = new FileHandler(logFileLocation + fileName, appendMode);
-                fileHandler.setFormatter(new TSXMLFormatter());
-                logger.addHandler(fileHandler);
-                setTSLogger(logger);
-            } else {
-                // use default logging mechanism
-                logger = TSLogger.getTSLogger("jacc");
-                setTSLogger(logger);
-                logger.log(SEVERE, "log.file.location not set: Using default logger");
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("TSLogger Initialization failed", e);
-        }
-    }
-
-    public static void setTSLogger(TSLogger lgr) {
-        logger = lgr;
-    }
-
-    public static void close() {
-        // fileHandler.close();
-    }
-
-
-    /**
-     * Find or create a logger for a named subsystem. If a logger has already been created with the given name it is
-     * returned. Otherwise a new logger is created.
-     * <p>
-     * If a new logger is created its log level will be configured based on the LogManager configuration and it will
-     * configured to also send logging output to its parent's handlers. It will be registered in the LogManager global
-     * namespace.
-     *
-     * @param name A name for the logger. This should be a dot-separated name and should normally be based on the package
-     * name or class name of the subsystem, such as java.net or javax.swing
-     * @return a suitable Logger
-     */
-    public static synchronized TSLogger getTSLogger(String name) {
-        TSLogger result = null;
-
-        LogManager manager = LogManager.getLogManager();
-
-        if (tsLogger != null) {
-            if (tsLogger.getName().equals(name)) {
-                result = tsLogger;
-            }
-        } else {
-            result = new TSLogger(name);
-            manager.addLogger(result);
-        }
-
-        return result;
+        handler = HANDLERS.computeIfAbsent(file, TSLogger::createFileHandler);
+        addHandler(handler);
     }
 
     /**
@@ -185,7 +86,7 @@ public class TSLogger extends Logger {
      * @param contextId the logging context Id
      */
     public void log(Level level, String msg, String contextId) {
-        if (level.intValue() < levelValue || levelValue == offValue) {
+        if (!isLoggable(level)) {
             return;
         }
 
@@ -214,45 +115,90 @@ public class TSLogger extends Logger {
      * @param record the TSLogRecord to be published
      */
     public void log(TSLogRecord record) {
-        if (record.getLevel().intValue() < levelValue || levelValue == offValue) {
+        if (!isLoggable(record.getLevel())) {
             return;
-        }
-
-        synchronized (this) {
-            if (filter != null && !filter.isLoggable(record)) {
-                return;
-            }
         }
 
         // Post the LogRecord to all our Handlers, and then to
         // our parents' handlers, all the way up the tree.
-
         TSLogger logger = this;
         while (logger != null) {
             Handler targets[] = logger.getHandlers();
-
             if (targets != null) {
                 for (int i = 0; i < targets.length; i++) {
-                    // targets[i].publish(record);
-
-                    // Publish record only if the
-                    // handler is of type FileHandler
-                    // Do not publish to all parent handler
-                    // Parent handler may not be able to
-                    // Format the TSLogRecord, because
-                    // TSLogRecord is the custom record.
-                    if (targets[i] instanceof FileHandler) {
-                        targets[i].publish(record);
-                    }
+                     targets[i].publish(record);
                 }
             }
-
             if (!logger.getUseParentHandlers()) {
                 break;
             }
-
             logger = null;
         }
     }
 
+    /**
+     * Closes and unregisters the handler.
+     * Despite we share handlers between loggers, webapp and test loggers usually stop all at the same time.
+     */
+    public synchronized void stop() {
+        LOGGERS.remove(getName());
+        if (handler == null) {
+            return;
+        }
+        removeHandler(handler);
+        HANDLERS.remove(handler.getFile());
+        handler.close();
+    }
+
+    public static synchronized TSLogger getTSLogger() {
+        return getTSLogger(DEFAULT_LOGGER_NAME);
+    }
+
+    /**
+     * Find or create a logger for a named subsystem. If a logger has already been created with the given name it is
+     * returned. Otherwise a new logger is created.
+     * <p>
+     * If a new logger is created its log level will be configured based on the LogManager configuration and it will
+     * configured to also send logging output to its parent's handlers. It will be registered in the LogManager global
+     * namespace.
+     *
+     * @param name A name for the logger. This should be a dot-separated name and should normally be based on the package
+     * name or class name of the subsystem, such as java.net or javax.swing
+     * @return a suitable Logger
+     */
+    public static synchronized TSLogger getTSLogger(String name) {
+        final TSLogger logger = LOGGERS.get(name);
+        if (logger != null) {
+            return logger;
+        }
+        final Logger logger2 = LOG_MANAGER.getLogger(name);
+        if (logger2 != null) {
+            throw new IllegalStateException("Found logger " + logger2 + " with name " + name
+                + " but is was not created by TSLogger. Returning null.");
+        }
+        final TSLogger newlogger = new TSLogger(name, TSLogging.IS_TEST_SIDE);
+        LOGGERS.put(name, newlogger);
+        LogManager.getLogManager().addLogger(newlogger);
+        return newlogger;
+    }
+
+    /**
+     * Closes all TSLoggers and their handlers.
+     */
+    public static synchronized void closeAll() {
+        Set<TSLogger> values = new HashSet<>(LOGGERS.values());
+        for (TSLogger logger : values) {
+            logger.stop();
+        }
+        LOGGERS.clear();
+        HANDLERS.clear();
+    }
+
+    private static TSFileHandler createFileHandler(File file) {
+        try {
+            return new TSFileHandler(file);
+        } catch (IOException e) {
+            throw new RuntimeException("FileHandler initialization failed", e);
+        }
+    }
 }

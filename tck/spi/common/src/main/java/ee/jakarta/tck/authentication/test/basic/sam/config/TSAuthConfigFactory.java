@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,10 +23,7 @@ import static java.util.logging.Level.SEVERE;
 import ee.jakarta.tck.authentication.test.basic.sam.ProviderConfigurationEntry;
 import ee.jakarta.tck.authentication.test.basic.sam.ProviderConfigurationXMLFileProcessor;
 import ee.jakarta.tck.authentication.test.basic.sam.TSAuthConfigProviderServlet;
-import ee.jakarta.tck.authentication.test.basic.sam.TSFileHandler;
-import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
-import ee.jakarta.tck.authentication.test.common.logging.server.TSXMLFormatter;
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.config.AuthConfigProvider;
 import jakarta.security.auth.message.config.RegistrationListener;
@@ -340,11 +337,13 @@ public class TSAuthConfigFactory extends jakarta.security.auth.message.config.Au
 
         // Hashtable can't store null as key or value so change the
         // appcontextId to be string "null" if the input value is null
-        if (appContext == null)
+        if (appContext == null) {
             appContext = "null";
+        }
 
-        if (layer == null)
+        if (layer == null) {
             layer = "null";
+        }
 
         logger.log(INFO, "registerConfigProvider() called for layer " + layer + " and appContext " + appContext);
         try {
@@ -531,32 +530,6 @@ public class TSAuthConfigFactory extends jakarta.security.auth.message.config.Au
      */
     @Override
     public void refresh() {
-    }
-
-    private static void initializeTSLogger() {
-        String logFileLocation = null;
-        if (logger != null)
-            return;
-        else {
-            try {
-                logFileLocation = System.getProperty("log.file.location");
-                System.out.println("logFileLocation = " + logFileLocation);
-                if (logFileLocation != null) {
-                    logger = TSLogger.getTSLogger(JASPICData.LOGGER_NAME);
-                    boolean appendMode = true;
-
-                    // create a new file
-                    TSFileHandler fileHandler = new TSFileHandler(logFileLocation + "/" + JASPICData.DEFAULT_LOG_FILE, appendMode);
-                    fileHandler.setFormatter(new TSXMLFormatter());
-                    logger.addHandler(fileHandler);
-                } else {
-                    throw new RuntimeException("log.file.location not set");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("TSLogger Initialization failed", e);
-            }
-        }
     }
 
     private String returnString(String[] array) {

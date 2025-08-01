@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to Eclipse Foundation.
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,7 +43,6 @@ public class ACFTestServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private String logFileLocation;
     private String servletAppContext;
     private String providerConfigFileLocation;
     private String vendorACFClass;
@@ -140,41 +139,15 @@ public class ACFTestServlet extends HttpServlet {
 
     private void getPropsAndParams(HttpServletRequest request, HttpServletResponse response) {
 
-        // set logfile location
-        logFileLocation = System.getProperty("log.file.location");
-        if ((logFileLocation != null) && (-1 < logFileLocation.indexOf(JASPICData.DEFAULT_LOG_FILE))) {
-            // if here, we have logfile location value which contains
-            // JASPICData.DEFAULT_LOG_FILE
-            debug("logFileLocation already set");
-        } else {
-            debug("logFileLocation NOT set completely");
-            System.setProperty("log.file.location", logFileLocation);
-        }
-        debug("logFileLocation = " + logFileLocation);
-
-        // set provider config file
         providerConfigFileLocation = System.getProperty("provider.configuration.file");
         debug("TS Provider ConfigFile = " + providerConfigFileLocation);
-        if (providerConfigFileLocation == null) {
-            debug("ERROR:  getPropsAndParams(): providerConfigFileLocation = null");
-        } else {
-            debug("getPropsAndParams(): providerConfigFileLocation = " + providerConfigFileLocation);
-        }
 
-        // set testMethod
         testMethod = request.getParameter("method.under.test");
 
-        // set vendor class
         vendorACFClass = System.getProperty("vendor.authconfig.factory");
-        if (vendorACFClass == null) {
-            debug("ERROR:  getPropsAndParams(): vendorACFClass = null");
-        } else {
-            debug("getPropsAndParams(): vendorACFClass = " + vendorACFClass);
-        }
+        debug("getPropsAndParams(): vendorACFClass = " + vendorACFClass);
 
         servletAppContext = IdUtil.getAppContextId(JASPICData.LAYER_SERVLET);
-
-        return;
     }
 
     /*
@@ -311,7 +284,7 @@ public class ACFTestServlet extends HttpServlet {
         PrintWriter out = null;
         try {
             out = response.getWriter();
-            commonTests._ACFRegisterOnlyOneACP(logFileLocation, providerConfigFileLocation, vendorACFClass, true);
+            commonTests._ACFRegisterOnlyOneACP(providerConfigFileLocation, vendorACFClass, true);
             out.println("ACFTestServlet->ACFPersistentRegisterOnlyOneACP() passed");
             out.flush();
         } catch (Exception ex) {
@@ -324,7 +297,7 @@ public class ACFTestServlet extends HttpServlet {
         PrintWriter out = null;
         try {
             out = response.getWriter();
-            commonTests._ACFRegisterOnlyOneACP(logFileLocation, providerConfigFileLocation, vendorACFClass, false);
+            commonTests._ACFRegisterOnlyOneACP(providerConfigFileLocation, vendorACFClass, false);
             out.println("ACFTestServlet->ACFInMemoryRegisterOnlyOneACP() passed");
             out.flush();
         } catch (Exception ex) {
@@ -337,7 +310,7 @@ public class ACFTestServlet extends HttpServlet {
         PrintWriter out = null;
         try {
             out = response.getWriter();
-            commonTests._ACFUnregisterACP(logFileLocation, providerConfigFileLocation, vendorACFClass);
+            commonTests._ACFUnregisterACP(providerConfigFileLocation, vendorACFClass);
             out.println("ACFTestServlet->ACFUnregisterACP() passed");
             out.flush();
         } catch (Exception ex) {
@@ -364,7 +337,7 @@ public class ACFTestServlet extends HttpServlet {
     }
 
     /**
-     * 1. Get System properties log.file.location, provider.configuration.file and vendor.authconfig.factory
+     * 1. Get System properties provider.configuration.file and vendor.authconfig.factory
      *
      * 2. Use the system properties to read the TestSuite providers defined in ProviderConfigruation.xml file and register
      * them with vendor's authconfig factory.
@@ -374,7 +347,7 @@ public class ACFTestServlet extends HttpServlet {
         PrintWriter out = null;
         try {
             out = response.getWriter();
-            AuthConfigFactory registerACF = CommonUtils.register(logFileLocation, providerConfigFileLocation, vendorACFClass);
+            AuthConfigFactory registerACF = CommonUtils.register(providerConfigFileLocation, vendorACFClass);
 
             if (registerACF != null) {
                 out.println("ACFTestServlet->AuthConfigFactoryRegistration() passed");
@@ -470,7 +443,7 @@ public class ACFTestServlet extends HttpServlet {
 
     /**
      *
-     * 1. Get System properties log.file.location, provider.configuration.file and vendor.authconfig.factory
+     * 1. Get System properties provider.configuration.file and vendor.authconfig.factory
      *
      * 2. Use the system properties to read the TestSuite providers defined in ProviderConfigruation.xml file and register
      * them with vendor's authconfig factory.
@@ -489,7 +462,7 @@ public class ACFTestServlet extends HttpServlet {
             out = response.getWriter();
 
             // register providers in vendor factory
-            AuthConfigFactory registeredACF = CommonUtils.register(logFileLocation, providerConfigFileLocation, vendorACFClass);
+            AuthConfigFactory registeredACF = CommonUtils.register(providerConfigFileLocation, vendorACFClass);
             if (registeredACF == null) {
                 out.println("getRegistrationContextId failed");
             }
@@ -545,7 +518,7 @@ public class ACFTestServlet extends HttpServlet {
 
     /**
      *
-     * 1. Get System properties log.file.location, provider.configuration.file and vendor.authconfig.factory
+     * 1. Get System properties provider.configuration.file and vendor.authconfig.factory
      *
      * 2. Load vendor's AuthConfigFactory and make sure the registered providers return properly for the right message layer
      * and appContextId
@@ -562,7 +535,7 @@ public class ACFTestServlet extends HttpServlet {
             out = response.getWriter();
 
             // Register providers in vendor factory
-            AuthConfigFactory registerACF = CommonUtils.register(logFileLocation, providerConfigFileLocation, vendorACFClass);
+            AuthConfigFactory registerACF = CommonUtils.register(providerConfigFileLocation, vendorACFClass);
             if (registerACF != null) {
                 out.println("AuthConfigFactoryVerifyPersistence failed");
             }

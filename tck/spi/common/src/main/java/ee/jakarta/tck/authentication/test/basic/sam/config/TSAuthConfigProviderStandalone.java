@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to Eclipse Foundation.
  * Copyright (c) 2007, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,10 +19,8 @@ package ee.jakarta.tck.authentication.test.basic.sam.config;
 
 import static java.util.logging.Level.INFO;
 
-import ee.jakarta.tck.authentication.test.basic.sam.TSFileHandler;
 import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
-import ee.jakarta.tck.authentication.test.common.logging.server.TSXMLFormatter;
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.config.AuthConfigFactory;
 import jakarta.security.auth.message.config.ClientAuthConfig;
@@ -81,10 +79,10 @@ public class TSAuthConfigProviderStandalone implements jakarta.security.auth.mes
             factory.registerConfigProvider(this, null, null, "TSAuthConfigProviderStandalone self registration");
         }
 
-        if (tsLogger != null) {
-            TSAuthConfigProviderStandalone.logger = tsLogger;
-        } else {
+        if (tsLogger == null) {
             initializeTSLogger();
+        } else {
+            TSAuthConfigProviderStandalone.logger = tsLogger;
         }
 
         if (description != null) {
@@ -221,24 +219,11 @@ public class TSAuthConfigProviderStandalone implements jakarta.security.auth.mes
     }
 
     private static void initializeTSLogger() {
-        String logFileLocation = null;
         if (logger != null) {
             return;
         }
-
         try {
-            logFileLocation = System.getProperty("log.file.location");
-            if (logFileLocation != null) {
-                logger = TSLogger.getTSLogger(JASPICData.LOGGER_NAME);
-                boolean appendMode = true;
-
-                // if log file already exists, just append to it
-                TSFileHandler fileHandler = new TSFileHandler(logFileLocation + "/" + JASPICData.DEFAULT_LOG_FILE, appendMode);
-                fileHandler.setFormatter(new TSXMLFormatter());
-                logger.addHandler(fileHandler);
-            } else {
-                throw new RuntimeException("log.file.location not set");
-            }
+            logger = TSLogger.getTSLogger(JASPICData.LOGGER_NAME);
         } catch (Exception e) {
             throw new RuntimeException("TSLogger Initialization failed", e);
         }

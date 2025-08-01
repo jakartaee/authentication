@@ -12,6 +12,8 @@ import ee.jakarta.tck.authentication.test.basic.sam.config.TSAuthConfigFactoryFo
 import ee.jakarta.tck.authentication.test.basic.sam.config.TSRegistrationListener;
 import ee.jakarta.tck.authentication.test.basic.servlet.CommonTests;
 import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
+import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
+
 import jakarta.security.auth.message.config.AuthConfigFactory;
 import jakarta.security.auth.message.config.AuthConfigProvider;
 import jakarta.security.auth.message.config.RegistrationListener;
@@ -19,6 +21,8 @@ import java.security.Security;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
+
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +30,6 @@ public class SoapUnitTest {
 
     Logger logger = Logger.getLogger(SoapUnitTest.class.getName());
 
-    private String logFileLocation = System.getProperty("log.file.location");
     private String providerConfigFileLocation = System.getProperty("provider.configuration.file");
     private String vendorACFClass = System.getProperty("vendor.authconfig.factory");
     private String soapAppContext = "localhost /Hello_web/Hello";
@@ -41,6 +44,12 @@ public class SoapUnitTest {
     public void setup() {
         AuthConfigFactory.setFactory(null);
         Security.setProperty(DEFAULT_FACTORY_SECURITY_PROPERTY, TSSV_ACF);
+    }
+
+
+    @AfterClass
+    public static void closeHandlers() {
+        TSLogger.closeAll();
     }
 
     /**
@@ -142,7 +151,7 @@ public class SoapUnitTest {
     public void ACFPersistentRegisterOnlyOneACP() {
         boolean passed = false;
         try {
-            commonTests._ACFRegisterOnlyOneACP(logFileLocation, providerConfigFileLocation, vendorACFClass, true);
+            commonTests._ACFRegisterOnlyOneACP(providerConfigFileLocation, vendorACFClass, true);
             passed = true;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -171,7 +180,7 @@ public class SoapUnitTest {
     public void ACFInMemoryRegisterOnlyOneACP() {
         boolean passed = false;
         try {
-            commonTests._ACFRegisterOnlyOneACP(logFileLocation, providerConfigFileLocation, vendorACFClass, false);
+            commonTests._ACFRegisterOnlyOneACP(providerConfigFileLocation, vendorACFClass, false);
             passed = true;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -199,7 +208,7 @@ public class SoapUnitTest {
     public void ACFUnregisterACP() {
         boolean passed = false;
         try {
-            commonTests._ACFUnregisterACP(logFileLocation, providerConfigFileLocation, vendorACFClass);
+            commonTests._ACFUnregisterACP(providerConfigFileLocation, vendorACFClass);
             passed = true;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -245,7 +254,7 @@ public class SoapUnitTest {
      *
      * @assertion_ids: JASPIC:JAVADOC:77
      *
-     * @test_Strategy: 1. Get System properties log.file.location, provider.configuration.file and vendor.authconfig.factory
+     * @test_Strategy: 1. Get System properties provider.configuration.file and vendor.authconfig.factory
      *
      * 2. Use the system properties to read the TestSuite providers defined in ProviderConfigruation.xml file and register
      * them with vendor's authconfig factory.
@@ -261,7 +270,7 @@ public class SoapUnitTest {
         String appContext = "localhost /Hello_web/Hello";
 
         // register providers in vendor factory
-        assertTrue(register(logFileLocation, providerConfigFileLocation, vendorACFClass));
+        assertTrue(register(providerConfigFileLocation, vendorACFClass));
 
         // verify we can access a given provider (any provider) appcontext id
         boolean bVerified = false;
@@ -320,7 +329,7 @@ public class SoapUnitTest {
      *
      * @assertion_ids: JASPIC:JAVADOC:80
      *
-     * @test_Strategy: 1. Get System properties log.file.location, provider.configuration.file and vendor.authconfig.factory
+     * @test_Strategy: 1. Get System properties provider.configuration.file and vendor.authconfig.factory
      *
      * 2. Use the system properties to read the TestSuite providers defined in ProviderConfigruation.xml file and register
      * them with vendor's authconfig factory.
@@ -332,11 +341,10 @@ public class SoapUnitTest {
      */
     @Test
     public void AuthConfigFactoryRegistration() {
-        assertTrue(
-            register(logFileLocation, providerConfigFileLocation, vendorACFClass));
+        assertTrue(register(providerConfigFileLocation, vendorACFClass));
     }
 
-    public boolean register(String logFileLocation, String providerConfigFileLocation, String vendorACFClass) {
+    public boolean register(String providerConfigFileLocation, String vendorACFClass) {
         try {
             printVerticalIndent();
 
@@ -414,7 +422,7 @@ public class SoapUnitTest {
      *
      * @assertion_ids: JASPIC:JAVADOC:75
      *
-     * @test_Strategy: 1. Get System properties log.file.location, provider.configuration.file and vendor.authconfig.factory
+     * @test_Strategy: 1. Get System properties provider.configuration.file and vendor.authconfig.factory
      *
      * 2. Load vendor's AuthConfigFactory and make sure the registered providers return properly for the right message layer
      * and appContextId
@@ -430,7 +438,7 @@ public class SoapUnitTest {
         try {
 
             // register providers in vendor factory
-            assertTrue(register(logFileLocation, providerConfigFileLocation, vendorACFClass));
+            assertTrue(register(providerConfigFileLocation, vendorACFClass));
 
             // Get system default AuthConfigFactory
             AuthConfigFactory acf = AuthConfigFactory.getFactory();
