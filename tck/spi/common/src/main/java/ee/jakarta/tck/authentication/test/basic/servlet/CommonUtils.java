@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to Eclipse Foundation.
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,7 +40,7 @@ public class CommonUtils implements Serializable {
 
     }
 
-    public static AuthConfigFactory register(String logFileLocation, String providerConfigurationFileLocation, String vendorAuthConfigFactoryClass) {
+    public static AuthConfigFactory register(String providerConfigurationFileLocation, String vendorAuthConfigFactoryClass) {
 
         AuthConfigFactory acf = null;
         try {
