@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2024, 2025 Contributors to Eclipse Foundation.
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -411,16 +411,14 @@ public class CommonTests {
      * assertions of: JASPIC:SPEC:340 and JASPIC:SPEC:343 - unregister our CTS provider - restore CTS default ACF
      *
      */
-    public void _ACFRegisterOnlyOneACP(String logFileLocation, String providerConfigFilePath, String vendorAuthConfigFactoryClass,
-            boolean usePersistRegistration) throws Exception {
-
+    public void _ACFRegisterOnlyOneACP(String providerConfigFilePath, String vendorAuthConfigFactoryClass,
+        boolean usePersistRegistration) throws Exception {
         // (persistently) register providers in vendor factory
-        printIt("CommonTests._ACFRegisterOnlyOneACP(): logFileLocation = " + logFileLocation);
         printIt("CommonTests._ACFRegisterOnlyOneACP(): providerConfigFilePath = " + providerConfigFilePath);
         printIt("CommonTests._ACFRegisterOnlyOneACP(): vendorACFClass = " + vendorAuthConfigFactoryClass);
 
-        AuthConfigFactory vendorAuthConfigFactory = CommonUtils.register(logFileLocation, providerConfigFilePath,
-                vendorAuthConfigFactoryClass);
+        AuthConfigFactory vendorAuthConfigFactory = CommonUtils.register(providerConfigFilePath,
+            vendorAuthConfigFactoryClass);
         try {
             if (vendorAuthConfigFactory == null) {
                 throw new Exception("Failed trying to register ACPs with vendors AuthConfigFactory");
@@ -549,10 +547,10 @@ public class CommonTests {
      * this tests the ability to unregister a provider. First, it must register a provider, then once registered, the
      * ability to unregister is then tested.
      */
-    public void _ACFUnregisterACP(String logFileLocation, String providerConfigFilePath, String vendorACFClass) throws Exception {
+    public void _ACFUnregisterACP(String providerConfigFilePath, String vendorACFClass) throws Exception {
         try {
             // register providers in vendor factory
-            AuthConfigFactory vendorACF = CommonUtils.register(logFileLocation, providerConfigFilePath, vendorACFClass);
+            AuthConfigFactory vendorACF = CommonUtils.register(providerConfigFilePath, vendorACFClass);
             if (vendorACF == null) {
                 throw new Exception("Failed trying to register ACPs with vendors ACF");
             }
@@ -626,9 +624,7 @@ public class CommonTests {
      * basic registration test to verify we can register the CTS providers within the vendors ACF. (registration is
      * persistent rgistration)
      */
-    public void _AuthConfigFactoryRegistration(String logFileLocation, String providerConfigFilePath, String vendorACFClass)
-            throws Exception {
-
+    public void _AuthConfigFactoryRegistration(String providerConfigFilePath, String vendorACFClass) throws Exception {
         try {
             // get default ACF being used
             AuthConfigFactory defaultACF = AuthConfigFactory.getFactory();
@@ -636,7 +632,7 @@ public class CommonTests {
             printIt("ACFUnregisterACP.defaultACFClass = " + defaultACFClass);
 
             // register providers in vendor factory
-            AuthConfigFactory vendorACF = CommonUtils.register(logFileLocation, providerConfigFilePath, vendorACFClass);
+            AuthConfigFactory vendorACF = CommonUtils.register(providerConfigFilePath, vendorACFClass);
 
             if (vendorACF == null) {
                 throw new Exception("Failed trying to register ACPs with vendors ACF");

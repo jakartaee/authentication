@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,10 +25,14 @@ import ee.jakarta.tck.authentication.test.basic.sam.TSAuthConfigProviderServlet;
 import ee.jakarta.tck.authentication.test.basic.sam.config.TSAuthConfigFactoryForStandalone;
 import ee.jakarta.tck.authentication.test.basic.servlet.IdUtil;
 import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
+import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
+
 import jakarta.security.auth.message.config.AuthConfigFactory;
 import jakarta.security.auth.message.config.AuthConfigProvider;
 import java.util.Collection;
 import java.util.logging.Logger;
+
+import org.junit.AfterClass;
 import org.junit.Test;
 
 /**
@@ -43,6 +47,11 @@ import org.junit.Test;
 public class ServletUnitTest {
 
     Logger logger = Logger.getLogger(ServletUnitTest.class.getName());
+
+    @AfterClass
+    public static void closeHandlers() {
+        TSLogger.closeAll();
+    }
 
     /**
     *
@@ -89,7 +98,7 @@ public class ServletUnitTest {
     *
     * @assertion_ids: JASPIC:JAVADOC:77
     *
-    * @test_Strategy: 1. Get System properties log.file.location, provider.configuration.file and vendor.authconfig.factory
+    * @test_Strategy: 1. Get System properties provider.configuration.file and vendor.authconfig.factory
     *
     * 2. Use the system properties to read the TestSuite providers defined in ProviderConfigruation.xml file and register
     * them with vendor's authconfig factory.
@@ -106,9 +115,8 @@ public class ServletUnitTest {
 
        // register providers in vendor factory
        assertTrue(register(
-               System.getProperty("log.file.location"),
-               System.getProperty("provider.configuration.file"),
-               System.getProperty("vendor.authconfig.factory")));
+           System.getProperty("provider.configuration.file"),
+           System.getProperty("vendor.authconfig.factory")));
 
        // verify we can access a given provider (any provider) appcontext id
        boolean bVerified = false;
@@ -163,7 +171,7 @@ public class ServletUnitTest {
     *
     * @assertion_ids: JASPIC:JAVADOC:75
     *
-    * @test_Strategy: 1. Get System properties log.file.location, provider.configuration.file and vendor.authconfig.factory
+    * @test_Strategy: 1. Get System properties provider.configuration.file and vendor.authconfig.factory
     *
     * 2. Load vendor's AuthConfigFactory and make sure the registered providers return properly for the right message layer
     * and appContextId
@@ -182,9 +190,8 @@ public class ServletUnitTest {
        try {
            // Register providers in vendor factory
            assertTrue(register(
-                   System.getProperty("log.file.location"),
-                   System.getProperty("provider.configuration.file"),
-                   System.getProperty("vendor.authconfig.factory")));
+               System.getProperty("provider.configuration.file"),
+               System.getProperty("vendor.authconfig.factory")));
 
            // Get system default AuthConfigFactory
            AuthConfigFactory acf = AuthConfigFactory.getFactory();
@@ -213,7 +220,7 @@ public class ServletUnitTest {
            verified);
    }
 
-   private boolean register(String logFileLocation, String providerConfigurationFileLocation, String vendorAuthConfigFactoryClass) {
+   private boolean register(String providerConfigurationFileLocation, String vendorAuthConfigFactoryClass) {
        try {
            printVerticalIndent();
 

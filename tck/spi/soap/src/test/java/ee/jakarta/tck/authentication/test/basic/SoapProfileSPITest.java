@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
 package ee.jakarta.tck.authentication.test.basic;
 
 import static ee.jakarta.tck.authentication.test.basic.servlet.JASPICData.TSSV_ACF;
@@ -9,8 +26,9 @@ import ee.jakarta.tck.authentication.test.basic.soap.HelloService;
 import ee.jakarta.tck.authentication.test.common.ArquillianBase;
 import ee.jakarta.tck.authentication.test.common.logging.client.LogFileProcessor;
 import ee.jakarta.tck.authentication.test.common.logging.client.TestUtil;
+import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
+
 import jakarta.servlet.ServletContainerInitializer;
-import java.io.File;
 import java.net.URL;
 import java.security.Security;
 import javax.xml.namespace.QName;
@@ -48,17 +66,6 @@ public class SoapProfileSPITest extends ArquillianBase {
         archive.addAsServiceProvider(ServletContainerInitializer.class, AuthFactoryContainerInitializer.class);
         archive.addAsWebInfResource(resource("soap-web.xml"), "web.xml");
 
-        File file = new File(System.getProperty("log.file.location"), "authentication-trace-log.xml");
-        if (file.exists()) {
-            System.out.println("deleting " + file.toString());
-            file.delete();
-        }
-
-        file = new File(System.getProperty("log.file.location"), "authentication-trace-log.xml.lck");
-        if (file.exists()) {
-            file.delete();
-        }
-
         System.out.println(archive.toString(true));
 
         return archive;
@@ -80,13 +87,12 @@ public class SoapProfileSPITest extends ArquillianBase {
         String text = helloService.getHelloPort().sayHelloProtected("Raja");
         TestUtil.logMsg("Got Output : " + text);
 
-        logProcessor.fetchLogs();
-
         setUpIsDone = true;
     }
 
     @Before
     public void fetchLogs() {
+        TSLogger.closeAll();
         logProcessor.fetchLogs();
         clientLogProcessor.fetchLogs();
     }
