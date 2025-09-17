@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,7 +31,6 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.Map;
 import java.util.logging.Logger;
-import org.htmlunit.DefaultCredentialsProvider;
 import org.htmlunit.DefaultCssErrorHandler;
 import org.htmlunit.FailingHttpStatusCodeException;
 import org.htmlunit.Page;
@@ -43,10 +42,13 @@ import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+
+import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
 
 public class ArquillianBase {
 
@@ -71,7 +73,7 @@ public class ArquillianBase {
         @Override
         protected void starting(Description description) {
             logger.log(INFO, "Running " + description.getMethodName());
-        };
+        }
 
         @Override
         protected void failed(Throwable e, Description description) {
@@ -157,6 +159,12 @@ public class ArquillianBase {
     public void tearDown() {
         webClient.getCookieManager().clearCookies();
         webClient.close();
+    }
+
+
+    @AfterClass
+    public static void closeHandlers() {
+        TSLogger.closeAll();
     }
 
     protected String readFromServerWithCredentials(String path, String username, String password) {
