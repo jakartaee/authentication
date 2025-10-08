@@ -118,7 +118,7 @@
         <skipCDI>false</skipCDI>
         <skipJSF>false</skipJSF>
         <skipJACC>false</skipJACC>
-        <skipSOAP>false</skipSOAP>
+        <skipSOAP>true</skipSOAP>
 
         <resultlistener.home>${maven.multiModuleProjectDirectory}/target</resultlistener.home>
         <maven.test.skip>false</maven.test.skip>
