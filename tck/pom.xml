@@ -378,9 +378,16 @@
                         </goals>
                         <configuration>
                             <classpathScope>runtime</classpathScope>
+                            <!--
+                                ResultPrinter locks the summary file, which fails instead of waiting when
+                                another module in a parallel build (-T) holds the lock in this same JVM.
+                                The interned string is the same object for all modules in the JVM.
+                            -->
                             <source>
                                 System.setProperty("resultlistener.home", "${resultlistener.home}")
-                                org.omnifaces.junit.ResultPrinter.printResult();
+                                synchronized ("org.omnifaces.junit.ResultPrinter".intern()) {
+                                    org.omnifaces.junit.ResultPrinter.printResult();
+                                }
                               </source>
                         </configuration>
                     </execution>
@@ -686,6 +693,147 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+
+        <!-- ### QUARKUS ### -->
+
+        <!--
+            Builds each test deployment into a production Quarkus application and runs it in its own JVM, via the
+            arquillian-quarkus-managed container. Jakarta Authentication is provided by the Epicyro Quarkus extension
+            (quarkus-epicyro), which also brings in Undertow for the Servlet Container Profile.
+        -->
+        <profile>
+            <id>quarkus</id>
+
+            <properties>
+                <quarkus-epicyro.version>3.1.1-SNAPSHOT</quarkus-epicyro.version>
+                <arquillian-quarkus.version>1.0.0</arquillian-quarkus.version>
+                <epicyro.version>3.1.1-SNAPSHOT</epicyro.version>
+                <!-- Jakarta Faces for Quarkus, from Apache MyFaces (for /dispatching-jsf-cdi) -->
+                <myfaces-quarkus.version>4.1.4</myfaces-quarkus.version>
+                <quarkus.log.dir>${project.build.directory}/quarkus-logs</quarkus.log.dir>
+                <!-- Set by the quarkus-native profile -->
+                <quarkus.native-image>false</quarkus.native-image>
+                <quarkus.native-dependencies></quarkus.native-dependencies>
+
+                <skipEJB>true</skipEJB>
+                <skipJACC>true</skipJACC>
+
+                <!-- The API jar Quarkus ships (managed by the Quarkus BOM), used by /authentication-signaturetest -->
+                <sigtest.api.groupId>jakarta.authentication</sigtest.api.groupId>
+                <sigtest.api.artifactId>jakarta.authentication-api</sigtest.api.artifactId>
+                <sigtest.api.version>3.1.0</sigtest.api.version>
+            </properties>
+
+            <dependencies>
+                <!-- The actual Arquillian connector -->
+                <dependency>
+                    <groupId>ee.omnifish.arquillian</groupId>
+                    <artifactId>arquillian-quarkus-managed</artifactId>
+                    <version>${arquillian-quarkus.version}</version>
+                    <scope>test</scope>
+                </dependency>
+
+                <!-- For the unit tests in /spi/ to be able to instantiate vendor AuthConfigFactory -->
+                <dependency>
+                    <groupId>org.glassfish.epicyro</groupId>
+                    <artifactId>epicyro</artifactId>
+                    <version>${epicyro.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <!--
+                                    Extensions the test applications are built with. The properties-file extension
+                                    provides the user store for SAMs that validate credentials with a
+                                    PasswordValidationCallback (j2ee/j2ee in /spi/).
+                                -->
+                                <arquillian.quarkus.dependencies>
+                                    org.glassfish.epicyro:quarkus-epicyro:${quarkus-epicyro.version}
+                                    io.quarkus:quarkus-elytron-security-properties-file
+                                    org.apache.myfaces.core.extensions.quarkus:myfaces-quarkus:${myfaces-quarkus.version}
+                                    ${quarkus.native-dependencies}
+                                </arquillian.quarkus.dependencies>
+
+                                <!-- Quarkus build time configuration for the test applications -->
+                                <arquillian.quarkus.buildProperties>
+                                    quarkus.security.users.embedded.enabled=true
+                                    quarkus.epicyro.virtual-server-name=server
+                                </arquillian.quarkus.buildProperties>
+                                <arquillian.quarkus.nativeImage>${quarkus.native-image}</arquillian.quarkus.nativeImage>
+
+                                <!--
+                                    MyFaces Quarkus only maps the FacesServlet to *.xhtml, while Faces requires
+                                    /faces/*, *.jsf and *.faces as well when the application doesn't map it
+                                    (/dispatching-jsf-cdi forwards to *.jsf). Adds those mappings to web.xml.
+                                -->
+                                <arquillian.quarkus.addFacesServletMappings>true</arquillian.quarkus.addFacesServletMappings>
+
+                                <!--
+                                    The TCK's TSLogger expects LogManager.getLogger(name) to return null for unknown
+                                    loggers, which the JDK LogManager does, but JBoss LogManager (Quarkus' default)
+                                    creates them on demand.
+                                -->
+                                <arquillian.quarkus.useJdkLogManager>true</arquillian.quarkus.useJdkLogManager>
+
+                                <!-- System properties for the server (the application JVM) -->
+                                <arquillian.quarkus.systemProperties>
+                                    quarkus.security.users.embedded.plain-text=true
+                                    quarkus.security.users.embedded.users.j2ee=j2ee
+                                    quarkus.security.users.embedded.roles.j2ee=Administrator
+                                    j2eelogin.name=j2ee
+                                    j2eelogin.password=j2ee
+                                    provider.configuration.file=${maven.multiModuleProjectDirectory}/spi/common/ProviderConfiguration.xml
+                                    vendor.authconfig.factory=org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory
+                                    log.file.location=${quarkus.log.dir}
+                                    log.file.name.webapp=authentication-tck-webapp.log
+                                </arquillian.quarkus.systemProperties>
+
+                                <!-- System properties for the tests -->
+                                <provider.configuration.file>${maven.multiModuleProjectDirectory}/spi/common/ProviderConfiguration.xml</provider.configuration.file>
+                                <vendor.authconfig.factory>org.glassfish.epicyro.config.factory.file.AuthConfigFileFactory</vendor.authconfig.factory>
+                                <log.file.name.test>authentication-tck-test.log</log.file.name.test>
+                                <log.file.name.webapp>authentication-tck-webapp.log</log.file.name.webapp>
+                                <log.file.location>${quarkus.log.dir}</log.file.location>
+
+                                <!--
+                                    The virtual server name (quarkus.epicyro.virtual-server-name above), part of the app
+                                    context ID. spi/common/ProviderConfiguration.xml uses "server" as well.
+                                -->
+                                <logical.hostname.servlet>server</logical.hostname.servlet>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--
+            Use together with the quarkus profile (-Pquarkus,quarkus-native) to build each test deployment into a native
+            executable and run that instead. Needs GraalVM or Mandrel, found via GRAALVM_HOME. Each deployment takes
+            a native build of a minute or more.
+
+            Quarkus deploys servlets while the native image is built, so Servlet listeners and initializers run there.
+            The container passes the system properties to that build as well.
+        -->
+        <profile>
+            <id>quarkus-native</id>
+            <properties>
+                <quarkus.native-image>true</quarkus.native-image>
+                <!--
+                    The SPI tests' AuthConfigProvider also serves the SOAP profile. A native image analyses and
+                    initializes those SOAP classes too, so they need the SOAP API (never used at runtime).
+                -->
+                <quarkus.native-dependencies>jakarta.xml.soap:jakarta.xml.soap-api:3.0.2</quarkus.native-dependencies>
+            </properties>
         </profile>
 
 

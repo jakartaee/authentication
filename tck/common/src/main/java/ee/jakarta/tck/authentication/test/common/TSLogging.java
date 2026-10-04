@@ -24,42 +24,69 @@ import java.io.File;
  * test side.
  * If the system property "log.file.location" is not set, the log file locations will be null and
  * logging for tests will be disabled.
+ * <p>
+ * The system properties are read when used, not when this class is initialized: a native image
+ * (e.g. Quarkus) may initialize classes when the image is built, with the build's system properties.
  */
 public final class TSLogging {
 
-    public static final boolean IS_TEST_SIDE = isTestSide();
-    public static final File DIR;
-    public static final File FILE_WEBAPP;
-    public static final File FILE_TEST;
-
-    static {
-        String dirPath = System.getProperty("log.file.location");
-        if (dirPath == null || dirPath.isEmpty()) {
-            DIR = null;
-            FILE_WEBAPP = null;
-            FILE_TEST = null;
-        } else {
-            DIR = new File(dirPath).getAbsoluteFile();
-            FILE_WEBAPP = new File(DIR, System.getProperty("log.file.name.webapp", "authentication-tck-webapp.log"));
-            FILE_TEST = new File(DIR, System.getProperty("log.file.name.test", "authentication-tck-test.log"));
-        }
-        System.err.println("Log file locations:"
-            + "\n  test side: " + IS_TEST_SIDE
-            + "\n       test: " + FILE_TEST
-            + "\n     webapp: " + FILE_WEBAPP);
-    }
+    private static boolean configurationPrinted;
 
     private TSLogging() {
         // Prevent instantiation
     }
 
-    private static boolean isTestSide() {
+    /**
+     * @return true if running on the test side, false in the web application
+     */
+    public static boolean isTestSide() {
         try {
             // This class should be excluded from war files, but should be available in the test side classpath.
             return Class.forName("ee.jakarta.tck.authentication.test.common.ArquillianBase", false,
                 TSLogging.class.getClassLoader()) != null;
-        } catch (Exception e) {
+        } catch (Exception | LinkageError e) {
             return false;
         }
+    }
+
+    /**
+     * @return the directory of the log files, or null if logging is disabled
+     */
+    public static File getDirectory() {
+        String dirPath = System.getProperty("log.file.location");
+        if (dirPath == null || dirPath.isEmpty()) {
+            return null;
+        }
+        return new File(dirPath).getAbsoluteFile();
+    }
+
+    /**
+     * @return the log file of the web application, or null if logging is disabled
+     */
+    public static File getWebappFile() {
+        File dir = getDirectory();
+        return dir == null ? null : new File(dir, System.getProperty("log.file.name.webapp", "authentication-tck-webapp.log"));
+    }
+
+    /**
+     * @return the log file of the tests, or null if logging is disabled
+     */
+    public static File getTestFile() {
+        File dir = getDirectory();
+        return dir == null ? null : new File(dir, System.getProperty("log.file.name.test", "authentication-tck-test.log"));
+    }
+
+    /**
+     * Prints the log file locations, once.
+     */
+    public static synchronized void printConfiguration() {
+        if (configurationPrinted) {
+            return;
+        }
+        configurationPrinted = true;
+        System.err.println("Log file locations:"
+            + "\n  test side: " + isTestSide()
+            + "\n       test: " + getTestFile()
+            + "\n     webapp: " + getWebappFile());
     }
 }
