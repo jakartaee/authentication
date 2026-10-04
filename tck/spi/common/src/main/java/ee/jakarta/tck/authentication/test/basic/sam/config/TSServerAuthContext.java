@@ -24,10 +24,6 @@ import static java.util.logging.Level.INFO;
 
 import ee.jakarta.tck.authentication.test.basic.sam.module.servlet.TSServerAuthModule;
 import ee.jakarta.tck.authentication.test.basic.sam.module.servlet.TSServletWrapperSAM;
-import ee.jakarta.tck.authentication.test.basic.sam.module.soap.TSAuthExceptionServerAuthModule;
-import ee.jakarta.tck.authentication.test.basic.sam.module.soap.TSFailureServerAuthModule;
-import ee.jakarta.tck.authentication.test.basic.sam.module.soap.TSSendFailureServerAuthModule;
-import ee.jakarta.tck.authentication.test.basic.sam.module.soap.TSSendSuccessServerAuthModule;
 import ee.jakarta.tck.authentication.test.basic.servlet.JASPICData;
 import ee.jakarta.tck.authentication.test.common.logging.server.TSLogger;
 import jakarta.security.auth.message.AuthException;
@@ -114,26 +110,26 @@ public class TSServerAuthContext implements jakarta.security.auth.message.config
         if (messageLayer.equals(LAYER_SOAP)) {
 
             if (appContext.equals(soapUPTokenAppContext)) {
-                sam = new ee.jakarta.tck.authentication.test.basic.sam.module.soap.TSServerAuthModule();
+                sam = SoapProfile.newServerAuthModule("TSServerAuthModule");
                 sam.initialize(requestMessagePolicy, responseMessagePolicy, handler, properties);
             } else if (appContext.indexOf("SendSuccessHello") > -1) {
-                sam = new TSSendSuccessServerAuthModule();
+                sam = SoapProfile.newServerAuthModule("TSSendSuccessServerAuthModule");
                 sam.initialize(null, null, handler, properties);
 
             } else if (appContext.indexOf("SendFailureHello") > -1) {
-                sam = new TSSendFailureServerAuthModule();
+                sam = SoapProfile.newServerAuthModule("TSSendFailureServerAuthModule");
                 sam.initialize(null, null, handler, properties);
 
             } else if (appContext.indexOf("FailureHello") > -1) {
-                sam = new TSFailureServerAuthModule();
+                sam = SoapProfile.newServerAuthModule("TSFailureServerAuthModule");
                 sam.initialize(null, null, handler, properties);
 
             } else if (appContext.indexOf("AuthExceptionHello") > -1) {
-                sam = new TSAuthExceptionServerAuthModule();
+                sam = SoapProfile.newServerAuthModule("TSAuthExceptionServerAuthModule");
                 sam.initialize(null, null, handler, properties);
 
             } else {
-                sam = new ee.jakarta.tck.authentication.test.basic.sam.module.soap.TSServerAuthModule();
+                sam = SoapProfile.newServerAuthModule("TSServerAuthModule");
                 sam.initialize(null, null, handler, properties);
             }
 

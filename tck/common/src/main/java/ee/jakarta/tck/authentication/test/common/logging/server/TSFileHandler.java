@@ -16,22 +16,25 @@
 
 package ee.jakarta.tck.authentication.test.common.logging.server;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.logging.ErrorManager;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.util.logging.StreamHandler;
 
 /**
  * FileHandler capable of rolling files.
+ * <p>
+ * It doesn't keep the file open: every record is appended by opening the file, writing and closing it
+ * again. The handler can therefore be created and used while a native image (e.g. Quarkus) is built,
+ * where Servlet listeners may already run, without an open file ending up in the image.
  */
-public class TSFileHandler extends StreamHandler {
+public class TSFileHandler extends Handler {
 
     private final File file;
     private boolean closed;
@@ -41,7 +44,8 @@ public class TSFileHandler extends StreamHandler {
         setLevel(Level.INFO);
         setEncoding(StandardCharsets.UTF_8.name());
         setFormatter(new TSXMLFormatter());
-        setOutputStream(prepareFile(file));
+        prepareFile(file);
+        write(getFormatter().getHead(this));
     }
 
     public File getFile() {
@@ -53,8 +57,9 @@ public class TSFileHandler extends StreamHandler {
      */
     public synchronized void roll() {
         try {
-            super.close();
-            setOutputStream(prepareFile(file));
+            write(getFormatter().getTail(this));
+            prepareFile(file);
+            write(getFormatter().getHead(this));
         } catch (SecurityException | IOException e) {
             throw new IllegalStateException("Failed to roll the file " + file, e);
         }
@@ -62,8 +67,26 @@ public class TSFileHandler extends StreamHandler {
 
     @Override
     public synchronized void publish(LogRecord log) {
-        super.publish(log);
-        flush();
+        if (isClosed() || !isLoggable(log)) {
+            return;
+        }
+        final String message;
+        try {
+            message = getFormatter().format(log);
+        } catch (Exception e) {
+            reportError(null, e, ErrorManager.FORMAT_FAILURE);
+            return;
+        }
+        try {
+            write(message);
+        } catch (IOException e) {
+            reportError(null, e, ErrorManager.WRITE_FAILURE);
+        }
+    }
+
+    @Override
+    public void flush() {
+        // Every record is written and the file closed right away
     }
 
     @Override
@@ -78,7 +101,11 @@ public class TSFileHandler extends StreamHandler {
         }
         System.err.println("TSFileHandler: closing log handler using file: " + file);
         closed = true;
-        super.close();
+        try {
+            write(getFormatter().getTail(this));
+        } catch (IOException e) {
+            reportError(null, e, ErrorManager.CLOSE_FAILURE);
+        }
     }
 
 
@@ -87,7 +114,14 @@ public class TSFileHandler extends StreamHandler {
     }
 
 
-    private static OutputStream prepareFile(File file) throws FileNotFoundException {
+    private void write(String text) throws IOException {
+        try (OutputStream output = new FileOutputStream(file, true)) {
+            output.write(text.getBytes(StandardCharsets.UTF_8));
+        }
+    }
+
+
+    private static void prepareFile(File file) {
         if (!file.isAbsolute()) {
             throw new IllegalArgumentException("The file must be absolute: " + file);
         }
@@ -104,7 +138,6 @@ public class TSFileHandler extends StreamHandler {
         if (fileLock.exists()) {
             throw new IllegalStateException("The lock file exists, another handler probably uses it!");
         }
-        return new BufferedOutputStream(new FileOutputStream(file, true), 8192);
     }
 
 

@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import ee.jakarta.tck.authentication.test.common.TSLogging;
@@ -44,18 +45,33 @@ public class TSLogger extends Logger {
     private static final Map<String, TSLogger> LOGGERS = new HashMap<>();
     private static final Map<File, TSFileHandler> HANDLERS = new HashMap<>();
 
-    private final TSFileHandler handler;
+    private TSFileHandler handler;
+    private boolean handlerResolved;
 
-    private TSLogger(String name, boolean testSide) {
+    private TSLogger(String name) {
         super(name, null);
         setLevel(Level.INFO);
-        File file = testSide ? TSLogging.FILE_TEST : TSLogging.FILE_WEBAPP;
-        if (file == null) {
-            handler = null;
-            return;
+    }
+
+    /**
+     * Opens the log file on first use rather than when the logger is created: loggers may be created
+     * while a native image (e.g. Quarkus) is built, where no file may be opened yet, and where the
+     * system properties with the log file location are not the ones the application runs with.
+     */
+    private void resolveHandler() {
+        synchronized (TSLogger.class) {
+            if (handlerResolved) {
+                return;
+            }
+            handlerResolved = true;
+            TSLogging.printConfiguration();
+            File file = TSLogging.isTestSide() ? TSLogging.getTestFile() : TSLogging.getWebappFile();
+            if (file == null) {
+                return;
+            }
+            handler = HANDLERS.computeIfAbsent(file, TSLogger::createFileHandler);
+            addHandler(handler);
         }
-        handler = HANDLERS.computeIfAbsent(file, TSLogger::createFileHandler);
-        addHandler(handler);
     }
 
     /**
@@ -109,6 +125,12 @@ public class TSLogger extends Logger {
         log(lr);
     }
 
+    @Override
+    public void log(LogRecord record) {
+        resolveHandler();
+        super.log(record);
+    }
+
     /**
      * Log a TSLogRecord.
      *
@@ -118,6 +140,7 @@ public class TSLogger extends Logger {
         if (!isLoggable(record.getLevel())) {
             return;
         }
+        resolveHandler();
 
         // Post the LogRecord to all our Handlers, and then to
         // our parents' handlers, all the way up the tree.
@@ -140,14 +163,22 @@ public class TSLogger extends Logger {
      * Closes and unregisters the handler.
      * Despite we share handlers between loggers, webapp and test loggers usually stop all at the same time.
      */
-    public synchronized void stop() {
+    public void stop() {
+        synchronized (TSLogger.class) {
+            stopLogger();
+        }
+    }
+
+    private void stopLogger() {
         LOGGERS.remove(getName());
+        handlerResolved = false;
         if (handler == null) {
             return;
         }
         removeHandler(handler);
         HANDLERS.remove(handler.getFile());
         handler.close();
+        handler = null;
     }
 
     public static synchronized TSLogger getTSLogger() {
@@ -171,14 +202,15 @@ public class TSLogger extends Logger {
         if (logger != null) {
             return logger;
         }
-        final Logger logger2 = LOG_MANAGER.getLogger(name);
-        if (logger2 != null) {
-            throw new IllegalStateException("Found logger " + logger2 + " with name " + name
-                + " but is was not created by TSLogger. Returning null.");
-        }
-        final TSLogger newlogger = new TSLogger(name, TSLogging.IS_TEST_SIDE);
+        final TSLogger newlogger = new TSLogger(name);
         LOGGERS.put(name, newlogger);
-        LogManager.getLogManager().addLogger(newlogger);
+        // Some LogManagers (e.g. JBoss LogManager) create a logger for every name asked for, so a logger
+        // with this name may exist already. TSLogger doesn't need the LogManager: it has its own handler,
+        // and the LOGGERS map returns this instance next time.
+        final Logger existing = LOG_MANAGER.getLogger(name);
+        if (existing == null) {
+            LOG_MANAGER.addLogger(newlogger);
+        }
         return newlogger;
     }
 

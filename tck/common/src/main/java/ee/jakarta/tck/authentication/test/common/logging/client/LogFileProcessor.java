@@ -79,7 +79,7 @@ public class LogFileProcessor {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
-            final File logFile = client ? TSLogging.FILE_TEST : TSLogging.FILE_WEBAPP;
+            final File logFile = client ? TSLogging.getTestFile() : TSLogging.getWebappFile();
             if (logFile == null || !logFile.exists()) {
                 System.out.println("Check permissions for log file ");
                 System.out.println("See User guide for Configuring log file permissions");

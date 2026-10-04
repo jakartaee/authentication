@@ -28,7 +28,7 @@ public class TSLoggingServletContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        // Just to print configuration values.
+        // Creates the default logger; it opens its log file when it logs first.
         TSLogger.getTSLogger();
     }
 

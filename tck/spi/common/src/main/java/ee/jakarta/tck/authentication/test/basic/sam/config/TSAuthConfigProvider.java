@@ -123,7 +123,7 @@ public class TSAuthConfigProvider implements jakarta.security.auth.message.confi
                 handler = new AuthDataCallbackHandler();
             }
 
-            ClientAuthConfig clientAuthConfig = new TSClientAuthConfig(layer, appContext, handler, properties, logger);
+            ClientAuthConfig clientAuthConfig = SoapProfile.newClientAuthConfig(layer, appContext, handler, properties, logger);
             clientAuthConfigMap.put(layer + appContext, clientAuthConfig);
             return clientAuthConfig;
         } catch (Exception e) {
@@ -186,7 +186,7 @@ public class TSAuthConfigProvider implements jakarta.security.auth.message.confi
             ServerAuthConfig serverAuthConfig = null;
 
             if (LAYER_SOAP.equals(layer)) {
-                serverAuthConfig = new SOAPTSServerAuthConfig(layer, appContext, handler, properties, logger);
+                serverAuthConfig = SoapProfile.newServerAuthConfig(layer, appContext, handler, properties, logger);
             } else {
                 serverAuthConfig = new TSServerAuthConfig(layer, appContext, handler, properties, logger);
             }
