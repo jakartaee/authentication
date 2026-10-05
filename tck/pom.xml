@@ -707,12 +707,15 @@
             <id>quarkus</id>
 
             <properties>
-                <quarkus-epicyro.version>3.1.1-SNAPSHOT</quarkus-epicyro.version>
+                <epicyro.version>3.1.2</epicyro.version>
+                <quarkus-epicyro.version>3.1.2</quarkus-epicyro.version>
                 <arquillian-quarkus.version>1.0.0</arquillian-quarkus.version>
-                <epicyro.version>3.1.1-SNAPSHOT</epicyro.version>
+                
                 <!-- Jakarta Faces for Quarkus, from Apache MyFaces (for /dispatching-jsf-cdi) -->
                 <myfaces-quarkus.version>4.1.4</myfaces-quarkus.version>
+                
                 <quarkus.log.dir>${project.build.directory}/quarkus-logs</quarkus.log.dir>
+                
                 <!-- Set by the quarkus-native profile -->
                 <quarkus.native-image>false</quarkus.native-image>
                 <quarkus.native-dependencies></quarkus.native-dependencies>
